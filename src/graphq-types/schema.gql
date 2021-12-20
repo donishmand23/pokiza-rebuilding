@@ -7,7 +7,7 @@ scalar Any
 
 
 # unions
-union BigTypes = Branch
+union BigTypes = Branch | State | Region | Neighborhood
 
 
 # types

@@ -6,10 +6,6 @@ create database pokiza;
 
 create extension "pgcrypto";
 
--- DATABASE GENERAL INFORMATION
--- 01. sms service
-drop table if exists sms_info cascade;
-
 -- 03. branches
 drop table if exists branches cascade;
 create table branches (
@@ -110,7 +106,9 @@ create table addresses (
 
 
 
-
+-- -- DATABASE GENERAL INFORMATION
+-- -- 01. sms service
+-- drop table if exists sms_info cascade;
 -- create table sms_info (
 -- 	info_id bigserial not null primary key,
 -- 	email character varying(128) not null,

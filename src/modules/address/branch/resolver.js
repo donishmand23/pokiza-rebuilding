@@ -6,24 +6,29 @@ export default {
 		addBranch: async (_, arg) => {
 			try {
 				const newBranch = await branchModel.addBranch(arg)
-				return {
-					status: 200,
-					message: "Yangi filial qo'shildi!",
-					data: newBranch
-				}
+				if(newBranch) {
+					return {
+						status: 200,
+						message: "Yangi filial qo'shildi!",
+						data: newBranch
+					}
+				} else throw new Error("Filial qo'shishda muammolik yuz berdi!")
 			} catch (error) { return mError(error) }
 		},
 
 		changeBranch: async(_, arg) => {
 			try {
-				const updatebranch = await branchModel.changeBranch(arg)
-				return {
-					status: 200,
-					message: "Filial yangilandi!",
-					data: updatebranch
-				}
+				const updatedBranch = await branchModel.changeBranch(arg)
+				if(updatedBranch) {
+					return {
+						status: 200,
+						message: "Filial yangilandi!",
+						data: updatedBranch
+					} 
+				} else throw new Error("Filialni yangilashda muammolik yuz berdi!")
 			} catch (error) { return mError(error) }
 		},
+		
 	},
 	Query: {
 		branches: async (_, arg) => {

@@ -30,6 +30,15 @@ export default {
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'
 			}
+			if(obj.state_id && obj.state_name && obj.state_created_at) {
+				return 'State'
+			}
+			if(obj.region_id && obj.region_name && obj.region_created_at) {
+				return 'Region'
+			}
+			if(obj.neighborhood_id && obj.neighborhood_name && obj.neighborhood_created_at) {
+				return 'Neighborhood'
+			}
 		}
 	}
 }

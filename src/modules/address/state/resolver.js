@@ -3,38 +3,33 @@ import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
-		changeState: async (_, { stateId, stateName }, { token }) => {
+		addState: async (_, arg) => {
 			try {
-				let payload = await permission(token, { branchId }, 302)
-				if (payload && payload.staff) {
-					const updatedState = await stateModel.changeStateName(stateId, stateName)
-					if (updatedState) {
-						return {
-							status: 200,
-							message: "The state name has been updated!",
-							data: updatedState
-						}
-					} else throw 'There is an error in updating state name!'
-				} else throw "You don't have a permission for this operation!"
+				const newState = await stateModel.addState(arg)
+				if(newState) {
+					return {
+						status: 200,
+						message: "Yangi viloyat qo'shildi!",
+						data: newState
+					}
+				} throw new Error("Viloyat qo'shishda muammolik yuz berdi!")
 			} catch (error) { return mError(error) }
 		},
 
-		addState: async (_, { stateName }, { token }) => {
+		changeState: async (_, arg) => {
 			try {
-				let payload = await permission(token, { branchId }, 304)
-				if (payload && payload.staff) {
-					const newState = await stateModel.addState(stateName)
-					if (newState) {
-						return {
-							status: 200,
-							message: "A new state has been added!",
-							data: newState
-						}
-					} else throw 'There is an error in adding a new state!'
-				} else throw "You don't have a permission for this operation!"
+				const updatedState = await stateModel.changeState(arg)
+				if(updatedState) {
+					return {
+						status: 200,
+						message: "Viloyat nomi yangilandi!",
+						data: updatedState
+					}
+				} throw new Error("Bunday viloyat mabjud emas!")
 			} catch (error) { return mError(error) }
-		}
+		},
 	},
+
 	Query: {
 		states: async (_, arg) => {
 			try {
@@ -45,11 +40,11 @@ export default {
 			}
 		}
 	},
+	
 	State: {
 		stateId: global => global.state_id,
 		stateName: global => global.state_name,
-		branchName: global => global.branch_name,
 		stateCreatedAt: global => global.state_created_at,
-		regions: async global => await stateModel.regions(global.state_id)
+		// regions: async global => await stateModel.regions(global.state_id)
 	},
 }

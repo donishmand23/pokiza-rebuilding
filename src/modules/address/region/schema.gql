@@ -1,0 +1,17 @@
+type Query {
+	regions(stateId: ID regionId: ID): [Region!]!
+}
+
+type Mutation {
+	changeRegion(regionId: ID! stateId: ID branchId: ID regionName: String): MutationResponse!
+	addRegion(stateId: ID! regionName: String! branchId: ID!): MutationResponse!
+}
+
+type Region {
+	regionId: ID!
+	regionName: String!
+	regionCreatedAt: Date!
+	# neighborhoods: [Neighborhood!]!
+	branch: Branch!
+	state: State!
+}

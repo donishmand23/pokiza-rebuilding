@@ -31,6 +31,7 @@ const CHANGE_BRANCH = `
 		to_char(branch_created_at, 'DD-MM-YYYY HH24:MI:SS') branch_created_at
 `
 
+
 export default {
 	CHANGE_BRANCH,
 	ADD_BRANCH,

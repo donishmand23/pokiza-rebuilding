@@ -6,9 +6,7 @@
     "main": "server.js",
     "scripts": {
         "start": "node src/server.js",
-        "dev": "nodemon -e * src/server.js link-module-alias",
-        "postinstall": "link-module-alias",
-        "preinstall": "command -v link-module-alias && link-module-alias clean || true"
+        "dev": "nodemon -e * src/server.js"
     },
     "keywords": [],
     "author": "",

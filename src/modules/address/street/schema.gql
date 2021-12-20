@@ -1,0 +1,18 @@
+type Query {
+	streets(regionId: ID neighborhoodId: ID streetId: ID): [Street!]!
+}
+
+type Mutation {
+	changeStreet(streetId: ID! neighborhoodId: [ID!] streetName: String streetDistance: Float): MutationResponse!
+	addStreet(neighborhoodId: [ID!]! streetName: String! streetDistance: Float!): MutationResponse!
+}
+
+type Street {
+	streetId: ID!
+	streetName: String!
+	streetDistance: Float!
+	streetCreatedAt: Date!
+	# neighborhoods: [Neighborhood!]!
+	# region: Region!
+	# areas: [Area!]!
+}

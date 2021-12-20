@@ -8,17 +8,17 @@ const PAGINATION = {
 
 const PORT = process.env.PORT || 4000
 
-const PG = {
-	host: 'localhost',
-	user: 'postgres',
-	password: '2303',
-	port: 5432,
-	database: 'pokiza'
-}
-
 // const PG = {
-// 	connectionString: 'postgres://dttuatwi:oxuKexMAm0mN6iu0LM9WROKtvgb32YiQ@kashin.db.elephantsql.com/dttuatwi'
+// 	host: 'kashin.db.elephantsql.com',
+// 	user: 'uqziszup',
+// 	password: 'bhCvhNxK8d0yAWO4mOpUcThtOTvnfh1E',
+// 	port: 5432,
+// 	database: 'uqziszup'
 // }
+
+const PG = {
+	connectionString: 'postgres://uqziszup:bhCvhNxK8d0yAWO4mOpUcThtOTvnfh1E@kashin.db.elephantsql.com/uqziszup'
+}
 
 const JWT = {
 	secretKey: "SECRET_WORD",
