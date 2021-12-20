@@ -1,0 +1,18 @@
+# scalars that have type check
+scalar Date
+
+
+# simple scalars that do not have type check
+scalar Any
+
+
+# unions
+union BigTypes = Branch
+
+
+# types
+type MutationResponse {
+	status: Any!
+	message: String!
+	data: BigTypes
+}

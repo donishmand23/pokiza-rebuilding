@@ -1,0 +1,14 @@
+type Query {
+	branches(branchId: ID): [Branch!]!
+}
+
+type Mutation {
+	addBranch(branchName: String!): MutationResponse!
+	changeBranch(branchId: ID! branchName: String!): MutationResponse!
+}
+
+type Branch {
+	branchId: ID!
+	branchName: String!
+	branchCreatedAt: Date!
+}

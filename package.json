@@ -1,0 +1,32 @@
+{
+    "name": "pokiza-rebuilted",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "start": "node src/server.js",
+        "dev": "nodemon -e * src/server.js link-module-alias",
+        "postinstall": "link-module-alias",
+        "preinstall": "command -v link-module-alias && link-module-alias clean || true"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@graphql-tools/schema": "^8.3.1",
+        "apollo-server-core": "^3.5.0",
+        "apollo-server-express": "^3.5.0",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.2",
+        "graphql": "^15.8.0",
+        "pg": "^8.7.1"
+    },
+    "imports": {
+        "#modules/*": "./src/modules/*",
+        "#config": "./src/config.js",
+        "#sql/*": "./src/sql-queries/*.js",
+        "#helpers/*": "./src/helpers/*.js",
+        "#utils/*": "./src/utils/*.js"
+    }
+}

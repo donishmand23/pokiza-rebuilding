@@ -1,0 +1,15 @@
+type Query {
+	states(stateId: ID): [State!]!
+}
+
+type Mutation {
+	changeState(stateId: ID! stateName: String!): MutationResponse!
+	addState(stateName: String!): MutationResponse!
+}
+
+type State {
+	stateId: ID!
+	stateName: String!
+	stateCreatedAt: DateTime!
+	# regions: [Region!]!
+}
