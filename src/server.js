@@ -27,6 +27,8 @@ const schema = makeExecutableSchema({
     
     const server = new ApolloServer({
         schema,
+        introspection: true,
+        playground: true,
         plugins: [
             ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerPluginDrainHttpServer({ httpServer })
