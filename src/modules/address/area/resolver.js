@@ -1,54 +1,52 @@
-import stateModel from './model.js'
+import areaModel from './model.js'
 import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
-		changeState: async (_, { stateId, stateName }, { token }) => {
+		addArea: async (_, args) => {
 			try {
-				let payload = await permission(token, { branchId }, 302)
-				if (payload && payload.staff) {
-					const updatedState = await stateModel.changeStateName(stateId, stateName)
-					if (updatedState) {
-						return {
-							status: 200,
-							message: "The state name has been updated!",
-							data: updatedState
-						}
-					} else throw 'There is an error in updating state name!'
-				} else throw "You don't have a permission for this operation!"
+				const newArea = await areaModel.addArea(args)
+				if(newArea) {
+					return {
+						status: 200,
+						message: "Yangi hudud qo'shildi!",
+						data: newArea
+					}
+				} else throw new Error("Hudud qo'shishda muammolik yuz berdi!")
 			} catch (error) { return mError(error) }
 		},
 
-		addState: async (_, { stateName }, { token }) => {
+		changeArea: async (_, args) => {
 			try {
-				let payload = await permission(token, { branchId }, 304)
-				if (payload && payload.staff) {
-					const newState = await stateModel.addState(stateName)
-					if (newState) {
-						return {
-							status: 200,
-							message: "A new state has been added!",
-							data: newState
-						}
-					} else throw 'There is an error in adding a new state!'
-				} else throw "You don't have a permission for this operation!"
+				const updatedArea = await areaModel.changeArea(args)
+				if(updatedArea) {
+					return {
+						status: 200,
+						message: "Hudud yangilandi!",
+						data: updatedArea
+					}
+				} else throw new Error("Bunday hudu mavjud emas!")
 			} catch (error) { return mError(error) }
-		}
+		},
 	},
+
 	Query: {
-		states: async (_, arg) => {
+		areas: async (_, args) => {
 			try {
-				const states = await stateModel.states(arg)
-				return states
-			} catch (error) {
+				const areas = await areaModel.areas(args)
+				return areas
+			} catch(error) {
 				throw error
 			}
 		}
 	},
-	State: {
-		stateId: global => global.state_id,
-		stateName: global => global.state_name,
-		stateCreatedAt: global => global.state_created_at,
-		// regions: async global => await stateModel.regions(global.state_id)
+
+	Area: {
+		areaId:        global  	   		=>  global.area_id,
+		areaName:      global  	   		=>  global.area_name,
+		areaDistance:  global  	   		=>  global.area_distance,
+		areaCreatedAt: global  	   		=>  global.area_created_at,
+		streets:       async global  	=>  await areaModel.streets({ areaId: global.area_id }),
+		neighborhood:  async global  	=>  await areaModel.neighborhood({ areaId: global.area_id })
 	},
 }

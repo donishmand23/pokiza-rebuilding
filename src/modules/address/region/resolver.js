@@ -45,7 +45,7 @@ export default {
 		regionId:        global  	   =>  global.region_id,
 		regionName:      global  	   =>  global.region_name,
 		regionCreatedAt: global  	   =>  global.region_created_at,
-		// neighborhoods:   async global  =>  await regionModel.neighborhoods(global.region_id),
+		neighborhoods:   async global  =>  await regionModel.neighborhoods({ regionId: global.region_id }),
 		branch:          async global  =>  await regionModel.branch({ branchId: global.branch_id }),
 		state:           async global  =>  await regionModel.state({ stateId: global.state_id }),
 	},

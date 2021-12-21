@@ -1,21 +1,45 @@
 import { fetch, fetchAll } from '#utils/postgres'
-import StateQuery from '#sql/state'
+import StreetQuery from '#sql/street'
+import NeighborhoodQuery from '#sql/neighborhood'
+import AreaQuery from '#sql/area'
 
-const states = ({ stateId = 0 }) => {
-	return fetchAll(StateQuery.STATES, stateId) 
+const neighborhood = ({ areaId }) => {
+	return fetch(NeighborhoodQuery.NEIGHBORHOODS_FOR_AREAS, areaId)
 }
 
-const changeState = ({ stateId, stateName }) => {
-	return fetch(StateQuery.CHANGE_STATE, stateId, stateName)
+const streets = async ({ areaId }) => {
+	return fetchAll(StreetQuery.STREETS_FOR_AREAS, areaId)
 }
 
-const addState = ({ stateName }) => {
-	return fetch(StateQuery.ADD_STATE, stateName)
+const areas = ({ regionId = 0, neighborhoodId = 0, streetId = 0, areaId = 0 }) => {
+	return fetchAll(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId)
+}
+
+const addArea = async ({ streetId, areaName, areaDistance }) => {
+	let newArea = await fetch(AreaQuery.ADD_AREA, areaName, areaDistance)
+	for (let e of streetId) {
+		await fetch(AreaQuery.ADD_STREET_AREAS, e, newArea.area_id)
+	}
+	return newArea
+}
+
+const changeArea = async ({ areaId, streetId, areaName = '', areaDistance = 0 })   => {
+	let oldData = await fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
+	if(!oldData) throw "Bunday hudud yo'q!"
+	if(streetId && streetId.length != 0) {
+		await fetch(AreaQuery.DELETE_STREET_AREAS, areaId)
+		for (let e of streetId) {
+			await fetch(AreaQuery.ADD_STREET_AREAS, e, areaId)
+		}
+	}
+	return fetch(AreaQuery.CHANGE_AREA, areaId, areaName, areaDistance)
 }
 
 
 export default {
-	changeState,
-	addState,
-	states,
+	neighborhood,
+	changeArea,
+	addArea,
+	streets,
+	areas,
 }

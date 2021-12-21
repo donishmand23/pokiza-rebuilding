@@ -17,6 +17,34 @@ const NEIGHBORHOODS = `
 	END 
 `
 
+const NEIGHBORHOODS_FOR_STREETS = `
+	SELECT 
+		n.neighborhood_id,
+		n.neighborhood_name,
+		n.neighborhood_distance,
+		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		n.region_id
+	FROM neighborhoods n
+	INNER JOIN neighborhood_streets ns ON n.neighborhood_id = ns.neighborhood_id
+	INNER JOIN streets s ON s.street_id = ns.street_id
+	WHERE n.neighborhood_deleted_at IS NULL AND s.street_id = $1
+`
+
+const NEIGHBORHOODS_FOR_AREAS = `
+	SELECT 
+		n.neighborhood_id,
+		n.neighborhood_name,
+		n.neighborhood_distance,
+		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		n.region_id
+	FROM neighborhoods n
+	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
+	INNER JOIN streets s ON s.street_id = ns.street_id
+	INNER JOIN street_areas sa ON sa.street_id = s.street_id
+	INNER JOIN areas a ON a.area_id = sa.area_id
+	WHERE n.neighborhood_deleted_at IS NULL AND a.area_id = $1
+`
+
 const CHANGE_NEIGHBORHOOD = `
 	UPDATE neighborhoods n SET
 		neighborhood_name = (
@@ -55,6 +83,8 @@ const ADD_NEIGHBORHOOD = `
 `
 
 export default {
+	NEIGHBORHOODS_FOR_STREETS,
+	NEIGHBORHOODS_FOR_AREAS,
 	CHANGE_NEIGHBORHOOD,
 	ADD_NEIGHBORHOOD,
 	NEIGHBORHOODS,

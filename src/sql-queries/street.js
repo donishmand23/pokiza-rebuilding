@@ -23,21 +23,47 @@ const STREETS = `
 	END
 `
 
+const STREETS_FOR_AREAS = `
+	SELECT 
+		s.street_id,
+		s.street_name,
+		s.street_distance,
+		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+	FROM streets s
+	INNER JOIN street_areas sa ON sa.street_id = s.street_id
+	INNER JOIN areas a ON a.area_id = sa.area_id
+	WHERE s.street_deleted_at IS NULL AND a.area_id = $1
+`
+
+const STREETS_FOR_NEIGHBORHOODS = `
+	SELECT 
+		s.street_id,
+		s.street_name,
+		s.street_distance,
+		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+	FROM streets s
+	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
+	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
+	WHERE s.street_deleted_at IS NULL AND ns.neighborhood_id = $1
+`
+
 const CHANGE_STREET = `
 	UPDATE streets s SET
 		street_name = (
 			CASE
-				
+				WHEN length($2) > 0 THEN $2
+				ELSE s.street_name 
 			END
 		),
 		street_distance = (
 			CASE
-				
+				WHEN $3 > 0 THEN $3
+				ELSE s.street_distance
 			END
 		)
-	WHERE street_id = $1
+	WHERE s.street_id = $1
 	RETURNING
-		*,
+		s.*,
 		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
 `
 
@@ -48,7 +74,7 @@ const ADD_STREET = `
 	) VALUES ($1, $2)
 	RETURNING
 		*,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
 `
 
 const ADD_NEIGHBORHOOD_STREETS = `
@@ -58,3 +84,19 @@ const ADD_NEIGHBORHOOD_STREETS = `
 	) VALUES ($1, $2)
 	RETURNING *
 `
+
+const DELETE_NEIGHBORHOOD_STREETS = `
+	DELETE FROM neighborhood_streets 
+	WHERE street_id = $1
+`
+
+
+export default {
+	DELETE_NEIGHBORHOOD_STREETS,
+	STREETS_FOR_NEIGHBORHOODS,
+	ADD_NEIGHBORHOOD_STREETS,
+	STREETS_FOR_AREAS,
+	CHANGE_STREET,
+	ADD_STREET,
+	STREETS,
+}

@@ -46,7 +46,7 @@ export default {
 		neighborhoodName:      global 		=>  global.neighborhood_name,
 		neighborhoodDistance:  global 		=>  global.neighborhood_distance,
 		neighborhoodCreatedAt: global 		=>  global.neighborhood_created_at,
-		// streets:               async global =>  await neighborhoodModel.streets(global.neighborhood_id),
+		streets:               async global =>  await neighborhoodModel.streets({ neighborhoodId: global.neighborhood_id }),
 		region:                async global =>  await neighborhoodModel.region({ regionId: global.region_id })
 	},
 }

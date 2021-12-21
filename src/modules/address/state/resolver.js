@@ -45,6 +45,6 @@ export default {
 		stateId: global => global.state_id,
 		stateName: global => global.state_name,
 		stateCreatedAt: global => global.state_created_at,
-		// regions: async global => await stateModel.regions(global.state_id)
+		regions: async global => await stateModel.regions({ stateId: global.state_id })
 	},
 }

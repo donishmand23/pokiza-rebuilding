@@ -1,15 +1,17 @@
 type Query {
-	states(stateId: ID): [State!]!
+	areas(regionId: ID! neighborhoodId: ID streetId: ID areaId: ID): [Area!]!
 }
 
 type Mutation {
-	changeState(stateId: ID! stateName: String!): MutationResponse!
-	addState(stateName: String!): MutationResponse!
+	addArea(streetId: [ID!]! areaName: String! areaDistance: Float!): MutationResponse!
+	changeArea(areaId: ID! streetId: [ID!] areaName: String areaDistance: Float): MutationResponse!
 }
 
-type State {
-	stateId: ID!
-	stateName: String!
-	stateCreatedAt: Date!
-	# regions: [Region!]!
+type Area {
+	areaId: ID!
+	areaName: String!
+	areaDistance: Float!
+	areaCreatedAt: Date!
+	streets: [Street!]!
+	neighborhood: Neighborhood!
 }

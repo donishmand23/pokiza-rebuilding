@@ -1,4 +1,4 @@
-import neighborhoodModel from './model.js'
+import streetModel from './model.js'
 import { mError } from '#helpers/error'
 
 export default {
@@ -46,8 +46,8 @@ export default {
 		streetName:      global  	   =>  global.street_name,
 		streetDistance:  global  	   =>  global.street_distance,
 		streetCreatedAt: global  	   =>  global.street_created_at,
-		// areas:           async global  =>  await streetModel.areas(global.street_id),
-		// region:          async global  =>  await streetModel.region(global.street_id),
-		// neighborhoods:   async global  =>  await streetModel.neighborhoods(global.street_id)
+		areas:           async global  =>  await streetModel.areas({ streetId: global.street_id }),
+		region:          async global  =>  await streetModel.region({ streetId: global.street_id }),
+		neighborhoods:   async global  =>  await streetModel.neighborhoods({ streetId: global.street_id })
 	},
 }

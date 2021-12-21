@@ -11,7 +11,7 @@ type Region {
 	regionId: ID!
 	regionName: String!
 	regionCreatedAt: Date!
-	# neighborhoods: [Neighborhood!]!
+	neighborhoods: [Neighborhood!]!
 	branch: Branch!
 	state: State!
 }

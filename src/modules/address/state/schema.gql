@@ -11,5 +11,5 @@ type State {
 	stateId: ID!
 	stateName: String!
 	stateCreatedAt: Date!
-	# regions: [Region!]!
+	regions: [Region!]!
 }

@@ -17,6 +17,19 @@ const REGIONS = `
 	END 
 `
 
+const REGIONS_FOR_STREETS = `
+	SELECT 
+		r.region_id,
+		r.region_name,
+		r.state_id,
+		r.branch_id,
+		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+	FROM regions r
+	NATURAL JOIN neighborhoods n
+	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
+	WHERE region_deleted_at IS NULL AND ns.street_id = $1
+`
+
 const CHANGE_REGION = `
 	UPDATE regions r SET 
 		region_name = (
@@ -56,6 +69,7 @@ const ADD_REGION = `
 
 
 export default {
+	REGIONS_FOR_STREETS,
 	CHANGE_REGION,
 	ADD_REGION,
 	REGIONS,

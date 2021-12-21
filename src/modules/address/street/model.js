@@ -1,45 +1,50 @@
 import { fetch, fetchAll } from '#utils/postgres'
 import RegionQuery from '#sql/region'
-import BranchQuery from '#sql/branch'
-import StateQuery from '#sql/state'
+import StreetQuery from '#sql/street'
 import NeighborhoodQuery from '#sql/neighborhood'
+import AreaQuery from '#sql/area'
 
-const neighborhoods = ({ regionId = 0, neighborhoodId = 0 }) => {
-	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId)
+const neighborhoods = async ({ streetId }) => {
+	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS_FOR_STREETS, streetId)
 }
 
-const streets = ({ neighborhoodId }) => {
-	return fetchAll(STREETS, neighborhoodId)
+const streets = ({ neighborhoodId = 0, regionId = 0, streetId = 0 }) => {
+	return fetchAll(StreetQuery.STREETS, regionId, neighborhoodId, streetId)
 }
 
-const region = ({ regionId }) => {
-	return fetch(RegionQuery.REGIONS, 0, regionId)
+const region = ({ streetId }) => {
+	return fetch(RegionQuery.REGIONS_FOR_STREETS, streetId)
 }
 
-const addNeighborhood = ({ regionId, neighborhoodName, neighborhoodDistance }) => {
-	return fetch(
-		NeighborhoodQuery.ADD_NEIGHBORHOOD, 
-		regionId, 
-		neighborhoodName, 
-		neighborhoodDistance
-	)
+const areas = ({ streetId }) => {
+	return fetchAll(AreaQuery.AREAS_FOR_STREETS, streetId)
 }
 
-const changeNeighborhood = ({ neighborhoodId, regionId = 0, neighborhoodName = '', neighborhoodDistance = 0 }) => {
-	return fetch(
-		NeighborhoodQuery.CHANGE_NEIGHBORHOOD,
-		neighborhoodId, 
-		neighborhoodName,
-		neighborhoodDistance,
-		regionId
-	)
+const addStreet = async ({ neighborhoodId, streetName, streetDistance }) => {
+	let newStreet = await fetch(StreetQuery.ADD_STREET, streetName, streetDistance)
+	for (let e of neighborhoodId) {
+		await fetch(StreetQuery.ADD_NEIGHBORHOOD_STREETS, e, newStreet.street_id)
+	}
+	return newStreet
 }
 
+const changeStreet = async ({ streetId, neighborhoodId, streetName = '', streetDistance = 0 }) => {
+	let oldData = await fetch(StreetQuery.STREETS, 0, 0, streetId)
+	if(!oldData) throw "Bunday ko'cha mavjud emas!"
+	if(neighborhoodId && neighborhoodId.length != 0) {
+		await fetch(StreetQuery.DELETE_NEIGHBORHOOD_STREETS, streetId)
+		for (let e of neighborhoodId) {
+			await fetch(StreetQuery.ADD_NEIGHBORHOOD_STREETS, e, streetId)
+		}
+	}
+	return fetch( StreetQuery.CHANGE_STREET, streetId, streetName, streetDistance)
+}
 
 export default {
-	changeNeighborhood,
-	addNeighborhood,
 	neighborhoods,
+	changeStreet,
+	addStreet,
 	streets,
-	region
+	region,
+	areas,
 }

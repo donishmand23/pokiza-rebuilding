@@ -1,7 +1,6 @@
 import { fetch, fetchAll } from '#utils/postgres'
 import RegionQuery from '#sql/region'
-import BranchQuery from '#sql/branch'
-import StateQuery from '#sql/state'
+import StreetQuery from '#sql/street'
 import NeighborhoodQuery from '#sql/neighborhood'
 
 const neighborhoods = ({ regionId = 0, neighborhoodId = 0 }) => {
@@ -9,7 +8,7 @@ const neighborhoods = ({ regionId = 0, neighborhoodId = 0 }) => {
 }
 
 const streets = ({ neighborhoodId }) => {
-	return fetchAll(STREETS, neighborhoodId)
+	return fetchAll(StreetQuery.STREETS_FOR_NEIGHBORHOODS, neighborhoodId)
 }
 
 const region = ({ regionId }) => {

@@ -9,11 +9,11 @@ const PAGINATION = {
 const PORT = process.env.PORT || 4000
 
 // const PG = {
-// 	host: 'kashin.db.elephantsql.com',
-// 	user: 'uqziszup',
-// 	password: 'bhCvhNxK8d0yAWO4mOpUcThtOTvnfh1E',
+// 	host: 'localhost',
+// 	user: 'postgres',
+// 	password: '2303',
 // 	port: 5432,
-// 	database: 'uqziszup'
+// 	database: 'pokiza'
 // }
 
 const PG = {

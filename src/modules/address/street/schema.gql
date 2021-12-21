@@ -12,7 +12,7 @@ type Street {
 	streetName: String!
 	streetDistance: Float!
 	streetCreatedAt: Date!
-	# neighborhoods: [Neighborhood!]!
-	# region: Region!
-	# areas: [Area!]!
+	neighborhoods: [Neighborhood!]!
+	region: Region!
+	areas: [Area!]!
 }
