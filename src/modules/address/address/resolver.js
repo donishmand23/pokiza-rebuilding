@@ -32,5 +32,16 @@ export default {
 				}
 			} else throw new Error(`${uzNames[addressField]}ni yoqishda muammolik yuz berdi!`)
 		}
+	},
+
+	Query: {
+		disabledAddresses: async (_, args) => {
+			try {
+				const addresses = await addressModel.addresses(args)
+				return addresses
+			} catch(error) {
+				throw error
+			}
+		}
 	}
 }

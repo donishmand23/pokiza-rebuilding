@@ -1,3 +1,7 @@
+type Query {
+	disabledAddresses(addressField: AddressType! addressFilter: AddressFilter): [AddressTypes!]!
+}
+
 type Mutation {
 	disableAddress(addressField: AddressType! addressFieldId: [ID!]!): MutationResponses!
 	enableAddress(addressField: AddressType! addressFieldId: [ID!]!): MutationResponses!
@@ -9,4 +13,39 @@ enum AddressType {
 	neighborhood
 	street
 	area
+}
+
+input AddressFilter {
+	state: StateFilter
+	region: RegionFilter
+	neighborhood: NeighborhoodFilter
+	street: StreetFilter
+	area: AreaFilter
+}
+
+input StateFilter {
+	stateId: ID!
+}
+
+input RegionFilter {
+	stateId: ID
+	regionId: ID
+}
+
+input NeighborhoodFilter {
+	regionId: ID
+	neighborhoodId: ID
+}
+
+input StreetFilter {
+	regionId: ID 
+	neighborhoodId: ID 
+	streetId: ID
+}
+
+input AreaFilter {
+	regionId: ID! 
+	neighborhoodId: ID 
+	streetId: ID 
+	areaId: ID
 }

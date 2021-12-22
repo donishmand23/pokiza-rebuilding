@@ -8,6 +8,7 @@ const STREETS = `
 	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
 	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
+	INNER JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
 	WHERE s.street_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.region_id = $1
@@ -110,14 +111,24 @@ const ENABLE_STREET = `
 
 const DISABLED_STREETS = `
 	SELECT 
-		street_id,
-		street_name,
-		street_distance,
-		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
-	FROM streets
+		s.street_id,
+		s.street_name,
+		s.street_distance,
+		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+	FROM streets s
+	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
+	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
 	WHERE street_deleted_at IS NOT NULL AND
 	CASE 
-		WHEN $1 > 0 THEN street_id = $1
+		WHEN $1 > 0 THEN n.region_id = $1
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $2 > 0 THEN n.neighborhood_id = $2
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $3 > 0 THEN s.street_id = $3
 		ELSE TRUE
 	END
 `

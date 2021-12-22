@@ -14,7 +14,38 @@ const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) =>
 	} )
 }
 
+const addresses = ({ addressField, addressFilter = {} }) => {
+	switch(addressField) {
+		case 'state': {
+			const { state = {} } = addressFilter
+			const { stateId = 0 } = state
+			return fetchAll(StateQuery.DISABLED_STATES, stateId)
+		}
+		case 'region': {
+			const { region = {} } = addressFilter
+			const { stateId = 0, regionId = 0 } = region
+			return fetchAll(RegionQuery.DISABLED_REGIONS, stateId, regionId)
+		}
+		case 'neighborhood': {
+			const { neighborhood = {} } = addressFilter
+			const { regionId = 0, neighborhoodId = 0 } = neighborhood
+			return fetchAll(NeighborhoodQuery.DISABLED_NEIGHBORHOODS, regionId, neighborhoodId)
+		}
+		case 'street': {
+			const { street = {} } = addressFilter
+			const { regionId = 0, neighborhoodId = 0, streetId = 0 } = street
+			return fetchAll(StreetQuery.DISABLED_STREETS, regionId, neighborhoodId, streetId)
+		}
+		case 'area': {
+			const { area = {} } = addressFilter
+			const { regionId = 0, neighborhoodId = 0, streetId = 0, areaId = 0 } = area
+			return fetchAll(AreaQuery.DISABLED_AREAS, regionId, neighborhoodId, streetId, areaId)
+		}
+	}
+}
+
 
 export default {
 	disableEnable,
+	addresses
 }

@@ -1,6 +1,6 @@
 # scalars that have type check
 scalar Date
-
+scalar ID
 
 # simple scalars that do not have type check
 scalar Any
@@ -8,7 +8,7 @@ scalar Any
 
 # unions
 union BigTypes = Branch | State | Region | Neighborhood | Street | Area
-
+union AddressTypes = State | Region | Neighborhood | Street | Area
 
 # types
 type MutationResponse {

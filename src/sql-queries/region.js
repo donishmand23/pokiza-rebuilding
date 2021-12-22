@@ -1,18 +1,19 @@
 const REGIONS = `
 	SELECT 
-		region_id,
-		region_name,
-		state_id,
-		branch_id,
-		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
-	FROM regions
+		r.region_id,
+		r.region_name,
+		r.state_id,
+		r.branch_id,
+		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+	FROM regions r
+	INNER JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
 	WHERE region_deleted_at IS NULL AND
 	CASE 
-		WHEN $1 > 0 THEN state_id = $1
+		WHEN $1 > 0 THEN r.state_id = $1
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN $2 > 0 THEN region_id = $2
+		WHEN $2 > 0 THEN r.region_id = $2
 		ELSE TRUE
 	END 
 `
@@ -95,7 +96,11 @@ const DISABLED_REGIONS = `
 	FROM regions
 	WHERE region_deleted_at IS NOT NULL AND
 	CASE 
-		WHEN $1 > 0 THEN region_id = $1
+		WHEN $1 > 0 THEN state_id = $1
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $2 > 0 THEN region_id = $2
 		ELSE TRUE
 	END
 `
