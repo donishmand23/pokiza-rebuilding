@@ -7,6 +7,7 @@ const REGIONS = `
 		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
 	FROM regions r
 	INNER JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
+	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE region_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.state_id = $1

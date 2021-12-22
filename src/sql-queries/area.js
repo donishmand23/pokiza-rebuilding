@@ -11,6 +11,7 @@ const AREAS = `
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
 	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
 	INNER JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
+	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE a.area_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.region_id = $1

@@ -8,6 +8,7 @@ const NEIGHBORHOODS = `
 	FROM neighborhoods n
 	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
 	INNER JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
+	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE n.neighborhood_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN n.region_id = $1
