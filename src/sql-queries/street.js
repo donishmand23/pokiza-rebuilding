@@ -90,12 +90,47 @@ const DELETE_NEIGHBORHOOD_STREETS = `
 	WHERE street_id = $1
 `
 
+const DISABLE_STREET = `
+	UPDATE streets 
+		SET street_deleted_at = current_timestamp
+	WHERE street_id = $1
+	RETURNING
+		*,
+		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+`
+
+const ENABLE_STREET = `
+	UPDATE streets 
+		SET street_deleted_at = NULL
+	WHERE street_id = $1
+	RETURNING
+		*,
+		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+`
+
+const DISABLED_STREETS = `
+	SELECT 
+		street_id,
+		street_name,
+		street_distance,
+		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+	FROM streets
+	WHERE street_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN street_id = $1
+		ELSE TRUE
+	END
+`
+
 
 export default {
 	DELETE_NEIGHBORHOOD_STREETS,
 	STREETS_FOR_NEIGHBORHOODS,
 	ADD_NEIGHBORHOOD_STREETS,
 	STREETS_FOR_AREAS,
+	DISABLED_STREETS,	
+	DISABLE_STREET,
+	ENABLE_STREET,
 	CHANGE_STREET,
 	ADD_STREET,
 	STREETS,

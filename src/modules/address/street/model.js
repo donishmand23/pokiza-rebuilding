@@ -1,7 +1,7 @@
 import { fetch, fetchAll } from '#utils/postgres'
 import RegionQuery from '#sql/region'
-import StreetQuery from '#sql/street'
 import NeighborhoodQuery from '#sql/neighborhood'
+import StreetQuery from '#sql/street'
 import AreaQuery from '#sql/area'
 
 const neighborhoods = async ({ streetId }) => {

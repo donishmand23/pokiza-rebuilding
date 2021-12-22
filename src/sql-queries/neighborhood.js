@@ -82,9 +82,46 @@ const ADD_NEIGHBORHOOD = `
 		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
 `
 
+const DISABLE_NEIGHBORHOOD = `
+	UPDATE neighborhoods 
+		SET neighborhood_deleted_at = current_timestamp
+	WHERE neighborhood_id = $1
+	RETURNING
+		*,
+		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+`
+
+const ENABLE_NEIGHBORHOOD = `
+	UPDATE neighborhoods 
+		SET neighborhood_deleted_at = NULL
+	WHERE neighborhood_id = $1
+	RETURNING
+		*,
+		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+`
+
+const DISABLED_NEIGHBORHOODS = `
+	SELECT 
+		neighborhood_id,
+		neighborhood_name,
+		neighborhood_distance,
+		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		region_id
+	FROM neighborhoods
+	WHERE neighborhood_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN neighborhood_id = $1
+		ELSE TRUE
+	END
+`
+
+
 export default {
 	NEIGHBORHOODS_FOR_STREETS,
 	NEIGHBORHOODS_FOR_AREAS,
+	DISABLED_NEIGHBORHOODS,
+	DISABLE_NEIGHBORHOOD,
+	ENABLE_NEIGHBORHOOD,
 	CHANGE_NEIGHBORHOOD,
 	ADD_NEIGHBORHOOD,
 	NEIGHBORHOODS,

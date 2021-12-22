@@ -1,6 +1,6 @@
-import pg from 'pg'
 import { ApolloError } from 'apollo-server-errors'
 import { PG } from '#config'
+import pg from 'pg'
 
 const pool = new pg.Pool(PG)
 

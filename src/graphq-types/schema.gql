@@ -16,3 +16,9 @@ type MutationResponse {
 	message: String!
 	data: BigTypes
 }
+
+type MutationResponses {
+	status: Any!
+	message: String!
+	data: [BigTypes!]
+}

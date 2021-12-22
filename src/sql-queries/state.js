@@ -29,8 +29,41 @@ const ADD_STATE = `
 		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
 `
 
+const DISABLE_STATE = ` 
+	UPDATE states SET
+		state_deleted_at = current_timestamp
+	WHERE state_id = $1
+	RETURNING
+		*,
+		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+`
+
+const ENABLE_STATE = ` 
+	UPDATE states SET
+		state_deleted_at = NULL
+	WHERE state_id = $1
+	RETURNING
+		*,
+		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+`
+
+const DISABLED_STATES = `
+	SELECT 
+		state_id,
+		state_name,
+		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+	FROM states
+	WHERE state_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN state_id = $1
+		ELSE true
+	END
+`
 
 export default{
+	DISABLED_STATES,
+	DISABLE_STATE,
+	ENABLE_STATE,
 	CHANGE_STATE,
 	ADD_STATE,
 	STATES,

@@ -1,7 +1,7 @@
 import { fetch, fetchAll } from '#utils/postgres'
-import RegionQuery from '#sql/region'
 import BranchQuery from '#sql/branch'
 import StateQuery from '#sql/state'
+import RegionQuery from '#sql/region'
 import NeighborhoodQuery from '#sql/neighborhood'
 
 const branch = async ({ branchId }) => {

@@ -67,9 +67,45 @@ const ADD_REGION = `
 		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
 `
 
+const DISABLE_REGION = `
+	UPDATE regions 
+		SET region_deleted_at = current_timestamp
+	WHERE region_id = $1
+	RETURNING
+		*,
+		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+`
+
+const ENABLE_REGION = `
+	UPDATE regions 
+		SET region_deleted_at = NULL
+	WHERE region_id = $1
+	RETURNING
+		*,
+		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+`
+
+const DISABLED_REGIONS = `
+	SELECT 
+		region_id,
+		region_name,
+		state_id,
+		branch_id,
+		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+	FROM regions
+	WHERE region_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN region_id = $1
+		ELSE TRUE
+	END
+`
+
 
 export default {
 	REGIONS_FOR_STREETS,
+	DISABLED_REGIONS,
+	DISABLE_REGION,
+	ENABLE_REGION,
 	CHANGE_REGION,
 	ADD_REGION,
 	REGIONS,

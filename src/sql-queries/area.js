@@ -84,11 +84,46 @@ const DELETE_STREET_AREAS = `
 	WHERE area_id = $1
 `
 
+const DISABLE_AREA = `
+	UPDATE areas 
+		SET area_deleted_at = current_timestamp
+	WHERE area_id = $1
+	RETURNING
+		*,
+		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+`
+
+const ENABLE_AREA = `
+	UPDATE areas 
+		SET area_deleted_at = NULL
+	WHERE area_id = $1
+	RETURNING
+		*,
+		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+`
+
+const DISABLED_AREAS = `
+	SELECT 
+		area_id,
+		area_name,
+		area_distance,
+		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+	FROM areas
+	WHERE area_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN area_id = $1
+		ELSE TRUE
+	END
+`
+
 
 export default {
 	DELETE_STREET_AREAS,
 	AREAS_FOR_STREETS,
 	ADD_STREET_AREAS,
+	DISABLED_AREAS,
+	DISABLE_AREA,
+	ENABLE_AREA,
 	CHANGE_AREA,
 	ADD_AREA,
 	AREAS,

@@ -1,0 +1,12 @@
+type Mutation {
+	disableAddress(addressField: AddressType! addressFieldId: [ID!]!): MutationResponses!
+	enableAddress(addressField: AddressType! addressFieldId: [ID!]!): MutationResponses!
+}
+
+enum AddressType {
+	state
+	region
+	neighborhood
+	street
+	area
+}
