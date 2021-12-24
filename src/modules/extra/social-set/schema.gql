@@ -1,0 +1,15 @@
+type Query {
+	socialSets(socialSetId: ID): [SocialSet!]!
+}
+
+type Mutation {
+	addSocialSet(socialSetName: String! socialSetIcon: SVG!): MutationResponse!
+	changeSocialSet(socialSetId: ID! socialSetName: String socialSetIcon: SVG): MutationResponse!
+}
+
+type SocialSet {
+	socialSetId: ID!
+	socialSetName: String!
+	socialSetIcon: SVG!
+	socialSetCreatedAt: DateTime!
+}

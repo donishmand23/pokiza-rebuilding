@@ -10,6 +10,6 @@ type Mutation {
 type State {
 	stateId: ID!
 	stateName: String!
-	stateCreatedAt: Date!
+	stateCreatedAt: DateTime!
 	regions: [Region!]!
 }

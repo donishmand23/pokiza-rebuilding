@@ -11,7 +11,7 @@ type Neighborhood {
 	neighborhoodId: ID!
 	neighborhoodName: String!
 	neighborhoodDistance: Float!
-	neighborhoodCreatedAt: Date!
+	neighborhoodCreatedAt: DateTime!
 	streets: [Street!]!
 	region: Region!
 }

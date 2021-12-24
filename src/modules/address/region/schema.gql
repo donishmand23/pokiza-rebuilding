@@ -10,7 +10,7 @@ type Mutation {
 type Region {
 	regionId: ID!
 	regionName: String!
-	regionCreatedAt: Date!
+	regionCreatedAt: DateTime!
 	neighborhoods: [Neighborhood!]!
 	branch: Branch!
 	state: State!

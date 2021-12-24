@@ -7,9 +7,13 @@ import StreetModule from './address/street/index.js'
 import AreaModule from './address/area/index.js'
 import AddressModule from './address/address/index.js'
 
+// extra modules
+import SocialSetModule from './extra/social-set/index.js'
+
 
 export default {
 	typeDefs: [
+		// address
   		BranchModule.typeDefs,
   		StateModule.typeDefs,
   		RegionModule.typeDefs,
@@ -17,8 +21,11 @@ export default {
   		StreetModule.typeDefs,
   		AreaModule.typeDefs,
   		AddressModule.typeDefs,
+  		// extra
+  		SocialSetModule.typeDefs,
 	],
 	resolvers: [
+		// address
   		BranchModule.resolvers,
   		StateModule.resolvers,
   		RegionModule.resolvers,
@@ -26,5 +33,7 @@ export default {
   		StreetModule.resolvers,
   		AreaModule.resolvers,
   		AddressModule.resolvers,
+  		// extra
+  		SocialSetModule.resolvers,
 	]
 }

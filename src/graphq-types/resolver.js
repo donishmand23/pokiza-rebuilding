@@ -29,15 +29,22 @@ function checkIdType (value) {
 	return value
 }
 
-const dateScalar = new GraphQLScalarType({
-	name: 'Date',
-	description: 'Date custom scalar type',
+function checkSvgType (value) {
+	if( !(typeof(value) === 'string') ) {
+		throw new Error("SVG type must be String!")
+	}
+	return value
+}
+
+const dateTimeScalar = new GraphQLScalarType({
+	name: 'DateTime',
+	description: 'DateTime custom scalar type',
 	serialize: checkDateType,
 	parseValue: checkDateType,
 	parseLiteral(ast) {
 		if (ast.kind === Kind.STRING) {
 	      	return checkDateType(ast.value)
-  		} else throw new Error('Date type must be a string like "dd-mm-yy hh:mm:ss"')
+  		} else throw new Error('DateTime type must be a string like "dd-mm-yy hh:mm:ss"')
 	},
 })
 
@@ -53,10 +60,22 @@ const idScalar = new GraphQLScalarType({
 	},
 })
 
-export default {
-	Date: dateScalar,
-	ID: idScalar,
+const svgScalar = new GraphQLScalarType({
+	name: 'SVG',
+	description: 'SVG custom scalar type',
+	serialize: checkSvgType,
+	parseValue: checkSvgType,
+	parseLiteral(ast) {
+		if (ast.kind === Kind.STRING) {
+	      	return checkSvgType(ast.value)
+  		} else throw new Error("SVG type must be String!")
+	},
+})
 
+export default {
+	DateTime: dateTimeScalar,
+	ID: idScalar,
+	SVG: svgScalar,
 	AddressTypes: {
 		__resolveType (obj, context, info) {
 			if(obj.state_id && obj.state_name && obj.state_created_at) {
@@ -96,6 +115,9 @@ export default {
 			}
 			if(obj.area_id && obj.area_name && obj.area_created_at) {
 				return 'Area'
+			}
+			if(obj.social_set_id && obj.social_set_name && obj.social_set_created_at) {
+				return 'SocialSet'
 			}
 		}
 	}

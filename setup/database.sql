@@ -88,6 +88,8 @@ create table street_areas (
 	street_area_deleted_at timestamptz default null
 );
 
+
+-- USER SYSTEM MODULE
 -- 11. addresses ( table for storing user and order adresses ) 
 drop table if exists addresses cascade;
 create table addresses (
@@ -103,8 +105,90 @@ create table addresses (
 	address_deleted_at timestamptz default null
 );
 
+-- analitics
+drop table if exists social_sets cascade;
+create table social_sets (
+	social_set_id serial not null primary key,
+	social_set_name character varying(30) not null,
+	social_set_icon text not null,
+	social_set_created_at timestamptz default current_timestamp
+);
 
+-- 12. users ( general info for staffs and clients )
+drop table if exists users cascade;
+create table users (
+	user_id bigserial not null primary key,
+	main_contact character varying(12),
+	second_contact character varying(12),
+	password character varying(60),
+	first_name character varying(32),
+	last_name character varying(32),
+	age smallint,
+	gender smallint,
+	branch_id bigint references branches(branch_id),
+	address_id bigint references addresses(address_id),
+	is_registered boolean default false,
+	deleted_at timestamptz default null,
+	joined_at timestamptz default current_timestamp,
+	unique(main_contact)
+);
 
+-- 13. staffs
+drop table if exists staffs cascade;
+create table staffs (
+	staff_id bigserial not null primary key,
+	user_id bigint not null references users (user_id),
+	staff_created_at timestamptz default current_timestamp,
+	staff_deleted_at timestamptz default null
+);
+
+-- 14. clients
+drop table if exists clients cascade;
+create table clients (
+	client_id bigserial not null primary key,
+	client_status smallint default 1,
+	client_summary character varying(128),
+	user_id bigint not null references users (user_id),
+	client_created_at timestamptz default current_timestamp,
+	client_deleted_at timestamptz default null
+);
+
+-- -- PERMISSIONS MODULE
+-- -- 23. permissions ( general permission actions )
+-- drop table if exists permissions cascade;
+-- create table permissions (
+-- 	permission_action int not null primary key unique,
+-- 	permission_model character varying(128) not null
+-- );
+
+-- -- 24. permission sets ( permissions that each user has )
+-- drop table if exists permission_sets cascade;
+-- create table permission_sets (
+-- 	permission_set_id bigserial not null primary key,
+-- 	user_id bigint references users(user_id),
+-- 	permission_action int references permissions(permission_action),
+-- 	branch_id bigint not null references branches(branch_id),
+-- 	permission_set_created_at timestamptz default current_timestamp,
+-- 	unique (user_id, permission_action, branch_id)
+-- );
+
+-- -- 25. permission groups ( groups for grouping a set of permissions )
+-- drop table if exists permission_groups cascade;
+-- create table permission_groups (
+-- 	group_id bigserial not null primary key,
+-- 	group_name character varying(128) not null,
+-- 	group_created_at timestamptz default current_timestamp,
+-- 	group_deleted_at timestamptz default null
+-- );
+
+-- -- 26. permission group sets ( for grouping a set of permissions )
+-- drop table if exists permission_group_sets cascade;
+-- create table permission_group_sets (
+-- 	group_set_id bigserial not null primary key,
+-- 	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
+-- 	permission_action int not null references permissions(permission_action),
+-- 	unique (group_id, permission_action)
+-- );
 
 -- -- DATABASE GENERAL INFORMATION
 -- -- 01. sms service
@@ -126,48 +210,6 @@ create table addresses (
 -- 	file_field_id bigint not null
 -- );
 
-
--- -- USER SYSTEM MODULE
--- -- 12. users ( general info for staffs and clients )
--- drop table if exists users cascade;
--- create table users (
--- 	user_id bigserial not null primary key,
--- 	main_contact character varying(12),
--- 	second_contact character varying(12),
--- 	password character varying(60),
--- 	first_name character varying(32),
--- 	last_name character varying(32),
--- 	age smallint,
--- 	gender smallint,
--- 	branch_id bigint references branches(branch_id),
--- 	address_id bigint references addresses(address_id),
--- 	is_registered boolean default false,
--- 	deleted_at timestamptz default null,
--- 	joined_at timestamptz default current_timestamp,
--- 	unique(main_contact)
--- );
-
-
-
--- -- 13. staffs
--- drop table if exists staffs cascade;
--- create table staffs (
--- 	staff_id bigserial not null primary key,
--- 	user_id bigint not null references users (user_id),
--- 	staff_created_at timestamptz default current_timestamp,
--- 	staff_deleted_at timestamptz default null
--- );
-
--- -- 14. clients
--- drop table if exists clients cascade;
--- create table clients (
--- 	client_id bigserial not null primary key,
--- 	client_status smallint default 1,
--- 	client_summary character varying(128),
--- 	user_id bigint not null references users (user_id),
--- 	client_created_at timestamptz default current_timestamp,
--- 	client_deleted_at timestamptz default null
--- );
 
 
 -- -- HISTORY
@@ -283,42 +325,7 @@ create table addresses (
 -- );
 
 
--- -- PERMISSIONS MODULE
--- -- 23. permissions ( general permission actions )
--- drop table if exists permissions cascade;
--- create table permissions (
--- 	permission_action int not null primary key unique,
--- 	permission_model character varying(128) not null
--- );
 
--- -- 24. permission sets ( permissions that each user has )
--- drop table if exists permission_sets cascade;
--- create table permission_sets (
--- 	permission_set_id bigserial not null primary key,
--- 	user_id bigint references users(user_id),
--- 	permission_action int references permissions(permission_action),
--- 	branch_id bigint not null references branches(branch_id),
--- 	permission_set_created_at timestamptz default current_timestamp,
--- 	unique (user_id, permission_action, branch_id)
--- );
-
--- -- 25. permission groups ( groups for grouping a set of permissions )
--- drop table if exists permission_groups cascade;
--- create table permission_groups (
--- 	group_id bigserial not null primary key,
--- 	group_name character varying(128) not null,
--- 	group_created_at timestamptz default current_timestamp,
--- 	group_deleted_at timestamptz default null
--- );
-
--- -- 26. permission group sets ( for grouping a set of permissions )
--- drop table if exists permission_group_sets cascade;
--- create table permission_group_sets (
--- 	group_set_id bigserial not null primary key,
--- 	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
--- 	permission_action int not null references permissions(permission_action),
--- 	unique (group_id, permission_action)
--- );
 
 
 -- -- CASHIER MODULE
@@ -393,13 +400,5 @@ create table addresses (
 -- 	expanse_deleted_at timestamptz default null
 -- );
 
--- -- analitics
--- drop table if exists social_sets cascade;
--- create table social_sets (
--- 	social_set_id serial not null primary key,
--- 	social_set_name character varying(30) not null,
--- 	social_set_icon text not null,
--- 	social_set_analitcs int not null default 0,
--- 	social_set_created_at timestamptz default current_timestamp
--- );
+
 

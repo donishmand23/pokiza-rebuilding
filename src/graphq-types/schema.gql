@@ -1,13 +1,16 @@
 # scalars that have type check
-scalar Date
+scalar DateTime
 scalar ID
+scalar SVG
 
 # simple scalars that do not have type check
 scalar Any
 
 
 # unions
-union BigTypes = Branch | State | Region | Neighborhood | Street | Area
+union BigTypes = Branch | State | Region | Neighborhood | Street | Area | 
+				 SocialSet
+
 union AddressTypes = State | Region | Neighborhood | Street | Area
 
 # types
