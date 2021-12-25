@@ -1,0 +1,32 @@
+type Query {
+	clients(
+		clientId: ID = 0
+		userSearch: String = ""
+		socialSetId: [ID!] = []
+		clientStatus: [Int!] = []
+		sort: ClientSort = {}
+		pagination: Pagination = {}
+		addressFilter: UserAddress = {}
+		userInfoFilter: UserInfoFilter = {}
+	): [Client!]!
+}
+
+
+type Client {
+	clientId: ID!
+	clientStatus: Int!
+	clientSummary: String
+	clientFrom: SocialSet!
+	clientInfo: UserInfo!
+	clientCreatedAt: DateTime!
+}
+
+input ClientSort {
+	clientId: SortOptions = 0
+	firstName: SortOptions = 0
+	lastName: SortOptions = 0
+	clientStatus: SortOptions = 0
+	age: SortOptions = 0
+	clientCreatedAt: SortOptions = 0
+	userJoinedAt: SortOptions = 0
+}

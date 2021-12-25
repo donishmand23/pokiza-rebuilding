@@ -1,7 +1,9 @@
 # scalars that have type check
 scalar DateTime
+scalar Date
 scalar ID
 scalar SVG
+scalar Contact
 
 # simple scalars that do not have type check
 scalar Any
@@ -11,7 +13,28 @@ scalar Any
 union BigTypes = Branch | State | Region | Neighborhood | Street | Area | 
 				 SocialSet
 
-union AddressTypes = State | Region | Neighborhood | Street | Area
+
+#enums
+enum Gender {
+	male
+	female
+}
+
+enum SortOptions {
+	toSmallest
+	toLargest
+}
+
+# inputs
+input Dual {
+	from: Int = 0
+	to: Int = 0
+}
+
+input Pagination {
+	limit: Int = 300
+	page: Int = 1
+}
 
 # types
 type MutationResponse {

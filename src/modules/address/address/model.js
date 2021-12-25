@@ -4,7 +4,33 @@ import RegionQuery from '#sql/region'
 import NeighborhoodQuery from '#sql/neighborhood'
 import StreetQuery from '#sql/street'
 import AreaQuery from '#sql/area'
-const Query = {...StateQuery, ...RegionQuery, ...NeighborhoodQuery, ...StreetQuery, ...AreaQuery}
+const Query = {
+	...NeighborhoodQuery, 
+	...StreetQuery, 
+	...RegionQuery, 
+	...StateQuery, 
+	...AreaQuery
+}
+
+const neighborhood = ({ neighborhoodId }) => {
+	return fetch(NeighborhoodQuery.NEIGHBORHOODS, 0, neighborhoodId)
+}
+
+const region = ({ regionId }) => {
+	return fetch(RegionQuery.REGIONS, 0, regionId)
+}
+
+const street = ({ streetId }) => {
+	return fetch(StreetQuery.STREETS, 0, 0, streetId)
+}
+
+const state = ({ stateId }) => {
+	return fetch(StateQuery.STATES, stateId)
+}
+
+const area = ({ areaId }) => {
+	return fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
+}
 
 const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) => {
 	return addressFieldId.map( async id => {
@@ -47,5 +73,10 @@ const addresses = ({ addressField, addressFilter = {} }) => {
 
 export default {
 	disableEnable,
-	addresses
+	neighborhood,
+	addresses,
+	region,
+	street,
+	state,
+	area,
 }

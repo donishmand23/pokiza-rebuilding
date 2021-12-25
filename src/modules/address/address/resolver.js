@@ -43,5 +43,37 @@ export default {
 				throw error
 			}
 		}
-	}
+	},
+
+	Address: {
+		addressId: 	        global => global.address_id,
+		addressHomeNumber: global => global.address_home_number,
+		addressTarget:     global => global.address_target, 
+		addressCreatedAt:  global => global.address_created_at,
+		neighborhood:async global => addressModel.neighborhood({ neighborhoodId: global.neighborhood_id }), 
+		region:      async global => addressModel.region({ regionId: global.region_id }),
+		street:      async global => addressModel.street({ streetId: global.street_id }), 
+		state:       async global => addressModel.state({ stateId: global.state_id }),
+		area:        async global => addressModel.area({ areaId: global.area_id }), 
+	},
+
+	AddressTypes: {
+		__resolveType (obj, context, info) {
+			if(obj.state_id && obj.state_name && obj.state_created_at) {
+				return 'State'
+			}
+			if(obj.region_id && obj.region_name && obj.region_created_at) {
+				return 'Region'
+			}
+			if(obj.neighborhood_id && obj.neighborhood_name && obj.neighborhood_created_at) {
+				return 'Neighborhood'
+			}
+			if(obj.street_id && obj.street_name && obj.street_created_at) {
+				return 'Street'
+			}
+			if(obj.area_id && obj.area_name && obj.area_created_at) {
+				return 'Area'
+			}
+		}
+	},
 }

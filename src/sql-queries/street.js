@@ -3,7 +3,7 @@ const STREETS = `
 		s.street_id,
 		s.street_name,
 		s.street_distance,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
 	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
@@ -30,7 +30,7 @@ const STREETS_FOR_AREAS = `
 		s.street_id,
 		s.street_name,
 		s.street_distance,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
 	INNER JOIN street_areas sa ON sa.street_id = s.street_id
 	INNER JOIN areas a ON a.area_id = sa.area_id
@@ -42,7 +42,7 @@ const STREETS_FOR_NEIGHBORHOODS = `
 		s.street_id,
 		s.street_name,
 		s.street_distance,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
 	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
@@ -66,7 +66,7 @@ const CHANGE_STREET = `
 	WHERE s.street_id = $1
 	RETURNING
 		s.*,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 `
 
 const ADD_STREET = `
@@ -76,7 +76,7 @@ const ADD_STREET = `
 	) VALUES ($1, $2)
 	RETURNING
 		*,
-		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 `
 
 const ADD_NEIGHBORHOOD_STREETS = `
@@ -98,7 +98,7 @@ const DISABLE_STREET = `
 	WHERE street_id = $1
 	RETURNING
 		*,
-		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 `
 
 const ENABLE_STREET = `
@@ -107,7 +107,7 @@ const ENABLE_STREET = `
 	WHERE street_id = $1
 	RETURNING
 		*,
-		to_char(street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 `
 
 const DISABLED_STREETS = `
@@ -115,7 +115,7 @@ const DISABLED_STREETS = `
 		s.street_id,
 		s.street_name,
 		s.street_distance,
-		to_char(s.street_created_at, 'DD-MM-YYYY HH24:MI:SS') street_created_at
+		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
 	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id

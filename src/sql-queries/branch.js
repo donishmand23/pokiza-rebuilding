@@ -2,7 +2,7 @@ const BRANCHES = `
 	SELECT 
 		branch_id,
 		branch_name,
-		to_char(branch_created_at, 'DD-MM-YYYY HH24:MI:SS') branch_created_at
+		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
 	FROM branches
 	WHERE branch_deleted_at IS NULL AND
 	CASE 
@@ -18,7 +18,7 @@ const ADD_BRANCH = `
 	RETURNING 
 		branch_id,
 		branch_name,
-		to_char(branch_created_at, 'DD-MM-YYYY HH24:MI:SS') branch_created_at
+		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
 `
 
 const CHANGE_BRANCH = `
@@ -28,7 +28,7 @@ const CHANGE_BRANCH = `
 	RETURNING
 		branch_id,
 		branch_name,
-		to_char(branch_created_at, 'DD-MM-YYYY HH24:MI:SS') branch_created_at
+		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
 `
 
 

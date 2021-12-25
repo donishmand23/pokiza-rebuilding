@@ -3,7 +3,7 @@ const AREAS = `
 		a.area_id,
 		a.area_name,
 		a.area_distance,
-		to_char(a.area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
 	INNER JOIN street_areas sa ON a.area_id = sa.area_id
 	INNER JOIN streets s ON s.street_id = sa.street_id AND s.street_deleted_at IS NULL
@@ -36,7 +36,7 @@ const AREAS_FOR_STREETS = `
 		a.area_id,
 		a.area_name,
 		a.area_distance,
-		to_char(a.area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
 	INNER JOIN street_areas sa ON a.area_id = sa.area_id
 	INNER JOIN streets s ON s.street_id = sa.street_id
@@ -60,7 +60,7 @@ const CHANGE_AREA = `
 	WHERE a.area_id = $1
 	RETURNING
 		a.*,
-		to_char(a.area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 `
 
 const ADD_AREA = `
@@ -70,7 +70,7 @@ const ADD_AREA = `
 	) VALUES ($1, $2)
 	RETURNING
 		*,
-		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 `
 
 const ADD_STREET_AREAS = `
@@ -92,7 +92,7 @@ const DISABLE_AREA = `
 	WHERE area_id = $1
 	RETURNING
 		*,
-		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 `
 
 const ENABLE_AREA = `
@@ -101,7 +101,7 @@ const ENABLE_AREA = `
 	WHERE area_id = $1
 	RETURNING
 		*,
-		to_char(area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 `
 
 const DISABLED_AREAS = `
@@ -109,7 +109,7 @@ const DISABLED_AREAS = `
 		a.area_id,
 		a.area_name,
 		a.area_distance,
-		to_char(a.area_created_at, 'DD-MM-YYYY HH24:MI:SS') area_created_at
+		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
 	INNER JOIN street_areas sa ON a.area_id = sa.area_id
 	INNER JOIN streets s ON s.street_id = sa.street_id

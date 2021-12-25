@@ -2,7 +2,7 @@ const STATES = `
 	SELECT 
 		state_id,
 		state_name,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 	FROM states
 	WHERE state_deleted_at IS NULL AND
 	CASE 
@@ -17,7 +17,7 @@ const CHANGE_STATE = `
 	WHERE state_id = $1
 	RETURNING
 		*,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 `
 
 const ADD_STATE = ` 
@@ -26,7 +26,7 @@ const ADD_STATE = `
 	) VALUES ($1)
 	RETURNING
 		*,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 `
 
 const DISABLE_STATE = ` 
@@ -35,7 +35,7 @@ const DISABLE_STATE = `
 	WHERE state_id = $1
 	RETURNING
 		*,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 `
 
 const ENABLE_STATE = ` 
@@ -44,14 +44,14 @@ const ENABLE_STATE = `
 	WHERE state_id = $1
 	RETURNING
 		*,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 `
 
 const DISABLED_STATES = `
 	SELECT 
 		state_id,
 		state_name,
-		to_char(state_created_at, 'DD-MM-YYYY HH24:MI:SS') state_created_at
+		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
 	FROM states
 	WHERE state_deleted_at IS NOT NULL AND
 	CASE 

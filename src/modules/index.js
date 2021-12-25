@@ -10,6 +10,9 @@ import AddressModule from './address/address/index.js'
 // extra modules
 import SocialSetModule from './extra/social-set/index.js'
 
+// user modules
+import UserModule from './user/user/index.js'
+import ClientModule from './user/client/index.js'
 
 export default {
 	typeDefs: [
@@ -23,6 +26,10 @@ export default {
   		AddressModule.typeDefs,
   		// extra
   		SocialSetModule.typeDefs,
+  		// user
+  		ClientModule.typeDefs,
+  		UserModule.typeDefs,
+
 	],
 	resolvers: [
 		// address
@@ -35,5 +42,8 @@ export default {
   		AddressModule.resolvers,
   		// extra
   		SocialSetModule.resolvers,
+  		// user
+  		ClientModule.resolvers,
+  		UserModule.resolvers,
 	]
 }

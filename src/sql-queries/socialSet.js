@@ -3,7 +3,7 @@ const SOCIAL_SETS = `
 		social_set_id,
 		social_set_name,
 		social_set_icon,
-		to_char(social_set_created_at, 'DD-MM-YYYY HH24:MI:SS') social_set_created_at
+		to_char(social_set_created_at, 'YYYY-MM-DD HH24:MI:SS') social_set_created_at
 	FROM social_sets
 	WHERE
 	CASE
@@ -19,7 +19,7 @@ const ADD_SOCIAL_SET = `
 	) VALUES ($1, $2)
 	RETURNING
 		*,
-		to_char(social_set_created_at, 'DD-MM-YYYY HH24:MI:SS') social_set_created_at
+		to_char(social_set_created_at, 'YYYY-MM-DD HH24:MI:SS') social_set_created_at
 `
 
 const CHANGE_SOCIAL_SET = ` 
@@ -39,7 +39,7 @@ const CHANGE_SOCIAL_SET = `
 	WHERE sc.social_set_id = $1
 	RETURNING
 		*,
-		to_char(social_set_created_at, 'DD-MM-YYYY HH24:MI:SS') social_set_created_at
+		to_char(social_set_created_at, 'YYYY-MM-DD HH24:MI:SS') social_set_created_at
 `
 
 

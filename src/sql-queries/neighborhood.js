@@ -3,7 +3,7 @@ const NEIGHBORHOODS = `
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
-		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		to_char(n.neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
 		n.region_id
 	FROM neighborhoods n
 	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
@@ -25,7 +25,7 @@ const NEIGHBORHOODS_FOR_STREETS = `
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
-		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		to_char(n.neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
 		n.region_id
 	FROM neighborhoods n
 	INNER JOIN neighborhood_streets ns ON n.neighborhood_id = ns.neighborhood_id
@@ -38,7 +38,7 @@ const NEIGHBORHOODS_FOR_AREAS = `
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
-		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		to_char(n.neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
 		n.region_id
 	FROM neighborhoods n
 	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
@@ -71,7 +71,7 @@ const CHANGE_NEIGHBORHOOD = `
 	WHERE n.neighborhood_id = $1
 	RETURNING
 		n.*,
-		to_char(n.neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+		to_char(n.neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at
 `
 
 const ADD_NEIGHBORHOOD = `
@@ -82,7 +82,7 @@ const ADD_NEIGHBORHOOD = `
 	) VALUES ($1, $2, $3)
 	RETURNING 
 		*,
-		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+		to_char(neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at
 `
 
 const DISABLE_NEIGHBORHOOD = `
@@ -91,7 +91,7 @@ const DISABLE_NEIGHBORHOOD = `
 	WHERE neighborhood_id = $1
 	RETURNING
 		*,
-		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+		to_char(neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at
 `
 
 const ENABLE_NEIGHBORHOOD = `
@@ -100,7 +100,7 @@ const ENABLE_NEIGHBORHOOD = `
 	WHERE neighborhood_id = $1
 	RETURNING
 		*,
-		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at
+		to_char(neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at
 `
 
 const DISABLED_NEIGHBORHOODS = `
@@ -108,7 +108,7 @@ const DISABLED_NEIGHBORHOODS = `
 		neighborhood_id,
 		neighborhood_name,
 		neighborhood_distance,
-		to_char(neighborhood_created_at, 'DD-MM-YYYY HH24:MI:SS') neighborhood_created_at,
+		to_char(neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
 		region_id
 	FROM neighborhoods
 	WHERE neighborhood_deleted_at IS NOT NULL AND

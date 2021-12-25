@@ -118,19 +118,18 @@ create table social_sets (
 drop table if exists users cascade;
 create table users (
 	user_id bigserial not null primary key,
-	main_contact character varying(12),
-	second_contact character varying(12),
-	password character varying(60),
-	first_name character varying(32),
-	last_name character varying(32),
-	age smallint,
-	gender smallint,
+	user_main_contact character varying(12),
+	user_second_contact character varying(12),
+	user_password character varying(60),
+	user_first_name character varying(32),
+	user_last_name character varying(32),
+	user_birth_date date,
+	user_gender smallint check (user_gender in (1, 2)),
 	branch_id bigint references branches(branch_id),
 	address_id bigint references addresses(address_id),
-	is_registered boolean default false,
-	deleted_at timestamptz default null,
-	joined_at timestamptz default current_timestamp,
-	unique(main_contact)
+	user_deleted_at timestamptz default null,
+	user_created_at timestamptz default current_timestamp,
+	unique(user_main_contact)
 );
 
 -- 13. staffs
@@ -148,6 +147,7 @@ create table clients (
 	client_id bigserial not null primary key,
 	client_status smallint default 1,
 	client_summary character varying(128),
+	social_set_id bigint references social_sets(social_set_id),
 	user_id bigint not null references users (user_id),
 	client_created_at timestamptz default current_timestamp,
 	client_deleted_at timestamptz default null

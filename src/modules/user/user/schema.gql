@@ -1,0 +1,27 @@
+type UserInfo {
+	userId: ID!
+	mainContact: Contact!
+	secondContact: Contact
+	firstName: String!
+	lastName: String
+	birthDate: Date
+	age: Int
+	gender: Gender
+	branch: Branch!
+	address: Address!
+	joinedAt: DateTime!
+}
+
+input UserInfoFilter {
+	age: Dual = {}
+	gender: Gender = 0
+	branchId: [ID!] = []
+}
+
+input UserAddress {
+	stateId: [ID!] = []
+	regionId: [ID!] = []
+	neighborhoodId: [ID!] = []
+	streetId: [ID!] = []
+	areaId: [ID!] = []
+}

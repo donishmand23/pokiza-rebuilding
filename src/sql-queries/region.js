@@ -4,7 +4,7 @@ const REGIONS = `
 		r.region_name,
 		r.state_id,
 		r.branch_id,
-		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(r.region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 	FROM regions r
 	INNER JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
 	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
@@ -25,7 +25,7 @@ const REGIONS_FOR_STREETS = `
 		r.region_name,
 		r.state_id,
 		r.branch_id,
-		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(r.region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 	FROM regions r
 	NATURAL JOIN neighborhoods n
 	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
@@ -55,7 +55,7 @@ const CHANGE_REGION = `
 	WHERE r.region_id = $1
 	RETURNING 
 		r.*,
-		to_char(r.region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(r.region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 `
 
 const ADD_REGION = `
@@ -66,7 +66,7 @@ const ADD_REGION = `
 	) VALUES ($1, $2, $3)
 	RETURNING 
 		*,
-		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 `
 
 const DISABLE_REGION = `
@@ -75,7 +75,7 @@ const DISABLE_REGION = `
 	WHERE region_id = $1
 	RETURNING
 		*,
-		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 `
 
 const ENABLE_REGION = `
@@ -84,7 +84,7 @@ const ENABLE_REGION = `
 	WHERE region_id = $1
 	RETURNING
 		*,
-		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 `
 
 const DISABLED_REGIONS = `
@@ -93,7 +93,7 @@ const DISABLED_REGIONS = `
 		region_name,
 		state_id,
 		branch_id,
-		to_char(region_created_at, 'DD-MM-YYYY HH24:MI:SS') region_created_at
+		to_char(region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 	FROM regions
 	WHERE region_deleted_at IS NOT NULL AND
 	CASE 

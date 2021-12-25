@@ -7,6 +7,18 @@ type Mutation {
 	enableAddress(addressField: AddressType! addressFieldId: [ID!]!): MutationResponses!
 }
 
+type Address {
+	addressId: ID!
+	state: State!
+	region: Region!
+	neighborhood: Neighborhood
+	street: Street
+	area: Area
+	addressHomeNumber: Int
+	addressTarget: String
+	addressCreatedAt: DateTime
+}
+
 enum AddressType {
 	state
 	region
@@ -14,6 +26,8 @@ enum AddressType {
 	street
 	area
 }
+
+union AddressTypes = State | Region | Neighborhood | Street | Area
 
 input AddressFilter {
 	state: StateFilter
