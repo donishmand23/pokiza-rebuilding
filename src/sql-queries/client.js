@@ -78,17 +78,13 @@ const CLIENTS = `
 	(CASE WHEN $15 = 1 AND $16 = 1 THEN u.user_first_name END) DESC,
 	(CASE WHEN $15 = 2 AND $16 = 1 THEN u.user_last_name END) DESC,
 	(CASE WHEN $15 = 3 AND $16 = 1 THEN u.user_birth_date END) ASC,
-	(CASE WHEN $15 = 4 AND $16 = 1 THEN u.user_created_at END) ASC,
-	(CASE WHEN $15 = 5 AND $16 = 1 THEN c.client_id END) DESC,
-	(CASE WHEN $15 = 6 AND $16 = 1 THEN c.client_status END) DESC,
-	(CASE WHEN $15 = 7 AND $16 = 1 THEN c.client_created_at END) DESC,
+	(CASE WHEN $15 = 4 AND $16 = 1 THEN c.client_id END) DESC,
+	(CASE WHEN $15 = 5 AND $16 = 1 THEN c.client_created_at END) DESC,
 	(CASE WHEN $15 = 1 AND $16 = 2 THEN u.user_first_name END) ASC,
 	(CASE WHEN $15 = 2 AND $16 = 2 THEN u.user_last_name END) ASC,
 	(CASE WHEN $15 = 3 AND $16 = 2 THEN u.user_birth_date END) DESC,
-	(CASE WHEN $15 = 4 AND $16 = 2 THEN u.user_created_at END) DESC,
-	(CASE WHEN $15 = 5 AND $16 = 2 THEN c.client_id END) ASC,
-	(CASE WHEN $15 = 6 AND $16 = 2 THEN c.client_status END) ASC,
-	(CASE WHEN $15 = 7 AND $16 = 2 THEN c.client_created_at END) ASC
+	(CASE WHEN $15 = 4 AND $16 = 2 THEN c.client_id END) ASC,
+	(CASE WHEN $15 = 5 AND $16 = 2 THEN c.client_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
@@ -112,13 +108,133 @@ const ADD_CLIENT = `
 		RETURNING user_id
 	)
 	INSERT INTO clients (
-		social_set_id, client_status, client_summary, user_id
-	) SELECT $14, $15, $16, u.user_id FROM new_user u
+		client_status, social_set_id, client_summary, user_id
+	) SELECT 
+		(CASE WHEN $14 > 0 THEN $14 ELSE 1 END), 
+		$15, $16, u.user_id FROM new_user u
 	RETURNING *,
 	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 `
 
+const CHANGE_CLIENT = `
+	WITH 
+	address AS (
+		UPDATE addresses a SET
+			state_id = (
+				CASE 
+					WHEN $2 = FALSE THEN a.state_id
+					WHEN $2 = TRUE AND $3 > 0 THEN $3
+					ELSE NULL
+				END
+			), 
+			region_id = (
+				CASE 
+					WHEN $2 = FALSE THEN a.region_id
+					WHEN $2 = TRUE AND $4 > 0 THEN $4
+					ELSE NULL
+				END
+			), 
+			neighborhood_id = (
+				CASE 
+					WHEN $2 = FALSE THEN a.neighborhood_id
+					WHEN $2 = TRUE AND $5 > 0 THEN $5
+					ELSE NULL
+				END
+			), 
+			street_id = (
+				CASE 
+					WHEN $2 = FALSE THEN a.street_id
+					WHEN $2 = TRUE AND $6 > 0 THEN $6
+					ELSE NULL
+				END
+			), 
+			area_id = (
+				CASE 
+					WHEN $2 = FALSE THEN a.area_id
+					WHEN $2 = TRUE AND $7 > 0 THEN $7
+					ELSE NULL
+				END
+			), 
+			address_home_number = (
+				CASE 
+					WHEN $2 = FALSE THEN a.address_home_number
+					WHEN $2 = TRUE AND $8 > 0 THEN $8
+					ELSE NULL
+				END
+			), 
+			address_target = (
+				CASE 
+					WHEN $2 = FALSE THEN a.address_target
+					WHEN $2 = TRUE AND LENGTH($9) > 0 THEN $9
+					ELSE NULL
+				END
+			)
+		FROM users u
+		NATURAL JOIN clients c
+		WHERE u.address_id = a.address_id AND c.client_id = $1
+		RETURNING a.address_id
+	),
+	updated_user AS (
+		UPDATE users u SET
+			user_main_contact = (
+				CASE 
+					WHEN LENGTH($10) > 0 THEN $10 ELSE u.user_main_contact 
+				END
+			), 
+			user_second_contact = (
+				CASE 
+					WHEN LENGTH($11) > 0 THEN $11 ELSE u.user_second_contact 
+				END
+			), 
+			user_first_name = (
+				CASE 
+					WHEN LENGTH($12) > 0 THEN $12 ELSE u.user_first_name 
+				END
+			), 
+			user_last_name = (
+				CASE 
+					WHEN LENGTH($13) > 0 THEN $13 ELSE u.user_last_name 
+				END
+			), 
+			user_birth_date = (
+				CASE 
+					WHEN LENGTH($14) > 0 THEN TO_DATE($14, 'YYYY-MM-DD') ELSE u.user_birth_date 
+				END
+			), 
+			user_gender = (
+				CASE 
+					WHEN $15 > 0 THEN $15 ELSE u.user_gender 
+				END
+			), 
+			branch_id = (
+				CASE 
+					WHEN r.branch_id IS NOT NULL THEN r.branch_id ELSE u.branch_id 
+				END
+			)
+		FROM address a
+		NATURAL JOIN clients c
+		LEFT JOIN regions r ON r.region_id = $4
+		WHERE c.client_id = $1 AND a.address_id = u.address_id
+	) 
+	UPDATE clients c SET
+		client_status = (
+			CASE 
+				WHEN $16 > 0 THEN $16 ELSE c.client_status 
+			END
+		), 
+		client_summary = (
+			CASE 
+				WHEN LENGTH($17) > 0 THEN $17 ELSE c.client_summary 
+			END
+		)
+	WHERE c.client_id = $1
+	RETURNING *,
+	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+`
+
+
 export default {
+	CHANGE_CLIENT,
 	ADD_CLIENT,
 	CLIENTS,
 }

@@ -13,23 +13,23 @@ const Query = {
 }
 
 const neighborhood = ({ neighborhoodId }) => {
-	return fetch(NeighborhoodQuery.NEIGHBORHOODS, 0, neighborhoodId)
+	return neighborhoodId && fetch(NeighborhoodQuery.NEIGHBORHOODS, 0, neighborhoodId)
 }
 
 const region = ({ regionId }) => {
-	return fetch(RegionQuery.REGIONS, 0, regionId)
+	return regionId && fetch(RegionQuery.REGIONS, 0, regionId)
 }
 
 const street = ({ streetId }) => {
-	return fetch(StreetQuery.STREETS, 0, 0, streetId)
+	return streetId && fetch(StreetQuery.STREETS, 0, 0, streetId)
 }
 
 const state = ({ stateId }) => {
-	return fetch(StateQuery.STATES, stateId)
+	return stateId && fetch(StateQuery.STATES, stateId)
 }
 
 const area = ({ areaId }) => {
-	return fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
+	return areaId && fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
 }
 
 const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) => {
@@ -40,31 +40,31 @@ const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) =>
 	} )
 }
 
-const addresses = ({ addressField, addressFilter = {} }) => {
+const addresses = ({ addressField, addressFilter }) => {
 	switch(addressField) {
 		case 'state': {
 			const { state = {} } = addressFilter
-			const { stateId = 0 } = state
+			const { stateId } = state
 			return fetchAll(StateQuery.DISABLED_STATES, stateId)
 		}
 		case 'region': {
 			const { region = {} } = addressFilter
-			const { stateId = 0, regionId = 0 } = region
+			const { stateId, regionId } = region
 			return fetchAll(RegionQuery.DISABLED_REGIONS, stateId, regionId)
 		}
 		case 'neighborhood': {
 			const { neighborhood = {} } = addressFilter
-			const { regionId = 0, neighborhoodId = 0 } = neighborhood
+			const { regionId, neighborhoodId } = neighborhood
 			return fetchAll(NeighborhoodQuery.DISABLED_NEIGHBORHOODS, regionId, neighborhoodId)
 		}
 		case 'street': {
 			const { street = {} } = addressFilter
-			const { regionId = 0, neighborhoodId = 0, streetId = 0 } = street
+			const { regionId, neighborhoodId, streetId } = street
 			return fetchAll(StreetQuery.DISABLED_STREETS, regionId, neighborhoodId, streetId)
 		}
 		case 'area': {
 			const { area = {} } = addressFilter
-			const { regionId = 0, neighborhoodId = 0, streetId = 0, areaId = 0 } = area
+			const { regionId, neighborhoodId, streetId, areaId } = area
 			return fetchAll(AreaQuery.DISABLED_AREAS, regionId, neighborhoodId, streetId, areaId)
 		}
 	}

@@ -88,8 +88,16 @@ create table street_areas (
 	street_area_deleted_at timestamptz default null
 );
 
-
 -- USER SYSTEM MODULE
+-- analitics
+drop table if exists social_sets cascade;
+create table social_sets (
+	social_set_id serial not null primary key,
+	social_set_name character varying(30) not null,
+	social_set_icon text not null,
+	social_set_created_at timestamptz default current_timestamp
+);
+
 -- 11. addresses ( table for storing user and order adresses ) 
 drop table if exists addresses cascade;
 create table addresses (
@@ -103,15 +111,6 @@ create table addresses (
 	address_target text,
 	address_created_at timestamptz default current_timestamp,
 	address_deleted_at timestamptz default null
-);
-
--- analitics
-drop table if exists social_sets cascade;
-create table social_sets (
-	social_set_id serial not null primary key,
-	social_set_name character varying(30) not null,
-	social_set_icon text not null,
-	social_set_created_at timestamptz default current_timestamp
 );
 
 -- 12. users ( general info for staffs and clients )

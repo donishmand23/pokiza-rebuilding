@@ -6,7 +6,6 @@ export default {
 		addClient: async (_, args) => {
 			try {
 				const newClient = await clientModel.addClient(args)
-				console.log(newClient)
 				if(newClient) {
 					return {
 						status: 200,
@@ -15,7 +14,20 @@ export default {
 					}
 				} else throw new Error("Mijoz qo'shishda muammolik yuz berdi!")
 			} catch(error) { return mError(error) }
-		}
+		},
+
+		changeClient: async (_, args) => {
+			try {
+				const updatedClient = await clientModel.changeClient(args)
+				if(updatedClient) {
+					return {
+						status: 200,
+						message: "Yangi mijoz ma'lumotlari yangilandi!'",
+						data: updatedClient
+					}
+				} else throw new Error("Mijoz ma'lumotlarini yangilashda muammolik yuz berdi!")
+			} catch(error) { return mError(error) }
+		},
 	},
 
 	Query: {
@@ -36,6 +48,6 @@ export default {
 		clientSummary:   global => global.client_summary,
 		clientCreatedAt: global => global.client_created_at,
 		clientInfo:      global => clientModel.user({ userId: global.user_id }),
-		clientFrom:      global => clientModel.socialSet({ socialSetId: global.social_set_id }),
+		socialSet:       global => clientModel.socialSet({ socialSetId: global.social_set_id }),
 	}
 }

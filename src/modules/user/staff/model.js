@@ -14,7 +14,7 @@ const staffs = ({
 	const { page, limit } = pagination
 	const { age, gender, branchId } = userInfoFilter
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
-	const sortNameValues = { firstName: 1, lastName: 2, age: 3, userJoinedAt: 4, staffId: 5, staffCreatedAt: 6 }
+	const sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
 
 	const sortObject = Object.keys(sort).map( key => {
 		if(sort[key]) {
@@ -27,7 +27,7 @@ const staffs = ({
 		(page - 1) * limit, limit,
 		staffId, [age.from, age.to], gender, branchId, userSearch,
 		stateId, regionId, neighborhoodId, streetId, areaId,
-		sortObject?.sortKey || 5, sortObject?.value || 1
+		sortObject?.sortKey || 4, sortObject?.value || 1
 	)
 }
 

@@ -67,15 +67,13 @@ const STAFFS = `
 	(CASE WHEN $13 = 1 AND $14 = 1 THEN u.user_first_name END) DESC,
 	(CASE WHEN $13 = 2 AND $14 = 1 THEN u.user_last_name END) DESC,
 	(CASE WHEN $13 = 3 AND $14 = 1 THEN u.user_birth_date END) ASC,
-	(CASE WHEN $13 = 4 AND $14 = 1 THEN u.user_created_at END) ASC,
-	(CASE WHEN $13 = 5 AND $14 = 1 THEN s.staff_id END) DESC,
-	(CASE WHEN $13 = 6 AND $14 = 1 THEN s.staff_created_at END) DESC,
+	(CASE WHEN $13 = 4 AND $14 = 1 THEN s.staff_id END) DESC,
+	(CASE WHEN $13 = 5 AND $14 = 1 THEN s.staff_created_at END) DESC,
 	(CASE WHEN $13 = 1 AND $14 = 2 THEN u.user_first_name END) ASC,
 	(CASE WHEN $13 = 2 AND $14 = 2 THEN u.user_last_name END) ASC,
 	(CASE WHEN $13 = 3 AND $14 = 2 THEN u.user_birth_date END) DESC,
-	(CASE WHEN $13 = 4 AND $14 = 2 THEN u.user_created_at END) DESC,
-	(CASE WHEN $13 = 5 AND $14 = 2 THEN s.staff_id END) ASC,
-	(CASE WHEN $13 = 6 AND $14 = 2 THEN s.staff_created_at END) ASC
+	(CASE WHEN $13 = 4 AND $14 = 2 THEN s.staff_id END) ASC,
+	(CASE WHEN $13 = 5 AND $14 = 2 THEN s.staff_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 

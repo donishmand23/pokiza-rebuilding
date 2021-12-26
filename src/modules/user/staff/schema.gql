@@ -1,10 +1,10 @@
 type Query {
 	staffs(
-		staffId: ID = 0
-		userSearch: String = ""
-		sort: StaffSort = {}
+		staffId: ID
+		userSearch: String
+		sort: UserSort = {}
 		pagination: Pagination = {} 
-		addressFilter: UserAddress = {}
+		addressFilter: UserAddressFilter = {}
 		userInfoFilter: UserInfoFilter = {}
 	): [Staff!]!
 }
@@ -15,13 +15,4 @@ type Staff {
 	staffImg: Link
 	staffInfo: UserInfo!
 	staffCreatedAt: DateTime!
-}
-
-input StaffSort {
-	staffId: SortOptions = 0
-	firstName: SortOptions = 0
-	lastName: SortOptions = 0
-	age: SortOptions = 0
-	staffCreatedAt: SortOptions = 0
-	userJoinedAt: SortOptions = 0
 }

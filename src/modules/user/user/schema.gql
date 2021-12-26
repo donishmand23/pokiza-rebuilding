@@ -14,16 +14,25 @@ type UserInfo {
 
 input UserInfoFilter {
 	age: Dual = {}
-	gender: Gender = 0
-	branchId: [ID!] = []
+	gender: Gender
+	branchId: [ID!]
 }
 
-input UserAddress {
-	stateId: [ID!] = []
-	regionId: [ID!] = []
-	neighborhoodId: [ID!] = []
-	streetId: [ID!] = []
-	areaId: [ID!] = []
+input UserInfoInput {
+	firstName: String
+	lastName: String
+	mainContact: Contact
+	secondContact: Contact
+	birthDate: Date
+	gender: Gender
+}
+
+input UserAddressFilter {
+	stateId: [ID!]
+	regionId: [ID!]
+	neighborhoodId: [ID!]
+	streetId: [ID!]
+	areaId: [ID!]
 }
 
 input UserAddressInput {
@@ -36,10 +45,10 @@ input UserAddressInput {
 	target: String
 }
 
-input UserInfoInput {
-	firstName: String!
-	lastName: String
-	secondContact: Contact
-	birthDate: Date!
-	gender: Gender!
+input UserSort {
+	userId: SortOptions
+	firstName: SortOptions
+	lastName: SortOptions
+	age: SortOptions
+	userCreatedAt: SortOptions
 }

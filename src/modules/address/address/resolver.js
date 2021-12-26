@@ -50,11 +50,11 @@ export default {
 		addressHomeNumber: global => global.address_home_number,
 		addressTarget:     global => global.address_target, 
 		addressCreatedAt:  global => global.address_created_at,
-		neighborhood:async global => addressModel.neighborhood({ neighborhoodId: global.neighborhood_id }), 
-		region:      async global => addressModel.region({ regionId: global.region_id }),
-		street:      async global => addressModel.street({ streetId: global.street_id }), 
-		state:       async global => addressModel.state({ stateId: global.state_id }),
-		area:        async global => addressModel.area({ areaId: global.area_id }), 
+		neighborhood:      global => addressModel.neighborhood({ neighborhoodId: global.neighborhood_id }), 
+		region:            global => addressModel.region({ regionId: global.region_id }),
+		street:            global => addressModel.street({ streetId: global.street_id }), 
+		state:             global => addressModel.state({ stateId: global.state_id }),
+		area:              global => addressModel.area({ areaId: global.area_id }), 
 	},
 
 	AddressTypes: {

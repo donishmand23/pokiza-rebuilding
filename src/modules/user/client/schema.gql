@@ -1,12 +1,12 @@
 type Query {
 	clients(
-		clientId: ID = 0
-		userSearch: String = ""
-		socialSetId: [ID!] = []
-		clientStatus: [Int!] = []
-		sort: ClientSort = {}
+		clientId: ID
+		userSearch: String
+		socialSetId: [ID!]
+		clientStatus: [Int!]
+		sort: UserSort = {}
 		pagination: Pagination = {} 
-		addressFilter: UserAddress = {}
+		addressFilter: UserAddressFilter = {}
 		userInfoFilter: UserInfoFilter = {}
 	): [Client!]!
 }
@@ -15,29 +15,27 @@ type Mutation {
 	addClient(
 		mainContact: Contact!
 		socialSetId: ID!
-		clientStatus: Int = 1
+		clientStatus: Int
 		clientSummary: String
 		userInfo: UserInfoInput! 
 		userAddress: UserAddressInput!
-	): MutationResponse
+	): MutationResponse!
+
+	changeClient(
+		clientId: ID!
+		clientStatus: Int
+		clientSummary: String
+		userInfo: UserInfoInput = {}
+		userAddress: UserAddressInput = {}
+	): MutationResponse!
 }
 
 type Client {
 	clientId: ID!
 	clientStatus: Int!
 	clientSummary: String
-	clientFrom: SocialSet!
+	socialSet: SocialSet!
 	clientInfo: UserInfo!
 	count: Int!
 	clientCreatedAt: DateTime!
-}
-
-input ClientSort {
-	clientId: SortOptions = 0
-	firstName: SortOptions = 0
-	lastName: SortOptions = 0
-	clientStatus: SortOptions = 0
-	age: SortOptions = 0
-	clientCreatedAt: SortOptions = 0
-	userJoinedAt: SortOptions = 0
 }
