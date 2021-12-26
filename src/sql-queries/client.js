@@ -5,6 +5,7 @@ const CLIENTS = `
 		c.client_summary,
 		c.social_set_id,
 		c.user_id,
+		count(*) OVER() as full_count,
 		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 	FROM clients c
 	NATURAL JOIN users u
@@ -74,20 +75,20 @@ const CLIENTS = `
 		ELSE TRUE
 	END
 	ORDER BY 
-	(CASE WHEN $15 = 1 AND $16 = 1 THEN u.user_first_name END) ASC,
-	(CASE WHEN $15 = 2 AND $16 = 1 THEN u.user_last_name END) ASC,
+	(CASE WHEN $15 = 1 AND $16 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $15 = 2 AND $16 = 1 THEN u.user_last_name END) DESC,
 	(CASE WHEN $15 = 3 AND $16 = 1 THEN u.user_birth_date END) ASC,
 	(CASE WHEN $15 = 4 AND $16 = 1 THEN u.user_created_at END) ASC,
-	(CASE WHEN $15 = 5 AND $16 = 1 THEN c.client_id END) ASC,
-	(CASE WHEN $15 = 6 AND $16 = 1 THEN c.client_status END) ASC,
-	(CASE WHEN $15 = 7 AND $16 = 1 THEN c.client_created_at END) ASC,
-	(CASE WHEN $15 = 1 AND $16 = 2 THEN u.user_first_name END) DESC,
-	(CASE WHEN $15 = 2 AND $16 = 2 THEN u.user_last_name END) DESC,
+	(CASE WHEN $15 = 5 AND $16 = 1 THEN c.client_id END) DESC,
+	(CASE WHEN $15 = 6 AND $16 = 1 THEN c.client_status END) DESC,
+	(CASE WHEN $15 = 7 AND $16 = 1 THEN c.client_created_at END) DESC,
+	(CASE WHEN $15 = 1 AND $16 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $15 = 2 AND $16 = 2 THEN u.user_last_name END) ASC,
 	(CASE WHEN $15 = 3 AND $16 = 2 THEN u.user_birth_date END) DESC,
 	(CASE WHEN $15 = 4 AND $16 = 2 THEN u.user_created_at END) DESC,
-	(CASE WHEN $15 = 5 AND $16 = 2 THEN c.client_id END) DESC,
-	(CASE WHEN $15 = 6 AND $16 = 2 THEN c.client_status END) DESC,
-	(CASE WHEN $15 = 7 AND $16 = 2 THEN c.client_created_at END) DESC
+	(CASE WHEN $15 = 5 AND $16 = 2 THEN c.client_id END) ASC,
+	(CASE WHEN $15 = 6 AND $16 = 2 THEN c.client_status END) ASC,
+	(CASE WHEN $15 = 7 AND $16 = 2 THEN c.client_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 

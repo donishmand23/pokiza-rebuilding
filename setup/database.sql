@@ -136,6 +136,7 @@ create table users (
 drop table if exists staffs cascade;
 create table staffs (
 	staff_id bigserial not null primary key,
+	staff_img text,
 	user_id bigint not null references users (user_id),
 	staff_created_at timestamptz default current_timestamp,
 	staff_deleted_at timestamptz default null

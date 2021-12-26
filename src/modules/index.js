@@ -13,6 +13,7 @@ import SocialSetModule from './extra/social-set/index.js'
 // user modules
 import UserModule from './user/user/index.js'
 import ClientModule from './user/client/index.js'
+import StaffModule from './user/staff/index.js'
 
 export default {
 	typeDefs: [
@@ -27,8 +28,9 @@ export default {
   		// extra
   		SocialSetModule.typeDefs,
   		// user
-  		ClientModule.typeDefs,
   		UserModule.typeDefs,
+  		ClientModule.typeDefs,
+  		StaffModule.typeDefs,
 
 	],
 	resolvers: [
@@ -43,7 +45,8 @@ export default {
   		// extra
   		SocialSetModule.resolvers,
   		// user
-  		ClientModule.resolvers,
   		UserModule.resolvers,
+  		ClientModule.resolvers,
+  		StaffModule.resolvers,
 	]
 }

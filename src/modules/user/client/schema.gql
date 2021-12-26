@@ -5,12 +5,11 @@ type Query {
 		socialSetId: [ID!] = []
 		clientStatus: [Int!] = []
 		sort: ClientSort = {}
-		pagination: Pagination = {}
+		pagination: Pagination = {} 
 		addressFilter: UserAddress = {}
 		userInfoFilter: UserInfoFilter = {}
 	): [Client!]!
 }
-
 
 type Client {
 	clientId: ID!
@@ -18,6 +17,7 @@ type Client {
 	clientSummary: String
 	clientFrom: SocialSet!
 	clientInfo: UserInfo!
+	count: Int!
 	clientCreatedAt: DateTime!
 }
 

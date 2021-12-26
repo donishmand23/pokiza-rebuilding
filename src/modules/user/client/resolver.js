@@ -15,6 +15,7 @@ export default {
 	
 	Client: {
 		clientId:        global => global.client_id,
+		count:           global => global.full_count,
 		clientStatus:    global => global.client_status,
 		clientSummary:   global => global.client_summary,
 		clientCreatedAt: global => global.client_created_at,

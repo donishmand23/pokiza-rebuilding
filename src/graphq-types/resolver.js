@@ -183,6 +183,9 @@ export default {
 			if(obj.client_id && obj.client_status && obj.client_created_at && obj.client_summary) {
 				return 'Client'
 			}
+			if(obj.staff_id && obj.staff_created_at) {
+				return 'Staff'
+			}
 		}
 	}
 }

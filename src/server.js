@@ -1,11 +1,12 @@
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { ApolloServer } from 'apollo-server-express'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginDrainHttpServer
 } from 'apollo-server-core'
-import { ApolloServer } from 'apollo-server-express'
-import { makeExecutableSchema } from '@graphql-tools/schema'
 import express from 'express'
 import http from 'http'
+import path from 'path'
 import { PORT } from '#config'
 
 
@@ -22,6 +23,8 @@ const schema = makeExecutableSchema({
 ;(async () => {
     const app = express()
     const httpServer = http.createServer(app)
+
+    app.use('/data/uploads', express.static( path.join(process.cwd(), 'uploads') ))
     
     const server = new ApolloServer({
         schema,

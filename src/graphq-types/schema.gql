@@ -7,11 +7,13 @@ scalar Contact
 
 # simple scalars that do not have type check
 scalar Any
+scalar Link
+
 
 
 # unions
 union BigTypes = Branch | State | Region | Neighborhood | Street | Area | 
-				 SocialSet
+				 SocialSet | Client | Staff
 
 
 #enums

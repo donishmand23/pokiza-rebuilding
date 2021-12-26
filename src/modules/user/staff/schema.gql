@@ -1,0 +1,27 @@
+type Query {
+	staffs(
+		staffId: ID = 0
+		userSearch: String = ""
+		sort: StaffSort = {}
+		pagination: Pagination = {} 
+		addressFilter: UserAddress = {}
+		userInfoFilter: UserInfoFilter = {}
+	): [Staff!]!
+}
+
+type Staff {
+	satffId: ID!
+	count: Int!
+	staffImg: Link
+	staffInfo: UserInfo!
+	staffCreatedAt: DateTime!
+}
+
+input StaffSort {
+	staffId: SortOptions = 0
+	firstName: SortOptions = 0
+	lastName: SortOptions = 0
+	age: SortOptions = 0
+	staffCreatedAt: SortOptions = 0
+	userJoinedAt: SortOptions = 0
+}
