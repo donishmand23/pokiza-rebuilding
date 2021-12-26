@@ -25,3 +25,21 @@ input UserAddress {
 	streetId: [ID!] = []
 	areaId: [ID!] = []
 }
+
+input UserAddressInput {
+	stateId: ID!
+	regionId: ID!
+	neighborhoodId: ID
+	streetId: ID
+	areaId: ID
+	homeNumber: Int
+	target: String
+}
+
+input UserInfoInput {
+	firstName: String!
+	lastName: String
+	secondContact: Contact
+	birthDate: Date!
+	gender: Gender!
+}

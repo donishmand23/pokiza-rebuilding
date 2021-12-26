@@ -11,6 +11,17 @@ type Query {
 	): [Client!]!
 }
 
+type Mutation {
+	addClient(
+		mainContact: Contact!
+		socialSetId: ID!
+		clientStatus: Int = 1
+		clientSummary: String
+		userInfo: UserInfoInput! 
+		userAddress: UserAddressInput!
+	): MutationResponse
+}
+
 type Client {
 	clientId: ID!
 	clientStatus: Int!

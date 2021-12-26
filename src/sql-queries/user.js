@@ -19,7 +19,13 @@ const USERS = `
 	END
 `
 
+const CHECK_USER_CONTACT = `
+	SELECT user_id
+	FROM users WHERE user_main_contact = $1
+`
+
 
 export default {
+	CHECK_USER_CONTACT,
 	USERS
 }

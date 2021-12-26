@@ -92,7 +92,33 @@ const CLIENTS = `
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
+const ADD_CLIENT = `
+	WITH 
+	address AS (
+		INSERT INTO addresses (
+			state_id, region_id, neighborhood_id, street_id, 
+			area_id, address_home_number, address_target
+		) VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING address_id
+	),
+	new_user AS (
+		INSERT INTO users (
+			user_main_contact, user_second_contact, user_first_name, 
+			user_last_name, user_birth_date, user_gender, 
+			branch_id, address_id
+		) SELECT $8, $9, $10, $11, $12, $13, r.branch_id, a.address_id
+		FROM address a
+		LEFT JOIN regions r ON r.region_id = $2
+		RETURNING user_id
+	)
+	INSERT INTO clients (
+		social_set_id, client_status, client_summary, user_id
+	) SELECT $14, $15, $16, u.user_id FROM new_user u
+	RETURNING *,
+	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+`
 
 export default {
+	ADD_CLIENT,
 	CLIENTS,
 }

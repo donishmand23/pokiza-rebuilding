@@ -180,7 +180,7 @@ export default {
 			if(obj.social_set_id && obj.social_set_name && obj.social_set_created_at) {
 				return 'SocialSet'
 			}
-			if(obj.client_id && obj.client_status && obj.client_created_at && obj.client_summary) {
+			if(obj.client_id && obj.client_status && obj.client_created_at) {
 				return 'Client'
 			}
 			if(obj.staff_id && obj.staff_created_at) {
