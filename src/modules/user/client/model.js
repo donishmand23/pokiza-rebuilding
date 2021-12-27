@@ -1,9 +1,5 @@
+import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
-import StateQuery from '#sql/state'
-import RegionQuery from '#sql/region'
-import NeighborhoodQuery from '#sql/neighborhood'
-import StreetQuery from '#sql/street'
-import AreaQuery from '#sql/area'
 import ClientQuery from '#sql/client'
 import SocialSetQuery from '#sql/socialSet'
 import UserQuery from '#sql/user'
@@ -52,6 +48,7 @@ const addClient = async ({ mainContact, socialSetId, clientStatus, clientSummary
 	const { firstName, lastName, secondContact, birthDate, gender } = userInfo
 
 	await checkContact(mainContact)
+	await checkUserInfo(userInfo)
 	await checkAddress(userAddress)
 
 	return fetch(
@@ -77,61 +74,11 @@ const changeClient = async ({ clientId, clientStatus = 0, clientSummary, userInf
 	)
 }
 
+
 export default {
 	changeClient,
 	addClient,
 	socialSet,
 	clients,
 	user
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function checkContact (mainContact) {
-	const user = await fetch(UserQuery.CHECK_USER_CONTACT, mainContact)
-	if(user) {
-		throw new Error(`${mainContact} allaqachon ro'yxatdan o'tazilgan!`)
-	}
-}
-
-async function checkAddress (userAddress) {
-	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
-
-	const state = await fetch(StateQuery.STATES, stateId)
-	if(!state) {
-		throw new Error("Kiritilgan viloyat mavjud emas!")
-	}
-
-	const region = await fetch(RegionQuery.REGIONS, stateId, regionId)
-	if(!region) {
-		throw new Error("Kiritilgan tumam kiritilgan viloyatga qarashli emas!")
-	}
-
-	if(neighborhoodId) {
-		const neighborhood = await fetch(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId)
-		if(!neighborhood) throw new Error("Kiritilgan mahalla kiritilgan tumanga qarashli emas!")
-	}
-
-	if(!neighborhoodId && streetId) throw new Error("Ko'chani kirgazish uchun avval mahallani kiritish zarur!")
-	if(streetId) {
-		const street = await fetch(StreetQuery.STREETS, regionId, neighborhoodId, streetId)
-		if(!street) throw new Error("Kiritilgan ko'cha kiritilgan mahallaga qarashli emas!")
-	}
-
-	if(!streetId && areaId) throw new Error("Hududni kirgazish uchun avval ko'chani kiritish zarur!")
-	if(areaId) {
-		const area = await fetch(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId)
-		if(!area) throw new Error("Kiritilgan hudud kiritilgan ko'chaga qarashli emas!")
-	}
 }

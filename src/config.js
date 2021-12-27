@@ -1,11 +1,6 @@
 // import dotenv from 'dotenv'
 // dotenv.config()	
 
-const PAGINATION = {
-	page: 1,
-	limit: 1000
-}
-
 const PORT = process.env.PORT || 4000
 
 // const PG = {
@@ -26,7 +21,6 @@ const JWT = {
 }
 
 export {
-	PAGINATION,
 	PORT,
 	PG,
 	JWT

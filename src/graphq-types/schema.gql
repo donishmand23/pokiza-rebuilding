@@ -1,19 +1,19 @@
 # scalars that have type check
+scalar Upload
 scalar DateTime
 scalar Date
 scalar ID
 scalar SVG
 scalar Contact
+scalar Password
 
 # simple scalars that do not have type check
 scalar Any
 scalar Link
 
 
-
 # unions
-union BigTypes = Branch | State | Region | Neighborhood | Street | Area | 
-				 SocialSet | Client | Staff
+union BigTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
 
 
 #enums

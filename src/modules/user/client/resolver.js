@@ -22,7 +22,7 @@ export default {
 				if(updatedClient) {
 					return {
 						status: 200,
-						message: "Yangi mijoz ma'lumotlari yangilandi!'",
+						message: "Mijoz ma'lumotlari yangilandi!'",
 						data: updatedClient
 					}
 				} else throw new Error("Mijoz ma'lumotlarini yangilashda muammolik yuz berdi!")

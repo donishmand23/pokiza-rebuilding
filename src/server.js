@@ -1,5 +1,6 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ApolloServer } from 'apollo-server-express'
+import { graphqlUploadExpress } from 'graphql-upload'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginDrainHttpServer
@@ -24,6 +25,7 @@ const schema = makeExecutableSchema({
     const app = express()
     const httpServer = http.createServer(app)
 
+    app.use(graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 1 }))
     app.use('/data/uploads', express.static( path.join(process.cwd(), 'uploads') ))
     
     const server = new ApolloServer({
@@ -45,7 +47,6 @@ const schema = makeExecutableSchema({
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
 })()
-
 
 
 

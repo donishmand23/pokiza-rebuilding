@@ -9,10 +9,33 @@ type Query {
 	): [Staff!]!
 }
 
+type Mutation {
+	addStaff(
+		mainContact: Contact!
+		password: Password!
+		branchId: ID!
+		file: Upload
+		staffSummary: String
+		userInfo: UserInfoInput! 
+		userAddress: UserAddressInput!
+	): MutationResponse!
+
+	changeStaff(
+		staffId: ID!
+		password: Password
+		branchId: ID
+		file: Upload
+		staffSummary: String
+		userInfo: UserInfoInput = {}
+		userAddress: UserAddressInput = {}
+	): MutationResponse!
+}
+
 type Staff {
 	satffId: ID!
 	count: Int!
 	staffImg: Link
+	staffSummary: String
 	staffInfo: UserInfo!
 	staffCreatedAt: DateTime!
 }

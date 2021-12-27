@@ -250,9 +250,10 @@ insert into users (user_main_contact, user_second_contact, user_password, user_f
 
 
 -- staffs (xodimlar)
-insert into staffs (user_id, staff_img) values (1, 'https://pokiza-rebuilding.herokuapp.com/data/uploads/abdulhakim.jpg');
-insert into staffs (user_id, staff_img) values (2, 'https://pokiza-rebuilding.herokuapp.com/data/uploads/hadicha.jpg');
-insert into staffs (user_id, staff_img) values (3, 'https://pokiza-rebuilding.herokuapp.com/data/uploads/sardor.jpg');
-insert into staffs (user_id, staff_img) values (6, 'https://pokiza-rebuilding.herokuapp.com/data/uploads/alisher.jpg');
+insert into staffs (user_id, staff_img, staff_summary) values 
+(1, '/data/uploads/abdulhakim.jpg', 'super admin'),
+(2, '/data/uploads/hadicha.jpg', 'Yuvuvchi. Yaxshi ishchi'),
+(3, '/data/uploads/sardor.jpg', null),
+(6, '/data/uploads/alisher.jpg', 'Ajoyib xodim');
 
 

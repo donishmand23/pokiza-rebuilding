@@ -1,4 +1,5 @@
 import { GraphQLScalarType, Kind } from 'graphql'
+import { GraphQLUpload } from 'graphql-upload'
 
 // DateTime scalar
 const dateTimeScalar = new GraphQLScalarType({
@@ -139,14 +140,42 @@ function checkContact (value) {
 }
 
 
+// Password scalar
+const passwordScalar = new GraphQLScalarType({
+	name: 'Password',
+	description: 'Password custom scalar type',
+	serialize: checkPassword,
+	parseValue: checkPassword,
+	parseLiteral(ast) {
+		if (ast.kind === Kind.STRING) {
+	      	return checkPassword(ast.value)
+  		} else {
+  			throw new Error('Password type must be a string!"')
+  		}
+	},
+})
+
+function checkPassword (value) {
+	if(!(typeof(value) === 'string')) throw new Error("Password type must be a string")
+	if(value.length > 20) throw new Error("Password must not be more than twenty characters!")
+	if(value.length < 5) throw new Error("Password must not be less than 5 characters!")
+	if(!(/[A-z]/).test(value)) throw new Error("Password must include at least one letter!")
+	if(!(/[1-9]/).test(value)) throw new Error("Password must include at least one number!")
+	if(!(/[@$!%*#?&]/).test(value)) throw new Error("Password must include at least one special character!")
+	return value
+}
+
+
 
 export default {
+	Upload: GraphQLUpload,
 	DateTime: dateTimeScalar,
 	Date: dateScalar,
 	ID: idScalar,
 	SVG: svgScalar,
 	Contact: contactScalar,
-
+	Password: passwordScalar,
+	
 	Gender: {
 		male: 1,
 		female: 2
