@@ -10,6 +10,8 @@ import http from 'http'
 import path from 'path'
 import { PORT } from '#config'
 
+import os from 'os'
+    console.log(os.networkInterfaces())
 
 // loading modules
 import modules from '#modules/index.js'
@@ -43,6 +45,7 @@ const schema = makeExecutableSchema({
         app,
         path: '/graphql',
     })
+
 
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
