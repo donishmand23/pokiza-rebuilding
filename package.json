@@ -19,7 +19,8 @@
         "express": "^4.17.2",
         "graphql": "^15.8.0",
         "graphql-upload": "^13.0.0",
-        "pg": "^8.7.1"
+        "pg": "^8.7.1",
+        "stream": "^0.0.2"
     },
     "imports": {
         "#modules/*": "./src/modules/*",
