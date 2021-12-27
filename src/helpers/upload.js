@@ -1,4 +1,4 @@
-import { finished } from 'stream/promises'
+import { finished } from 'stream'
 import path from 'path'
 import fs from 'fs'
 
