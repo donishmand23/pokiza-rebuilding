@@ -1,9 +1,11 @@
+import { fetch } from '#utils/postgres'
 import { finished } from 'stream'
+import StaffQuery from '#sql/staff'
 import path from 'path'
 import fs from 'fs'
 
 export default async (args) => {
-	if(args.file) {
+	if(args?.file) {
 		const { createReadStream, filename, mimetype, encoding } = await args.file
 
 		const allowedMimetypes = {
@@ -22,7 +24,13 @@ export default async (args) => {
 		const out = fs.createWriteStream(filePath)
       	stream.pipe(out)
       	await finished(out)
-      	args.file = '/data/uploads/' + fileName
+      	args.file = fileName
+
+      	if(args.staffId) {
+      		const oldFile = fetch(StaffQuery.STAFF_PHOTO, args.staffId)
+      		if(oldFile.staff_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.staff_img))
+      	}
+
       	return
 	} else return
 }

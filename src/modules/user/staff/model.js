@@ -60,8 +60,28 @@ const changeStaff = async ({ staffId, password, branchId, file, staffSummary, us
 	)
 }
 
+const deleteStaff = async ({ staffId }) => {
+	const deletedStaffs = []
+	for(let id of staffId) {
+		const deletedStaff = await fetch(StaffQuery.DELETE_STAFF, id)
+		if(deletedStaff) deletedStaffs.push(deletedStaff)
+	}
+	return deletedStaffs
+}
+
+const restoreStaff = async ({ staffId }) => {
+	const restoredStaffs = []
+	for(let id of staffId) {
+		const restoredStaff = await fetch(StaffQuery.RESTORE_STAFF, id)
+		if(restoredStaff) restoredStaffs.push(restoredStaff)
+	}
+	return restoredStaffs
+}
+
 
 export default {
+	restoreStaff,
+	deleteStaff,
 	changeStaff,
 	addStaff,
 	staffs,

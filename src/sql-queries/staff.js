@@ -160,7 +160,8 @@ const CHANGE_STAFF = `
 			)
 		FROM users u
 		NATURAL JOIN staffs s
-		WHERE u.address_id = a.address_id AND s.staff_id = $1
+		WHERE s.staff_deleted_at IS NULL AND
+		u.address_id = a.address_id AND s.staff_id = $1
 		RETURNING a.address_id
 	),
 	updated_user AS (
@@ -207,7 +208,8 @@ const CHANGE_STAFF = `
 			)
 		FROM address a
 		NATURAL JOIN staffs s
-		WHERE s.staff_id = $1 AND a.address_id = u.address_id
+		WHERE u.user_deleted_contact IS NULL AND
+		s.staff_id = $1 AND a.address_id = u.address_id
 		RETURNING u.user_gender
 	) 
 	UPDATE staffs s SET
@@ -222,15 +224,64 @@ const CHANGE_STAFF = `
 			END
 		)
 	FROM updated_user u
-	WHERE s.staff_id = $1
+	WHERE s.staff_deleted_at IS NULL AND s.staff_id = $1
 	RETURNING s.*,
 	u.user_gender,
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
 
+const STAFF_PHOTO = `
+	SELECT staff_img
+	FROM staffs WHERE staff_id = $1
+`
+
+const DELETE_STAFF = `
+	WITH deleted_user AS (
+		UPDATE users u SET
+			user_deleted_contact = u.user_main_contact,
+			user_main_contact = NULL
+		FROM staffs s
+		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NULL AND
+		s.staff_id = $1
+		RETURNING u.*,
+		to_char(u.user_birth_date, 'YYYY-MM-DD') user_birth_date,
+		to_char(u.user_created_at, 'YYYY-MM-DD HH24:MI:SS') user_created_at
+	) UPDATE staffs s SET
+		staff_deleted_at = current_timestamp
+	FROM deleted_user du
+	WHERE s.staff_deleted_at IS NULL AND
+	du.user_id = s.user_id AND s.staff_id = $1
+	RETURNING s.*,
+	ROW_TO_JSON(du.*) as user,
+	du.user_gender,
+	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+`
+
+const RESTORE_STAFF = `
+	WITH restored_user AS (
+		UPDATE users u SET
+			user_deleted_contact = NULL,
+			user_main_contact = u.user_deleted_contact
+		FROM staffs s
+		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NOT NULL AND
+		s.staff_id = $1
+		RETURNING u.user_id, u.user_gender
+	) UPDATE staffs s SET
+		staff_deleted_at = NULL
+	FROM restored_user ru
+	WHERE s.staff_deleted_at IS NOT NULL AND 
+	ru.user_id = s.user_id AND s.staff_id = $1
+	RETURNING s.*,
+	ru.user_gender,
+	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+`
+
 
 export default {
+	RESTORE_STAFF,
+	DELETE_STAFF,
 	CHANGE_STAFF,
+	STAFF_PHOTO,
 	ADD_STAFF,
 	STAFFS
 }

@@ -126,7 +126,7 @@ create table users (
 	user_gender smallint check (user_gender in (1, 2)),
 	branch_id bigint references branches(branch_id),
 	address_id bigint references addresses(address_id),
-	user_deleted_at timestamptz default null,
+	user_deleted_contact character varying(12) default null,
 	user_created_at timestamptz default current_timestamp,
 	unique(user_main_contact)
 );

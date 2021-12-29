@@ -1,6 +1,6 @@
 type UserInfo {
 	userId: ID!
-	mainContact: Contact!
+	mainContact: Contact
 	secondContact: Contact
 	firstName: String!
 	lastName: String

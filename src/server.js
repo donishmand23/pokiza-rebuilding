@@ -10,8 +10,6 @@ import http from 'http'
 import path from 'path'
 import { PORT } from '#config'
 
-import os from 'os'
-    console.log(os.networkInterfaces())
 
 // loading modules
 import modules from '#modules/index.js'
@@ -53,6 +51,8 @@ const schema = makeExecutableSchema({
 
 
 
+
+
 /*
     Plan
     1. clients (filter, sort, pagination)
@@ -73,4 +73,9 @@ const schema = makeExecutableSchema({
     enterClientPassword
     registerClient
     checkPhoneNumber (contact)
+
+
+
+    orderlar chiqarilayotganda ular tegishli bolgan user o'chirilgan yoki
+    yo'qligi tekshirilsin
 */

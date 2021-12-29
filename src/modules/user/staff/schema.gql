@@ -29,6 +29,9 @@ type Mutation {
 		userInfo: UserInfoInput = {}
 		userAddress: UserAddressInput = {}
 	): MutationResponse!
+
+	deleteStaff(staffId: [ID!]): MutationResponses!
+	restoreStaff(staffId: [ID!]): MutationResponses!
 }
 
 type Staff {

@@ -12,7 +12,7 @@ const USERS = `
 		to_char(u.user_birth_date, 'YYYY-MM-DD') user_birth_date,
 		to_char(u.user_created_at, 'YYYY-MM-DD HH24:MI:SS') user_created_at
 	FROM users u
-	WHERE u.user_deleted_at IS NULL AND
+	WHERE u.user_deleted_contact IS NULL AND
 	CASE
 		WHEN $1 > 0 THEN u.user_id = $1
 		ELSE TRUE
