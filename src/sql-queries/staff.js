@@ -244,6 +244,7 @@ const DELETE_STAFF = `
 		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NULL AND
 		s.staff_id = $1
 		RETURNING u.*,
+		EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.user_birth_date)) user_age,
 		to_char(u.user_birth_date, 'YYYY-MM-DD') user_birth_date,
 		to_char(u.user_created_at, 'YYYY-MM-DD HH24:MI:SS') user_created_at
 	) UPDATE staffs s SET

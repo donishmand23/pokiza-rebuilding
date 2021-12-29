@@ -171,7 +171,8 @@ const CHANGE_CLIENT = `
 			)
 		FROM users u
 		NATURAL JOIN clients c
-		WHERE u.address_id = a.address_id AND c.client_id = $1
+		WHERE c.client_deleted_at IS NULL AND 
+		u.address_id = a.address_id AND c.client_id = $1
 		RETURNING a.address_id
 	),
 	updated_user AS (
@@ -214,7 +215,8 @@ const CHANGE_CLIENT = `
 		FROM address a
 		NATURAL JOIN clients c
 		LEFT JOIN regions r ON r.region_id = $4
-		WHERE c.client_id = $1 AND a.address_id = u.address_id
+		WHERE u.user_deleted_contact IS NULL AND 
+		c.client_id = $1 AND a.address_id = u.address_id
 	) 
 	UPDATE clients c SET
 		client_status = (
@@ -227,13 +229,58 @@ const CHANGE_CLIENT = `
 				WHEN LENGTH($17) > 0 THEN $17 ELSE c.client_summary 
 			END
 		)
-	WHERE c.client_id = $1
+	WHERE c.client_deleted_at IS NULL AND
+	c.client_id = $1
 	RETURNING *,
 	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 `
 
+const DELETE_CLIENT = `
+	WITH deleted_user AS (
+		UPDATE users u SET
+			user_deleted_contact = u.user_main_contact,
+			user_main_contact = NULL
+		FROM clients c
+		WHERE u.user_id = c.user_id AND u.user_deleted_contact IS NULL AND
+		c.client_id = $1
+		RETURNING u.*,
+		EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.user_birth_date)) user_age,
+		to_char(u.user_birth_date, 'YYYY-MM-DD') user_birth_date,
+		to_char(u.user_created_at, 'YYYY-MM-DD HH24:MI:SS') user_created_at
+	) UPDATE clients c SET
+		client_deleted_at = current_timestamp
+	FROM deleted_user du
+	WHERE c.client_deleted_at IS NULL AND
+	du.user_id = c.user_id AND c.client_id = $1
+	RETURNING c.*,
+	ROW_TO_JSON(du.*) as user,
+	du.user_gender,
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+`
+
+const RESTORE_CLIENT = `
+	WITH restored_user AS (
+		UPDATE users u SET
+			user_deleted_contact = NULL,
+			user_main_contact = u.user_deleted_contact
+		FROM clients c
+		WHERE u.user_id = c.user_id AND u.user_deleted_contact IS NOT NULL AND
+		c.client_id = $1
+		RETURNING u.user_id, u.user_gender
+	) UPDATE clients c SET
+		client_deleted_at = NULL
+	FROM restored_user ru
+	WHERE c.client_deleted_at IS NOT NULL AND 
+	ru.user_id = c.user_id AND c.client_id = $1
+	RETURNING c.*,
+	ru.user_gender,
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+`
+
 
 export default {
+	RESTORE_CLIENT,
+	DELETE_CLIENT,
 	CHANGE_CLIENT,
 	ADD_CLIENT,
 	CLIENTS,

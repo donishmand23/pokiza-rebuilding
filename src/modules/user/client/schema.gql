@@ -28,6 +28,9 @@ type Mutation {
 		userInfo: UserInfoInput = {}
 		userAddress: UserAddressInput = {}
 	): MutationResponse!
+
+	deleteClient(clientId: [ID!]): MutationResponses!
+	restoreClient(clientId: [ID!]): MutationResponses!
 }
 
 type Client {

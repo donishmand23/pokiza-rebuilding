@@ -74,8 +74,28 @@ const changeClient = async ({ clientId, clientStatus = 0, clientSummary, userInf
 	)
 }
 
+const deleteClient = async ({ clientId }) => {
+	const deletedClients = []
+	for(let id of clientId) {
+		const deletedClient = await fetch(ClientQuery.DELETE_CLIENT, id)
+		if(deletedClient) deletedClients.push(deletedClient)
+	}
+	return deletedClients
+}
+
+const restoreClient = async ({ clientId }) => {
+	const restoredClients = []
+	for(let id of clientId) {
+		const restoredClient = await fetch(ClientQuery.RESTORE_CLIENT, id)
+		if(restoredClient) restoredClients.push(restoredClient)
+	}
+	return restoredClients
+}
+
 
 export default {
+	restoreClient,
+	deleteClient,
 	changeClient,
 	addClient,
 	socialSet,
