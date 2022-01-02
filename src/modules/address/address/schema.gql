@@ -1,5 +1,5 @@
 type Query {
-	disabledAddresses(addressField: AddressType! addressFilter: AddressFilter = {}): [AddressTypes!]!
+	disabledAddresses(addressField: AddressType! addressFilter: AddFilter = {}): [AddressTypes!]!
 }
 
 type Mutation {
@@ -29,12 +29,30 @@ enum AddressType {
 
 union AddressTypes = State | Region | Neighborhood | Street | Area
 
-input AddressFilter {
+input AddFilter {
 	state: StateFilter = {}
 	region: RegionFilter = {}
 	neighborhood: NeighborhoodFilter = {}
 	street: StreetFilter = {}
 	area: AreaFilter = {}
+}
+
+input AddressFilter {
+	stateId: [ID!]
+	regionId: [ID!]
+	neighborhoodId: [ID!]
+	streetId: [ID!]
+	areaId: [ID!]
+}
+
+input AddressInput {
+	stateId: ID!
+	regionId: ID!
+	neighborhoodId: ID
+	streetId: ID
+	areaId: ID
+	homeNumber: Int
+	target: String
 }
 
 input StateFilter {

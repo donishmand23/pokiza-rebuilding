@@ -64,12 +64,21 @@ export default {
 	Query: {
 		clients: async (_, args) => {
 			try {
-				const clients = await clientModel.clients(args)
+				const clients = await clientModel.clients({ isDeleted: false, ...args })
 				return clients
 			} catch(error) {
 				throw error
 			}
-		}
+		},
+
+		deletedClients: async (_, args) => {
+			try {
+				const deletedClients = await clientModel.clients({ isDeleted: true, ...args })
+				return deletedClients
+			} catch(error) {
+				throw error
+			}
+		},
 	},
 	
 	Client: {
@@ -78,10 +87,7 @@ export default {
 		clientStatus:    global => global.client_status,
 		clientSummary:   global => global.client_summary,
 		clientCreatedAt: global => global.client_created_at,
+		clientInfo:      global => clientModel.user({ userId: global.user_id }),
 		socialSet:       global => clientModel.socialSet({ socialSetId: global.social_set_id }),
-		clientInfo:      global => {
-			if(global.user) return global.user
-			else return clientModel.user({ userId: global.user_id })
-		},
 	}
 }

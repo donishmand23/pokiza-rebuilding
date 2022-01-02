@@ -15,67 +15,71 @@ const STAFFS = `
 	LEFT JOIN neighborhoods n ON n.neighborhood_id = a.neighborhood_id
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
-	WHERE s.staff_deleted_at IS NULL AND
+	WHERE
+	CASE 
+		WHEN $3 = FALSE THEN s.staff_deleted_at IS NULL
+		WHEN $3 = TRUE THEN s.staff_deleted_at IS NOT NULL
+	END AND
 	CASE
-		WHEN $3 > 0 THEN s.staff_id = $3
+		WHEN $4 > 0 THEN s.staff_id = $4
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $4::INT[] <> ARRAY[0, 0] THEN (
+		WHEN $5::INT[] <> ARRAY[0, 0] THEN (
 			EXTRACT(
 				YEAR FROM AGE(CURRENT_DATE, u.user_birth_date)
-			)::INT BETWEEN ($4::INT[])[1] AND ($4::INT[])[2]
+			)::INT BETWEEN ($5::INT[])[1] AND ($5::INT[])[2]
 		)
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $5 = ANY(ARRAY[1, 2]) THEN u.user_gender = $5
+		WHEN $6 = ANY(ARRAY[1, 2]) THEN u.user_gender = $6
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN ARRAY_LENGTH($6::INT[], 1) > 0 THEN u.branch_id = ANY($6::INT[])
+		WHEN ARRAY_LENGTH($7::INT[], 1) > 0 THEN u.branch_id = ANY($7::INT[])
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($7) > 0 THEN (
-			u.user_first_name ILIKE CONCAT('%', $7, '%') OR
-			u.user_last_name ILIKE CONCAT('%', $7, '%') OR
-			u.user_main_contact ILIKE CONCAT('%', $7, '%') OR
-			u.user_second_contact ILIKE CONCAT('%', $7, '%') OR
-			CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $7, '%')
+		WHEN LENGTH($8) > 0 THEN (
+			u.user_first_name ILIKE CONCAT('%', $8, '%') OR
+			u.user_last_name ILIKE CONCAT('%', $8, '%') OR
+			u.user_main_contact ILIKE CONCAT('%', $8, '%') OR
+			u.user_second_contact ILIKE CONCAT('%', $8, '%') OR
+			CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $8, '%')
 		) ELSE TRUE
 	END AND
 	CASE
-		WHEN ARRAY_LENGTH($8::INT[], 1) > 0 THEN sta.state_id = ANY($8::INT[])
+		WHEN ARRAY_LENGTH($9::INT[], 1) > 0 THEN sta.state_id = ANY($9::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($9::INT[], 1) > 0 THEN r.region_id = ANY($9::INT[])
+		WHEN ARRAY_LENGTH($10::INT[], 1) > 0 THEN r.region_id = ANY($10::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($10::INT[], 1) > 0 THEN n.neighborhood_id = ANY($10::INT[]) 
+		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN n.neighborhood_id = ANY($11::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN st.street_id = ANY($11::INT[]) 
+		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN st.street_id = ANY($12::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN ar.area_id = ANY($12::INT[]) 
+		WHEN ARRAY_LENGTH($13::INT[], 1) > 0 THEN ar.area_id = ANY($13::INT[]) 
 		ELSE TRUE
 	END
 	ORDER BY 
-	(CASE WHEN $13 = 1 AND $14 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $13 = 2 AND $14 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $13 = 3 AND $14 = 1 THEN u.user_birth_date END) ASC,
-	(CASE WHEN $13 = 4 AND $14 = 1 THEN s.staff_id END) DESC,
-	(CASE WHEN $13 = 5 AND $14 = 1 THEN s.staff_created_at END) DESC,
-	(CASE WHEN $13 = 1 AND $14 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $13 = 2 AND $14 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $13 = 3 AND $14 = 2 THEN u.user_birth_date END) DESC,
-	(CASE WHEN $13 = 4 AND $14 = 2 THEN s.staff_id END) ASC,
-	(CASE WHEN $13 = 5 AND $14 = 2 THEN s.staff_created_at END) ASC
+	(CASE WHEN $14 = 1 AND $15 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $14 = 2 AND $15 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $14 = 3 AND $15 = 1 THEN u.user_birth_date END) ASC,
+	(CASE WHEN $14 = 4 AND $15 = 1 THEN s.staff_id END) DESC,
+	(CASE WHEN $14 = 5 AND $15 = 1 THEN s.staff_created_at END) DESC,
+	(CASE WHEN $14 = 1 AND $15 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $14 = 2 AND $15 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $14 = 3 AND $15 = 2 THEN u.user_birth_date END) DESC,
+	(CASE WHEN $14 = 4 AND $15 = 2 THEN s.staff_id END) ASC,
+	(CASE WHEN $14 = 5 AND $15 = 2 THEN s.staff_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
@@ -243,17 +247,13 @@ const DELETE_STAFF = `
 		FROM staffs s
 		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NULL AND
 		s.staff_id = $1
-		RETURNING u.*,
-		EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.user_birth_date)) user_age,
-		to_char(u.user_birth_date, 'YYYY-MM-DD') user_birth_date,
-		to_char(u.user_created_at, 'YYYY-MM-DD HH24:MI:SS') user_created_at
+		RETURNING u.user_id, u.user_gender
 	) UPDATE staffs s SET
 		staff_deleted_at = current_timestamp
 	FROM deleted_user du
 	WHERE s.staff_deleted_at IS NULL AND
 	du.user_id = s.user_id AND s.staff_id = $1
 	RETURNING s.*,
-	ROW_TO_JSON(du.*) as user,
 	du.user_gender,
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
@@ -277,11 +277,21 @@ const RESTORE_STAFF = `
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
 
+const LOGIN_STAFF = `
+	SELECT
+		u.user_id
+	FROM users u
+	RIGHT JOIN staffs s ON s.user_id = u.user_id
+	WHERE s.staff_deleted_at IS NULL AND
+	u.user_main_contact = $1 AND
+	u.user_password = crypt($2, user_password)
+`
 
 export default {
 	RESTORE_STAFF,
 	DELETE_STAFF,
 	CHANGE_STAFF,
+	LOGIN_STAFF,
 	STAFF_PHOTO,
 	ADD_STAFF,
 	STAFFS

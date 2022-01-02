@@ -1,5 +1,6 @@
 import staffModel from './model.js'
 import upload from '#helpers/upload'
+import { sign } from '#utils/jwt'
 import { mError } from '#helpers/error'
 
 export default {
@@ -62,17 +63,39 @@ export default {
 				return mError(error)
 			}
 		},
+
+		loginStaff: async (_, args, { agent }) => {
+			try {
+				const staff = await staffModel.loginStaff(args)
+				if(staff) {
+					return {
+						status: 200,
+						message: "Muvaffaqqiyatli login qildingiz!",
+						token: sign({ userId: staff.user_id, agent })
+					}
+				} else throw new Error("Telefon raqam yoki parol xato!")
+			} catch(error) { return mError(error) }
+		},
 	},
 
 	Query: {
 		staffs: async (_, args) => {
 			try {
-				const staffs = await staffModel.staffs(args)
+				const staffs = await staffModel.staffs({ isDeleted: false, ...args })
 				return staffs
 			} catch(error) {
 				throw error
 			}
-		}
+		},
+
+		deletedStaffs: async (_, args) => {
+			try {
+				const deletedStaffs = await staffModel.staffs({ isDeleted: true, ...args })
+				return deletedStaffs
+			} catch(error) {
+				throw error
+			}
+		},
 	},
 
 	Staff: {
@@ -80,10 +103,7 @@ export default {
 		count:          global => global.full_count,
 		staffSummary:   global => global.staff_summary,
 		staffCreatedAt: global => global.staff_created_at,
-		staffInfo:      global => {
-			if(global.user) return global.user
-			else return staffModel.user({ userId: global.user_id })
-		},
+		staffInfo:      global => staffModel.user({ userId: global.user_id }),
 		staffImg:       global => {
 			if(!global.staff_img && global.user_gender == 1) return '/data/uploads/male.jpg'
 			if(!global.staff_img && global.user_gender == 2) return '/data/uploads/female.jpg'

@@ -10,6 +10,7 @@ scalar Password
 # simple scalars that do not have type check
 scalar Any
 scalar Link
+scalar Token
 
 
 # unions
@@ -49,4 +50,10 @@ type MutationResponses {
 	status: Any!
 	message: String!
 	data: [BigTypes!]
+}
+
+type AuthResponse {
+	status: Any!
+	message: String!
+	token: Token
 }

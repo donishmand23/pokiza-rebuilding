@@ -27,24 +27,6 @@ input UserInfoInput {
 	gender: Gender
 }
 
-input UserAddressFilter {
-	stateId: [ID!]
-	regionId: [ID!]
-	neighborhoodId: [ID!]
-	streetId: [ID!]
-	areaId: [ID!]
-}
-
-input UserAddressInput {
-	stateId: ID!
-	regionId: ID!
-	neighborhoodId: ID
-	streetId: ID
-	areaId: ID
-	homeNumber: Int
-	target: String
-}
-
 input UserSort {
 	userId: SortOptions
 	firstName: SortOptions

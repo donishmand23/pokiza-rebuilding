@@ -5,6 +5,7 @@ import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginDrainHttpServer
 } from 'apollo-server-core'
+import context from './context.js'
 import express from 'express'
 import http from 'http'
 import path from 'path'
@@ -26,12 +27,13 @@ const schema = makeExecutableSchema({
     const httpServer = http.createServer(app)
 
     app.use(graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 1 }))
-    app.use('/data/uploads', express.static( path.join(process.cwd(), 'uploads') ))
+    app.use('/data/uploads', express.static(path.join(process.cwd(), 'uploads')))
     
     const server = new ApolloServer({
         schema,
         introspection: true,
         playground: true,
+        context: context,
         plugins: [
             ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerPluginDrainHttpServer({ httpServer })

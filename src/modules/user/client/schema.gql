@@ -6,7 +6,18 @@ type Query {
 		clientStatus: [Int!]
 		sort: UserSort = {}
 		pagination: Pagination = {} 
-		addressFilter: UserAddressFilter = {}
+		addressFilter: AddressFilter = {}
+		userInfoFilter: UserInfoFilter = {}
+	): [Client!]!
+
+	deletedClients(
+		clientId: ID
+		userSearch: String
+		socialSetId: [ID!]
+		clientStatus: [Int!]
+		sort: UserSort = {}
+		pagination: Pagination = {} 
+		addressFilter: AddressFilter = {}
 		userInfoFilter: UserInfoFilter = {}
 	): [Client!]!
 }
@@ -18,7 +29,7 @@ type Mutation {
 		clientStatus: Int
 		clientSummary: String
 		userInfo: UserInfoInput! 
-		userAddress: UserAddressInput!
+		userAddress: AddressInput!
 	): MutationResponse!
 
 	changeClient(
@@ -26,11 +37,14 @@ type Mutation {
 		clientStatus: Int
 		clientSummary: String
 		userInfo: UserInfoInput = {}
-		userAddress: UserAddressInput = {}
+		userAddress: AddressInput = {}
 	): MutationResponse!
 
 	deleteClient(clientId: [ID!]): MutationResponses!
 	restoreClient(clientId: [ID!]): MutationResponses!
+	
+	# enterClientPhone(mainContact: Contact!): AuthResponse!
+	# enterClientPassword(password: Password!): AuthResponse!
 }
 
 type Client {

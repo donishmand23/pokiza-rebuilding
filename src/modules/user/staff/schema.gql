@@ -4,7 +4,16 @@ type Query {
 		userSearch: String
 		sort: UserSort = {}
 		pagination: Pagination = {} 
-		addressFilter: UserAddressFilter = {}
+		addressFilter: AddressFilter = {}
+		userInfoFilter: UserInfoFilter = {}
+	): [Staff!]!
+
+	deletedStaffs(
+		staffId: ID
+		userSearch: String
+		sort: UserSort = {}
+		pagination: Pagination = {} 
+		addressFilter: AddressFilter = {}
 		userInfoFilter: UserInfoFilter = {}
 	): [Staff!]!
 }
@@ -17,7 +26,7 @@ type Mutation {
 		file: Upload
 		staffSummary: String
 		userInfo: UserInfoInput! 
-		userAddress: UserAddressInput!
+		userAddress: AddressInput!
 	): MutationResponse!
 
 	changeStaff(
@@ -27,11 +36,12 @@ type Mutation {
 		file: Upload
 		staffSummary: String
 		userInfo: UserInfoInput = {}
-		userAddress: UserAddressInput = {}
+		userAddress: AddressInput = {}
 	): MutationResponse!
 
 	deleteStaff(staffId: [ID!]): MutationResponses!
 	restoreStaff(staffId: [ID!]): MutationResponses!
+	loginStaff(mainContact: Contact! password: Password!): AuthResponse!
 }
 
 type Staff {

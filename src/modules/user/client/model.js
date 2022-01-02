@@ -7,6 +7,7 @@ import UserQuery from '#sql/user'
 const clients = ({ 
 	sort,
 	clientId,
+	isDeleted,
 	userSearch,
 	pagination, 
 	socialSetId,
@@ -27,7 +28,7 @@ const clients = ({
 
 	return fetchAll(
 		ClientQuery.CLIENTS,
-		(page - 1) * limit, limit,
+		(page - 1) * limit, limit, isDeleted,
 		clientId, clientStatus, socialSetId,
 		[age.from, age.to], gender, branchId, userSearch,
 		stateId, regionId, neighborhoodId, streetId, areaId,
