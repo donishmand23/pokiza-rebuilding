@@ -13,7 +13,7 @@ type UserInfo {
 }
 
 input UserInfoFilter {
-	age: Dual = {}
+	age: Range
 	gender: Gender
 	branchId: [ID!]
 }

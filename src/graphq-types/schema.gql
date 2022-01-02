@@ -29,9 +29,9 @@ enum SortOptions {
 }
 
 # inputs
-input Dual {
-	from: Int = 0
-	to: Int = 0
+input Range {
+	from: Int!
+	to: Int!
 }
 
 input Pagination {

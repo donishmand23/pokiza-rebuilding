@@ -30,7 +30,7 @@ const clients = ({
 		ClientQuery.CLIENTS,
 		(page - 1) * limit, limit, isDeleted,
 		clientId, clientStatus, socialSetId,
-		[age.from, age.to], gender, branchId, userSearch,
+		[age?.from || 0, age?.to || 0], gender, branchId, userSearch,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)

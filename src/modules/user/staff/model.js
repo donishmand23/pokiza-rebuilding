@@ -19,7 +19,7 @@ const staffs = ({ isDeleted, sort, staffId, pagination, userSearch, addressFilte
 	return fetchAll(
 		StaffQuery.STAFFS,
 		(page - 1) * limit, limit, isDeleted,
-		staffId, [age.from, age.to], gender, branchId, userSearch,
+		staffId, [age?.from || 0, age?.to || 0], gender, branchId, userSearch,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)
