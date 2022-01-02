@@ -14,7 +14,7 @@ scalar Token
 
 
 # unions
-union BigTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
+union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
 
 
 #enums
@@ -43,17 +43,25 @@ input Pagination {
 type MutationResponse {
 	status: Any!
 	message: String!
-	data: BigTypes
+	data: AllTypes
 }
 
 type MutationResponses {
 	status: Any!
 	message: String!
-	data: [BigTypes!]
+	data: [AllTypes!]
 }
 
 type AuthResponse {
 	status: Any!
 	message: String!
+	data: AllTypes
+	token: Token
+}
+
+type AuthResponseWithoutType {
+	status: Any!
+	message: String!
+	isRegistered: Boolean!
 	token: Token
 }

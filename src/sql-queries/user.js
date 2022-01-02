@@ -21,7 +21,9 @@ const USERS = `
 
 const CHECK_USER_CONTACT = `
 	SELECT user_id
-	FROM users WHERE user_main_contact = $1
+	FROM users 
+	WHERE user_deleted_contact IS NULL AND
+	user_main_contact = $1
 `
 
 

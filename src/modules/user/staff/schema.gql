@@ -1,7 +1,6 @@
 type Query {
 	staffs(
 		staffId: ID
-		userSearch: String
 		sort: UserSort = {}
 		pagination: Pagination = {} 
 		addressFilter: AddressFilter = {}
@@ -41,11 +40,12 @@ type Mutation {
 
 	deleteStaff(staffId: [ID!]): MutationResponses!
 	restoreStaff(staffId: [ID!]): MutationResponses!
+	
 	loginStaff(mainContact: Contact! password: Password!): AuthResponse!
 }
 
 type Staff {
-	satffId: ID!
+	staffId: ID!
 	count: Int!
 	staffImg: Link
 	staffSummary: String

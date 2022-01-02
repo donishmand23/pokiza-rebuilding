@@ -9,6 +9,7 @@ import AddressModule from './address/address/index.js'
 
 // extra modules
 import SocialSetModule from './extra/social-set/index.js'
+import SearchModule from './extra/search/index.js'
 
 // user modules
 import UserModule from './user/user/index.js'
@@ -27,6 +28,7 @@ export default {
   		AddressModule.typeDefs,
   		// extra
   		SocialSetModule.typeDefs,
+  		SearchModule.typeDefs,
   		// user
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
@@ -44,6 +46,7 @@ export default {
   		AddressModule.resolvers,
   		// extra
   		SocialSetModule.resolvers,
+  		SearchModule.resolvers,
   		// user
   		UserModule.resolvers,
   		ClientModule.resolvers,

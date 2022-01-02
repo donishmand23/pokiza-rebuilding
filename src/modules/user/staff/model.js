@@ -4,7 +4,7 @@ import StaffQuery from '#sql/staff'
 import UserQuery from '#sql/user'
 
 
-const staffs = ({ isDeleted, sort, staffId, pagination, userSearch, addressFilter, userInfoFilter }) => {
+const staffs = ({ isDeleted, sort, staffId, pagination, addressFilter, userInfoFilter }) => {
 	const { page, limit } = pagination
 	const { age, gender, branchId } = userInfoFilter
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
@@ -19,7 +19,7 @@ const staffs = ({ isDeleted, sort, staffId, pagination, userSearch, addressFilte
 	return fetchAll(
 		StaffQuery.STAFFS,
 		(page - 1) * limit, limit, isDeleted,
-		staffId, [age?.from || 0, age?.to || 0], gender, branchId, userSearch,
+		staffId, [age?.from || 0, age?.to || 0], gender, branchId,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)

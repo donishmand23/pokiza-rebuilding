@@ -41,46 +41,64 @@ const STAFFS = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($8) > 0 THEN (
-			u.user_first_name ILIKE CONCAT('%', $8, '%') OR
-			u.user_last_name ILIKE CONCAT('%', $8, '%') OR
-			u.user_main_contact ILIKE CONCAT('%', $8, '%') OR
-			u.user_second_contact ILIKE CONCAT('%', $8, '%') OR
-			CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $8, '%')
-		) ELSE TRUE
-	END AND
-	CASE
-		WHEN ARRAY_LENGTH($9::INT[], 1) > 0 THEN sta.state_id = ANY($9::INT[])
+		WHEN ARRAY_LENGTH($8::INT[], 1) > 0 THEN sta.state_id = ANY($8::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($10::INT[], 1) > 0 THEN r.region_id = ANY($10::INT[])
+		WHEN ARRAY_LENGTH($9::INT[], 1) > 0 THEN r.region_id = ANY($9::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN n.neighborhood_id = ANY($11::INT[]) 
+		WHEN ARRAY_LENGTH($10::INT[], 1) > 0 THEN n.neighborhood_id = ANY($10::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN st.street_id = ANY($12::INT[]) 
+		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN st.street_id = ANY($11::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($13::INT[], 1) > 0 THEN ar.area_id = ANY($13::INT[]) 
+		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN ar.area_id = ANY($12::INT[]) 
 		ELSE TRUE
 	END
 	ORDER BY 
-	(CASE WHEN $14 = 1 AND $15 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $14 = 2 AND $15 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $14 = 3 AND $15 = 1 THEN u.user_birth_date END) ASC,
-	(CASE WHEN $14 = 4 AND $15 = 1 THEN s.staff_id END) DESC,
-	(CASE WHEN $14 = 5 AND $15 = 1 THEN s.staff_created_at END) DESC,
-	(CASE WHEN $14 = 1 AND $15 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $14 = 2 AND $15 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $14 = 3 AND $15 = 2 THEN u.user_birth_date END) DESC,
-	(CASE WHEN $14 = 4 AND $15 = 2 THEN s.staff_id END) ASC,
-	(CASE WHEN $14 = 5 AND $15 = 2 THEN s.staff_created_at END) ASC
+	(CASE WHEN $13 = 1 AND $14 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $13 = 2 AND $14 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $13 = 3 AND $14 = 1 THEN u.user_birth_date END) ASC,
+	(CASE WHEN $13 = 4 AND $14 = 1 THEN s.staff_id END) DESC,
+	(CASE WHEN $13 = 5 AND $14 = 1 THEN s.staff_created_at END) DESC,
+	(CASE WHEN $13 = 1 AND $14 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $13 = 2 AND $14 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $13 = 3 AND $14 = 2 THEN u.user_birth_date END) DESC,
+	(CASE WHEN $13 = 4 AND $14 = 2 THEN s.staff_id END) ASC,
+	(CASE WHEN $13 = 5 AND $14 = 2 THEN s.staff_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
+`
+
+const SEARCH_STAFFS = `
+	SELECT 
+		s.staff_id,
+		s.user_id,
+		s.staff_img,
+		s.staff_summary,
+		u.user_gender,
+		to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+		count(*) OVER() as full_count
+	FROM staffs s
+	NATURAL JOIN users u
+	WHERE s.staff_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN u.branch_id = ANY($3::INT[])
+		ELSE TRUE
+	END AND
+	(	
+		s.staff_id = $1::INT OR
+		s.staff_summary ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+		u.user_first_name ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+		u.user_last_name ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	u.user_main_contact ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	u.user_second_contact ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $2::VARCHAR, '%')
+	)
 `
 
 const ADD_STAFF = `
@@ -279,7 +297,13 @@ const RESTORE_STAFF = `
 
 const LOGIN_STAFF = `
 	SELECT
-		u.user_id
+		s.staff_id,
+		s.user_id,
+		s.staff_img,
+		s.staff_summary,
+		u.user_gender,
+		to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+		count(*) OVER() as full_count
 	FROM users u
 	RIGHT JOIN staffs s ON s.user_id = u.user_id
 	WHERE s.staff_deleted_at IS NULL AND
@@ -288,6 +312,7 @@ const LOGIN_STAFF = `
 `
 
 export default {
+	SEARCH_STAFFS,
 	RESTORE_STAFF,
 	DELETE_STAFF,
 	CHANGE_STAFF,

@@ -1,5 +1,9 @@
 import clientModel from './model.js'
+import codeGen from '#helpers/randomNumberGenerator'
+import { sendPassword } from '#utils/sms'
 import { mError } from '#helpers/error'
+import { sign } from '#utils/jwt'
+
 
 export default {
 	Mutation: {
@@ -59,6 +63,24 @@ export default {
 				return mError(error)
 			}
 		},
+
+		// enterClientPhone: async (_, args, { agent }) => {
+		// 	try {
+		// 		const client = await clientModel.enterClientPhone(args)
+		// 		if(client) {
+
+		// 			const code = codeGen(4)
+		// 			await sendPassword(args.mainContact, code)
+
+		// 			return {
+		// 				status: 200,
+		// 				message: args.mainContact + " ga kod yuborildi. Kod 3 daqiqa amal qiladi." + code,
+		// 				token: sign({ userId: client.user_id, agent }, 60 * 3)
+		// 			}
+
+		// 		} else throw new Error("Dasturda bunday telefon raqam mavjud emas!")
+		// 	} catch(error) { return mError(error) }
+		// },
 	},
 
 	Query: {

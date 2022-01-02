@@ -6,6 +6,16 @@ create database pokiza;
 
 create extension "pgcrypto";
 
+-- 01. sms service
+drop table if exists sms_info cascade;
+create table sms_service (
+	sms_service_id bigserial not null primary key,
+	sms_service_email character varying(128) not null,
+	sms_service_password character varying(128) not null,
+	sms_service_token text not null,
+	sms_service_created_at timestamptz default current_timestamp
+);
+
 -- 03. branches
 drop table if exists branches cascade;
 create table branches (

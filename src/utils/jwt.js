@@ -5,11 +5,11 @@ const defaultAlgorithm = 'aes256'
 const defaultSecretKey = JWT.secretKey
 const expiresIn = JWT.expiresIn
 
-const sign = (payload) => {
+const sign = (payload, deadLine) => {
 	try {
 		const currentTime = Date.now() / 1000 | 0
 		payload.iat = currentTime
-		payload.exp = currentTime + expiresIn
+		payload.exp = currentTime + deadLine || expiresIn
 
 		const data = JSON.stringify(payload)
 

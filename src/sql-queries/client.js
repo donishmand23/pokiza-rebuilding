@@ -49,47 +49,64 @@ const CLIENTS = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($10) > 0 THEN (
-			u.user_first_name ILIKE CONCAT('%', $10, '%') OR
-			u.user_last_name ILIKE CONCAT('%', $10, '%') OR
-			u.user_main_contact ILIKE CONCAT('%', $10, '%') OR
-			u.user_second_contact ILIKE CONCAT('%', $10, '%') OR
-			CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $10, '%') OR
-			c.client_summary ILIKE CONCAT('%', $10, '%')
-		) ELSE TRUE
-	END AND
-	CASE
-		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN s.state_id = ANY($11::INT[])
+		WHEN ARRAY_LENGTH($10::INT[], 1) > 0 THEN s.state_id = ANY($10::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN r.region_id = ANY($12::INT[])
+		WHEN ARRAY_LENGTH($11::INT[], 1) > 0 THEN r.region_id = ANY($11::INT[])
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($13::INT[], 1) > 0 THEN n.neighborhood_id = ANY($13::INT[]) 
+		WHEN ARRAY_LENGTH($12::INT[], 1) > 0 THEN n.neighborhood_id = ANY($12::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($14::INT[], 1) > 0 THEN st.street_id = ANY($14::INT[]) 
+		WHEN ARRAY_LENGTH($13::INT[], 1) > 0 THEN st.street_id = ANY($13::INT[]) 
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($15::INT[], 1) > 0 THEN ar.area_id = ANY($15::INT[]) 
+		WHEN ARRAY_LENGTH($14::INT[], 1) > 0 THEN ar.area_id = ANY($14::INT[]) 
 		ELSE TRUE
 	END
 	ORDER BY 
-	(CASE WHEN $16 = 1 AND $17 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $16 = 2 AND $17 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $16 = 3 AND $17 = 1 THEN u.user_birth_date END) ASC,
-	(CASE WHEN $16 = 4 AND $17 = 1 THEN c.client_id END) DESC,
-	(CASE WHEN $16 = 5 AND $17 = 1 THEN c.client_created_at END) DESC,
-	(CASE WHEN $16 = 1 AND $17 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $16 = 2 AND $17 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $16 = 3 AND $17 = 2 THEN u.user_birth_date END) DESC,
-	(CASE WHEN $16 = 4 AND $17 = 2 THEN c.client_id END) ASC,
-	(CASE WHEN $16 = 5 AND $17 = 2 THEN c.client_created_at END) ASC
+	(CASE WHEN $15 = 1 AND $16 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $15 = 2 AND $16 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $15 = 3 AND $16 = 1 THEN u.user_birth_date END) ASC,
+	(CASE WHEN $15 = 4 AND $16 = 1 THEN c.client_id END) DESC,
+	(CASE WHEN $15 = 5 AND $16 = 1 THEN c.client_created_at END) DESC,
+	(CASE WHEN $15 = 1 AND $16 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $15 = 2 AND $16 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $15 = 3 AND $16 = 2 THEN u.user_birth_date END) DESC,
+	(CASE WHEN $15 = 4 AND $16 = 2 THEN c.client_id END) ASC,
+	(CASE WHEN $15 = 5 AND $16 = 2 THEN c.client_created_at END) ASC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
+`
+
+const SEARCH_CLIENTS = `
+	SELECT 
+		c.client_id,
+		c.client_status,
+		c.client_summary,
+		c.social_set_id,
+		c.user_id,
+		count(*) OVER() as full_count,
+		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	FROM clients c
+	NATURAL JOIN users u
+	WHERE c.client_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN u.branch_id = ANY($3::INT[])
+		ELSE TRUE
+	END AND
+	(	
+		c.client_id = $1::INT OR
+		c.client_summary ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+		u.user_first_name ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+		u.user_last_name ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	u.user_main_contact ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	u.user_second_contact ILIKE CONCAT('%', $2::VARCHAR, '%') OR
+	 	CAST(u.user_birth_date AS VARCHAR) ILIKE CONCAT('%', $2::VARCHAR, '%')
+	)
 `
 
 const ADD_CLIENT = `
@@ -280,6 +297,7 @@ const RESTORE_CLIENT = `
 
 
 export default {
+	SEARCH_CLIENTS,
 	RESTORE_CLIENT,
 	DELETE_CLIENT,
 	CHANGE_CLIENT,

@@ -193,6 +193,15 @@ insert into street_areas (street_id, area_id) values (15, 19);
 insert into street_areas (street_id, area_id) values (15, 20);
 
 
+--------------------------------   SERVICE   -----------------------------------------
+
+-- sms service
+insert into sms_service (sms_service_email, sms_service_password, sms_service_token) values 
+(
+	'Pokizakokand@gmail.com', 
+	'ktpsULFrwxqXctn9SyqIxsJxugveveppOY0oDvTa', 
+	'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbm90aWZ5LmVza2l6LnV6XC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjEzNDEwMzI4LCJleHAiOjE2MTYwMDIzMjgsIm5iZiI6MTYxMzQxMDMyOCwianRpIjoiOWZ3QTVoSnFpNDkwVEc2UCIsInN1YiI6Mzk0LCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.hOaTEJkdt_WNBU56cAnL_uBX3LZ5xLdGmGee12d0VqY'
+);
 
 
 --------------------------------   USER   -------------------------------------------

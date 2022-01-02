@@ -8,7 +8,6 @@ const clients = ({
 	sort,
 	clientId,
 	isDeleted,
-	userSearch,
 	pagination, 
 	socialSetId,
 	clientStatus, 
@@ -30,7 +29,7 @@ const clients = ({
 		ClientQuery.CLIENTS,
 		(page - 1) * limit, limit, isDeleted,
 		clientId, clientStatus, socialSetId,
-		[age?.from || 0, age?.to || 0], gender, branchId, userSearch,
+		[age?.from || 0, age?.to || 0], gender, branchId,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)
@@ -93,8 +92,13 @@ const restoreClient = async ({ clientId }) => {
 	return restoredClients
 }
 
+const enterClientPhone = ({ mainContact }) => {
+	return fetch(UserQuery.CHECK_USER_CONTACT, mainContact)
+}
+
 
 export default {
+	enterClientPhone,
 	restoreClient,
 	deleteClient,
 	changeClient,

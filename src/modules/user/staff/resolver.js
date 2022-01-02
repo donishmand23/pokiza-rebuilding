@@ -71,6 +71,7 @@ export default {
 					return {
 						status: 200,
 						message: "Muvaffaqqiyatli login qildingiz!",
+						data: staff,
 						token: sign({ userId: staff.user_id, agent })
 					}
 				} else throw new Error("Telefon raqam yoki parol xato!")
@@ -99,7 +100,7 @@ export default {
 	},
 
 	Staff: {
-		satffId:        global => global.staff_id,
+		staffId:        global => global.staff_id,
 		count:          global => global.full_count,
 		staffSummary:   global => global.staff_summary,
 		staffCreatedAt: global => global.staff_created_at,

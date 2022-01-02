@@ -186,7 +186,7 @@ export default {
 		toLargest: 2
 	},
 
-	BigTypes: {
+	AllTypes: {
 		__resolveType (obj, context, info) {
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'

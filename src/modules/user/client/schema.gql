@@ -1,7 +1,6 @@
 type Query {
 	clients(
 		clientId: ID
-		userSearch: String
 		socialSetId: [ID!]
 		clientStatus: [Int!]
 		sort: UserSort = {}
