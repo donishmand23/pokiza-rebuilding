@@ -6,8 +6,6 @@ const SMS_SERVICE = `
 		sms_service_token,
 		sms_service_created_at
 	FROM sms_service
-	ORDER BY token_time DESC 
-	LIMIT 1
 `
 
 const CHANGE_SMS_SERVICE = `

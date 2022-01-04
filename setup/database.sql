@@ -7,7 +7,7 @@ create database pokiza;
 create extension "pgcrypto";
 
 -- 01. sms service
-drop table if exists sms_info cascade;
+drop table if exists sms_service cascade;
 create table sms_service (
 	sms_service_id bigserial not null primary key,
 	sms_service_email character varying(128) not null,
@@ -149,7 +149,8 @@ create table staffs (
 	staff_summary character varying(128),
 	user_id bigint not null references users (user_id),
 	staff_created_at timestamptz default current_timestamp,
-	staff_deleted_at timestamptz default null
+	staff_deleted_at timestamptz default null,
+	unique(user_id)
 );
 
 -- 14. clients
@@ -161,7 +162,8 @@ create table clients (
 	social_set_id bigint references social_sets(social_set_id),
 	user_id bigint not null references users (user_id),
 	client_created_at timestamptz default current_timestamp,
-	client_deleted_at timestamptz default null
+	client_deleted_at timestamptz default null,
+	unique(user_id)
 );
 
 -- -- PERMISSIONS MODULE

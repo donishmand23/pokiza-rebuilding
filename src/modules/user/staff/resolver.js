@@ -71,8 +71,14 @@ export default {
 					return {
 						status: 200,
 						message: "Muvaffaqqiyatli login qildingiz!",
+						registered: true,
 						data: staff,
-						token: sign({ userId: staff.user_id, agent })
+						token: sign({ 
+							registered: true, 
+							staffId: staff.staff_id, 
+							userId: staff.user_id, 
+							agent 
+						})
 					}
 				} else throw new Error("Telefon raqam yoki parol xato!")
 			} catch(error) { return mError(error) }
@@ -104,7 +110,7 @@ export default {
 		count:          global => global.full_count,
 		staffSummary:   global => global.staff_summary,
 		staffCreatedAt: global => global.staff_created_at,
-		staffInfo:      global => staffModel.user({ userId: global.user_id }),
+		userInfo:       global => staffModel.user({ userId: global.user_id }),
 		staffImg:       global => {
 			if(!global.staff_img && global.user_gender == 1) return '/data/uploads/male.jpg'
 			if(!global.staff_img && global.user_gender == 2) return '/data/uploads/female.jpg'

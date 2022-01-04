@@ -6,6 +6,7 @@ import UserQuery from '#sql/user'
 
 const clients = ({ 
 	sort,
+	search,
 	clientId,
 	isDeleted,
 	pagination, 
@@ -29,7 +30,7 @@ const clients = ({
 		ClientQuery.CLIENTS,
 		(page - 1) * limit, limit, isDeleted,
 		clientId, clientStatus, socialSetId,
-		[age?.from || 0, age?.to || 0], gender, branchId,
+		[age?.from || 0, age?.to || 0], gender, branchId, search,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)
@@ -59,7 +60,7 @@ const addClient = async ({ mainContact, socialSetId, clientStatus, clientSummary
 	)
 }
 
-const changeClient = async ({ clientId, clientStatus = 0, clientSummary, userInfo, userAddress }) => {
+const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, userAddress }) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
 	const { firstName, lastName, mainContact, secondContact, birthDate, gender } = userInfo
 	
@@ -92,13 +93,39 @@ const restoreClient = async ({ clientId }) => {
 	return restoredClients
 }
 
-const enterClientPhone = ({ mainContact }) => {
-	return fetch(UserQuery.CHECK_USER_CONTACT, mainContact)
+const enterClientPhone = async ({ mainContact, code }) => {
+	const user = await fetch(ClientQuery.CHANGE_CLIENT_PASSWORD, 0, mainContact, code)
+	if(!user) return fetch(UserQuery.ADD_USER, mainContact, code)
+	return user
 }
 
+const enterClientPassword = async ({ password, userId, code }) => {
+	const user = await fetch(ClientQuery.CHECK_CLIENT_PASSWORD, userId, password)
+	if(!user) throw new Error("Wrong password or username!")
+	await fetch(ClientQuery.CHANGE_CLIENT_PASSWORD, userId, '', code)
+	if(!user.client_id) return fetch(ClientQuery.ADD_CLIENT_PART, user.user_id)
+	return user
+}
+
+const fillClientData = async ({ clientId, socialSetId, clientStatus, clientSummary, userInfo, userAddress }) => {
+	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
+	const { firstName, lastName, secondContact, birthDate, gender } = userInfo
+	
+	await checkUserInfo(userInfo)
+	await checkAddress(userAddress)
+
+	return fetch(
+		ClientQuery.FILL_CLIENT_DATA, clientId,
+		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
+		secondContact, firstName, lastName, birthDate, gender,
+		socialSetId, clientStatus, clientSummary
+	)
+}
 
 export default {
+	enterClientPassword,
 	enterClientPhone,
+	fillClientData,
 	restoreClient,
 	deleteClient,
 	changeClient,

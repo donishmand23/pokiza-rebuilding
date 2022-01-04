@@ -11,11 +11,12 @@ scalar Password
 scalar Any
 scalar Link
 scalar Token
+scalar Code
 
 
 # unions
 union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
-
+union AuthType = Staff | Client
 
 #enums
 enum Gender {
@@ -55,13 +56,14 @@ type MutationResponses {
 type AuthResponse {
 	status: Any!
 	message: String!
-	data: AllTypes
+	registered: Boolean!
+	data: AuthType
 	token: Token
 }
 
 type AuthResponseWithoutType {
 	status: Any!
 	message: String!
-	isRegistered: Boolean!
+	registered: Boolean!
 	token: Token
 }

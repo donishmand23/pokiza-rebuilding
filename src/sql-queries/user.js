@@ -20,14 +20,24 @@ const USERS = `
 `
 
 const CHECK_USER_CONTACT = `
-	SELECT user_id
+	SELECT 
+		user_id
 	FROM users 
 	WHERE user_deleted_contact IS NULL AND
 	user_main_contact = $1
 `
 
+const ADD_USER = `
+	INSERT INTO users (
+		user_main_contact,
+		user_password
+	) VALUES ($1, crypt($2, gen_salt('bf')))
+	RETURNING user_id, FALSE as is_registered
+`
+
 
 export default {
 	CHECK_USER_CONTACT,
-	USERS
+	ADD_USER,
+	USERS,
 }

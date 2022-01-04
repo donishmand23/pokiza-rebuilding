@@ -1,6 +1,4 @@
 type Query {
-	searchStaffs(key: String!): [Staff!]!
-	searchClients(key: String!): [Client!]!
 	searchGlobal(key: String!): [GlobalSearch!]!
 }
 

@@ -33,6 +33,7 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
+
 		deleteClient: async (_, args) => {
 			try {
 				const deletedClients = await clientModel.deleteClient(args)
@@ -64,23 +65,71 @@ export default {
 			}
 		},
 
-		// enterClientPhone: async (_, args, { agent }) => {
-		// 	try {
-		// 		const client = await clientModel.enterClientPhone(args)
-		// 		if(client) {
+		enterClientPhone: async (_, args, { agent }) => {
+			try {
+				const code = codeGen(4)
+				const client = await clientModel.enterClientPhone({ code, ...args })
+				if(client) {
+					await sendPassword(args.mainContact, code)
+					return {
+						status: 200,
+						registered: client.is_registered,
+						message: args.mainContact + " ga kod yuborildi. Kod 3 daqiqa amal qiladi. " + code,
+						token: sign({ 
+							registered: client.is_registered, 
+							userId: client.user_id, 
+							agent 
+						}, 60 * 3),
+					}
+				} else throw new Error("Muammolik yuz berdi!")
+			} catch(error) {
+				if(error.message.includes("users_user_main_contact_key")) {
+					return mError("Bu telefon raqam xodim sifatida ro'yxatdan o'tkazilgan. Boshqa raqam kiriting!")
+				}
+				return mError(error)
+			}
+		},
 
-		// 			const code = codeGen(4)
-		// 			await sendPassword(args.mainContact, code)
+		enterClientPassword: async (_, args, { userId, agent }) => {
+			try {
+				const code = codeGen(4)
+				const client = await clientModel.enterClientPassword({ userId, code, ...args })
+				if(client) {
+					return {
+						status: 200,
+						data: client.is_registered ? client : null,
+						registered: client.is_registered,
+						message: "Kod to'g'ri kiritildi!",
+						token: sign({
+							userId: client.user_id, 
+							clientId: client.client_id,
+							registered: client.is_registered, 
+							agent 
+						}),
+					}
+				} else throw new Error("Muammolik yuz berdi!")
+			} catch(error) { return mError(error) }
+		},
 
-		// 			return {
-		// 				status: 200,
-		// 				message: args.mainContact + " ga kod yuborildi. Kod 3 daqiqa amal qiladi." + code,
-		// 				token: sign({ userId: client.user_id, agent }, 60 * 3)
-		// 			}
-
-		// 		} else throw new Error("Dasturda bunday telefon raqam mavjud emas!")
-		// 	} catch(error) { return mError(error) }
-		// },
+		fillClientData: async (_, args, { clientId, agent }) => {
+			try {
+				const updatedClient = await clientModel.fillClientData({ clientId, ...args })
+				if(updatedClient) {
+					return {
+						status: 200,
+						registered: true,
+						message: "Siz muvaffaqqiyatli ro'yxatdan o'tdingiz!'",
+						data: updatedClient,
+						token: sign({
+							registered: true,
+							clientId: updatedClient.client_id,
+							user_id: updatedClient.user_id,
+							agent
+						})
+					}
+				} else throw new Error("Ro'yxatdan o'tishda muammolik yuz berdi!")
+			} catch(error) { return mError(error) }
+		},
 	},
 
 	Query: {
@@ -109,7 +158,7 @@ export default {
 		clientStatus:    global => global.client_status,
 		clientSummary:   global => global.client_summary,
 		clientCreatedAt: global => global.client_created_at,
-		clientInfo:      global => clientModel.user({ userId: global.user_id }),
+		userInfo:        global => clientModel.user({ userId: global.user_id }),
 		socialSet:       global => clientModel.socialSet({ socialSetId: global.social_set_id }),
 	}
 }

@@ -225,14 +225,14 @@ insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id,
 
 -- users (userlar)
 insert into users (user_main_contact, user_second_contact, user_password, user_first_name, user_last_name, user_birth_date, user_gender, branch_id, address_id) values
-/* 1 */('998946209914', '998994523145', crypt('root', gen_salt('bf')), 'Abdulhakim', 'Shodiyev', '1994-03-23', 1, 1, 1),
-/* 2 */('998942256598', '998934563215', crypt('1111', gen_salt('bf')), 'Hadicha', 'Malikova', '2000-04-05', 2, 1, 2),
-/* 3 */('998942362103', '998334561203', crypt('1111', gen_salt('bf')), 'Sardor', 'Shavkatov', '2001-11-10', 1, 1, 3),
-/* 4 */('998332203689', '998971034579', crypt('1111', gen_salt('bf')), 'Abdulloh', 'Nasriddinov', '1995-07-25', 1, 1, 4),
-/* 5 */('998337894561', '998906419734', crypt('1111', gen_salt('bf')), 'Nigora', 'Yo''ldosheva', '1998-09-13', 2, 1, 5),
-/* 6 */('998951023265', '998912037894', crypt('1111', gen_salt('bf')), 'Alisher', 'Nazirov', '1984-10-10', 1, 2, 6),
-/* 7 */('998331234567', '998972013265', crypt('1111', gen_salt('bf')), 'Muhammad', 'Soliyev', '1990-04-29', 1, 2, 7),
-/* 8 */('998337844561', '998917361489', crypt('1111', gen_salt('bf')), 'Gavhar', 'Hikmatova', '1991-03-15', 2, 2, 8);
+/* 1 */('998946209914', '998994523145', crypt('admin@1', gen_salt('bf')), 'Abdulhakim', 'Shodiyev', '1994-03-23', 1, 1, 1),
+/* 2 */('998942256598', '998934563215', crypt('pokiza@1', gen_salt('bf')), 'Hadicha', 'Malikova', '2000-04-05', 2, 1, 2),
+/* 3 */('998942362103', '998334561203', crypt('pokiza@1', gen_salt('bf')), 'Sardor', 'Shavkatov', '2001-11-10', 1, 1, 3),
+/* 4 */('998332203689', '998971034579', crypt('pokiza@1', gen_salt('bf')), 'Abdulloh', 'Nasriddinov', '1995-07-25', 1, 1, 4),
+/* 5 */('998337894561', '998906419734', crypt('pokiza@1', gen_salt('bf')), 'Nigora', 'Yo''ldosheva', '1998-09-13', 2, 1, 5),
+/* 6 */('998951023265', '998912037894', crypt('pokiza@1', gen_salt('bf')), 'Alisher', 'Nazirov', '1984-10-10', 1, 2, 6),
+/* 7 */('998331234567', '998972013265', crypt('pokiza@1', gen_salt('bf')), 'Muhammad', 'Soliyev', '1990-04-29', 1, 2, 7),
+/* 8 */('998337844561', '998917361489', crypt('pokiza@1', gen_salt('bf')), 'Gavhar', 'Hikmatova', '1991-03-15', 2, 2, 8);
 
 /*
 	address and user for client and staff

@@ -1,14 +1,16 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
+import code from '#helpers/randomNumberGenerator'
 import StaffQuery from '#sql/staff'
 import UserQuery from '#sql/user'
 
 
-const staffs = ({ isDeleted, sort, staffId, pagination, addressFilter, userInfoFilter }) => {
+const staffs = ({ isDeleted, sort, search, staffId, pagination, addressFilter, userInfoFilter }) => {
 	const { page, limit } = pagination
 	const { age, gender, branchId } = userInfoFilter
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
 	const sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
+
 
 	const sortObject = Object.keys(sort).map( key => {
 		if(sort[key]) {
@@ -19,7 +21,7 @@ const staffs = ({ isDeleted, sort, staffId, pagination, addressFilter, userInfoF
 	return fetchAll(
 		StaffQuery.STAFFS,
 		(page - 1) * limit, limit, isDeleted,
-		staffId, [age?.from || 0, age?.to || 0], gender, branchId,
+		staffId, [age?.from || 0, age?.to || 0], gender, branchId, search,
 		stateId, regionId, neighborhoodId, streetId, areaId,
 		sortObject?.sortKey || 4, sortObject?.value || 1
 	)

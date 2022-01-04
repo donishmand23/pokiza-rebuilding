@@ -9,7 +9,7 @@ const sign = (payload, deadLine) => {
 	try {
 		const currentTime = Date.now() / 1000 | 0
 		payload.iat = currentTime
-		payload.exp = currentTime + deadLine || expiresIn
+		payload.exp = currentTime + (deadLine || expiresIn)
 
 		const data = JSON.stringify(payload)
 

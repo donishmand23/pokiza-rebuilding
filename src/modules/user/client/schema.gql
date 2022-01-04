@@ -1,6 +1,7 @@
 type Query {
 	clients(
 		clientId: ID
+		search: String
 		socialSetId: [ID!]
 		clientStatus: [Int!]
 		sort: UserSort = {}
@@ -11,7 +12,7 @@ type Query {
 
 	deletedClients(
 		clientId: ID
-		userSearch: String
+		search: String
 		socialSetId: [ID!]
 		clientStatus: [Int!]
 		sort: UserSort = {}
@@ -42,16 +43,23 @@ type Mutation {
 	deleteClient(clientId: [ID!]): MutationResponses!
 	restoreClient(clientId: [ID!]): MutationResponses!
 	
-	# enterClientPhone(mainContact: Contact!): AuthResponse!
-	# enterClientPassword(password: Password!): AuthResponse!
+	enterClientPhone(mainContact: Contact!): AuthResponseWithoutType!
+	enterClientPassword(password: Code!): AuthResponse!
+	fillClientData(
+		socialSetId: ID!
+		clientStatus: Int
+		clientSummary: String
+		userInfo: UserInfoInput!
+		userAddress: AddressInput!
+	): AuthResponse!
 }
 
 type Client {
 	clientId: ID!
+	count: Int!
 	clientStatus: Int!
+	userInfo: UserInfo!
 	clientSummary: String
 	socialSet: SocialSet!
-	clientInfo: UserInfo!
-	count: Int!
 	clientCreatedAt: DateTime!
 }
