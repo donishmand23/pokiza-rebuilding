@@ -11,6 +11,7 @@ import AddressModule from './address/address/index.js'
 import SocialSetModule from './extra/social-set/index.js'
 import SearchModule from './extra/search/index.js'
 import NotificationModule from './extra/notificaton/index.js'
+import SMSModule from './extra/sms/index.js'
 
 // user modules
 import UserModule from './user/user/index.js'
@@ -31,6 +32,7 @@ export default {
   		SocialSetModule.typeDefs,
   		SearchModule.typeDefs,
   		NotificationModule.typeDefs,
+  		SMSModule.typeDefs,
   		// user
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
@@ -50,6 +52,7 @@ export default {
   		SocialSetModule.resolvers,
   		SearchModule.resolvers,
   		NotificationModule.resolvers,
+  		SMSModule.resolvers,
   		// user
   		UserModule.resolvers,
   		ClientModule.resolvers,

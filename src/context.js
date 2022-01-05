@@ -22,7 +22,8 @@ export default function ({ req }) {
             'enterClientPassword', 
             'fillClientData', 
             'notifications', 
-            'sendNotification'
+            'sendNotification',
+            'sendSMS',
         ].includes(fieldName))
     ) return
 
@@ -55,6 +56,11 @@ export default function ({ req }) {
     }
 
     if(fieldName == 'sendNotification') {
+        if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
+        return { staffId }
+    } 
+
+    if(fieldName == 'sendSMS') {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
         return { staffId }
     }

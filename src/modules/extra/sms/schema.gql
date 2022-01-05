@@ -1,0 +1,8 @@
+type Mutation {
+	sendSMS(
+		user: UserSelection!
+		branchId: [ID!]
+		userId: [ID!]
+		smsText: String!
+	): MutationResponse!
+}

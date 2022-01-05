@@ -40,6 +40,50 @@ const sendPassword = async (contact, code) => {
 	}
 }
 
+async function sendSMS (contacts, text) {
+	const { sms_service_token } = await fetch(ServiceQuery.SMS_SERVICE)
+
+	const requestOptions = {
+		headers: { 
+			Authorization: 'Bearer ' + sms_service_token,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			messages: contacts.map( (contact, id) => {
+				return {
+					user_sms_id: id + 1,
+					to: contact,
+					text
+				}
+			}),
+			from: 'PokizaGilam',
+			dispatch_id: 123
+		})
+	}
+
+	try {
+		let response = await got.post('https://notify.eskiz.uz/api/message/sms/send-batch', requestOptions).json()
+		if(
+			response.status == 'success' && 
+			response.status != 'error' && 
+			response.status_code != 500 && 
+			response.status_code != 401 &&
+			response.status_code != 400
+		) {
+			return {
+				error: false, 
+				message: "SMS yuborildi!"
+			}
+		} else {
+			throw response.message
+		}
+
+	} catch(error) {
+		await refreshSmsToken()
+		throw error
+	}
+}
+
 async function refreshSmsToken () {
 	try {
 		const { sms_service_id, sms_service_email, sms_service_password } = await fetch(ServiceQuery.SMS_SERVICE)
@@ -64,5 +108,6 @@ async function refreshSmsToken () {
 
 
 export {
-	sendPassword
+	sendPassword,
+	sendSMS
 }

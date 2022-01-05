@@ -86,6 +86,32 @@ const USER = `
 	END
 `
 
+const USER_CONTACTS = `
+	SELECT
+		u.user_main_contact as con
+	FROM users u
+	LEFT JOIN staffs s ON u.user_id = s.user_id
+	LEFT JOIN clients c ON u.user_id = c.user_id
+	WHERE u.user_deleted_contact IS NULL AND
+	CASE
+		WHEN $1 = 'staff' THEN s.staff_id IS NOT NULL
+		WHEN $1 = 'client' THEN c.client_id IS NOT NULL
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $1 = 'staff' THEN s.staff_id <> $4
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN u.branch_id = ANY($2::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN u.user_id = ANY($3::INT[])
+		ELSE TRUE
+	END
+`
+
 const CHECK_USER_CONTACT = `
 	SELECT 
 		user_id
@@ -105,6 +131,7 @@ const ADD_USER = `
 
 export default {
 	CHECK_USER_CONTACT,
+	USER_CONTACTS,
 	ADD_USER,
 	USERS,
 	USER,
