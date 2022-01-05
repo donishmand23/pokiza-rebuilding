@@ -218,7 +218,7 @@ export default {
 		}
 	},
 
-	AuthType: {
+	UserType: {
 		__resolveType (obj, context, info) {
 			if(obj.client_id && obj.client_status && obj.client_created_at) {
 				return 'Client'

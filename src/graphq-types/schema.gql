@@ -16,7 +16,7 @@ scalar Code
 
 # unions
 union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
-union AuthType = Staff | Client
+union UserType = Staff | Client
 
 #enums
 enum Gender {
@@ -57,7 +57,7 @@ type AuthResponse {
 	status: Any!
 	message: String!
 	registered: Boolean!
-	data: AuthType
+	data: UserType
 	token: Token
 }
 

@@ -18,7 +18,12 @@ export default function ({ req }) {
     }
 
     if( 
-        !(['enterClientPassword', 'fillClientData'].includes(fieldName))
+        !([
+            'enterClientPassword', 
+            'fillClientData', 
+            'notifications', 
+            'sendNotification'
+        ].includes(fieldName))
     ) return
 
     // private queries
@@ -39,9 +44,19 @@ export default function ({ req }) {
     if(fieldName === 'fillClientData') {
         if(registered) throw new Error('Siz allaqachon ro\'yxatdan o\'tgansiz!')
         return { 
-            agent: reqAgent, userId,
+            agent: reqAgent,
             clientId
         }
+    }
+
+    if(fieldName == 'notifications') {
+        if(!registered) throw new Error('Siz uchun ruxsat yo\'q')
+        return { userId }
+    }
+
+    if(fieldName == 'sendNotification') {
+        if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
+        return { staffId }
     }
 
 }

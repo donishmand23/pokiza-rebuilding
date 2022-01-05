@@ -10,6 +10,7 @@ import AddressModule from './address/address/index.js'
 // extra modules
 import SocialSetModule from './extra/social-set/index.js'
 import SearchModule from './extra/search/index.js'
+import NotificationModule from './extra/notificaton/index.js'
 
 // user modules
 import UserModule from './user/user/index.js'
@@ -29,6 +30,7 @@ export default {
   		// extra
   		SocialSetModule.typeDefs,
   		SearchModule.typeDefs,
+  		NotificationModule.typeDefs,
   		// user
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
@@ -47,6 +49,7 @@ export default {
   		// extra
   		SocialSetModule.resolvers,
   		SearchModule.resolvers,
+  		NotificationModule.resolvers,
   		// user
   		UserModule.resolvers,
   		ClientModule.resolvers,

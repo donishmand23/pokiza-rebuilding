@@ -1,0 +1,32 @@
+type Query {
+	notifications: [Notification!]!
+}
+
+type Mutation {
+	sendNotifications(
+		user: UserSelection!
+		branchId: [ID!]
+		userId: [ID!]
+		file: Upload
+		notificationTitle: String!
+		notificationBody: String!
+	): MutationResponse!
+
+	deleteNotifications(notificationId: [ID!] userId: [ID!]): MutationResponse!
+}
+
+type Notification {
+	sender: Staff!
+	receiver: UserType!
+	notificationId: ID!
+	notificationImg: Link
+	notificationTitle: String!
+	notificationBody: String!
+	notificationCreatedAt: DateTime!
+}
+
+enum UserSelection {
+	staff
+	client
+	both
+}

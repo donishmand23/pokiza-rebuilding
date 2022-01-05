@@ -193,16 +193,6 @@ insert into street_areas (street_id, area_id) values (15, 19);
 insert into street_areas (street_id, area_id) values (15, 20);
 
 
---------------------------------   SERVICE   -----------------------------------------
-
--- sms service
-insert into sms_service (sms_service_email, sms_service_password, sms_service_token) values 
-(
-	'Pokizakokand@gmail.com', 
-	'ktpsULFrwxqXctn9SyqIxsJxugveveppOY0oDvTa', 
-	'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbm90aWZ5LmVza2l6LnV6XC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjEzNDEwMzI4LCJleHAiOjE2MTYwMDIzMjgsIm5iZiI6MTYxMzQxMDMyOCwianRpIjoiOWZ3QTVoSnFpNDkwVEc2UCIsInN1YiI6Mzk0LCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.hOaTEJkdt_WNBU56cAnL_uBX3LZ5xLdGmGee12d0VqY'
-);
-
 
 --------------------------------   USER   -------------------------------------------
 
@@ -266,3 +256,24 @@ insert into staffs (user_id, staff_img, staff_summary) values
 (6, 'alisher.jpg', 'Ajoyib xodim');
 
 
+
+--------------------------------   SERVICE   -----------------------------------------
+
+-- sms service
+insert into sms_service (sms_service_email, sms_service_password, sms_service_token) values 
+(
+	'Pokizakokand@gmail.com', 
+	'ktpsULFrwxqXctn9SyqIxsJxugveveppOY0oDvTa', 
+	'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbm90aWZ5LmVza2l6LnV6XC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjEzNDEwMzI4LCJleHAiOjE2MTYwMDIzMjgsIm5iZiI6MTYxMzQxMDMyOCwianRpIjoiOWZ3QTVoSnFpNDkwVEc2UCIsInN1YiI6Mzk0LCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.hOaTEJkdt_WNBU56cAnL_uBX3LZ5xLdGmGee12d0VqY'
+);
+
+-- notification
+insert into notifications(notification_from, notification_to, notification_img, notification_title, notification_body) VALUES
+/* to staff */  (1, 2, 'cong.jpg', 'Tabriknoma', 'Siz jamoamizdagi eng yaxshi xodimsiz. Sizga Pokiza nomidan rahmat aytamiz'),
+/* to staff */  (3, 2, 'alert.jpg', 'Shoshilinch', 'Tezda ombordagi 01256 raqamli gilamni yuvish kerak!'),
+/* to staff */  (1, 2, 'farewell.png', 'Vidolashuv', 'Kompaniyamizga qo''shgan xissangiz uchun rahmat'),
+/* to staff */  (1, 3, 'farewell.png', 'Vidolashuv', 'Kompaniyamizga qo''shgan xissangiz uchun rahmat'),
+/* to staff */  (1, 6, 'promotion.jpg', 'Promotion', 'Sizni Toshkent filialiga o''tkazmoqchimiz'),
+/* to client */ (2, 4, 'cong.jpg', 'Yaxshi yangilik!', 'Siz Pokiza gilam yuvish fabrikasi tomonidan o''tkazilgan aksiyada g''olib bo''ldingiz. Tabriklaymiz!'),
+/* to client */ (2, 5, 'cong.jpg', 'Yaxshi yangilik!', 'Siz Pokiza gilam yuvish fabrikasi tomonidan o''tkazilgan aksiyada g''olib bo''ldingiz. Tabriklaymiz!'),
+/* to client */ (1, 5, 'announcement.jpg', 'Elon', 'Siz fabrikamizga kelib sovg''angizni olib ketishingiz kerak!');

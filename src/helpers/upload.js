@@ -15,11 +15,11 @@ export default async (args) => {
 		}
 
 		if(!allowedMimetypes[mimetype]) {
-			throw new Error("Yuklanayotgan file jpg yoki png rasm bo'lishi kerak!")
+			throw new Error("The file must be jpg or png!")
 		}
 
 		const stream = createReadStream()
-		const fileName = Date.now() + filename.replace(/\s/g, "")
+		const fileName = (Date.now() % 100000) + filename.replace(/\s/g, "")
 		const filePath = path.join(process.cwd(), 'uploads', fileName)
 		const out = fs.createWriteStream(filePath)
       	stream.pipe(out)

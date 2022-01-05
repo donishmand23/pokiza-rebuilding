@@ -166,6 +166,18 @@ create table clients (
 	unique(user_id)
 );
 
+drop table if exists notifications cascade;
+create table notifications (
+	notification_id serial not null primary key,
+	notification_from bigint not null references staffs(staff_id),
+	notification_to bigint not null references users(user_id),
+	notification_title character varying(300) not null,
+	notification_body text not null,
+	notification_img text,
+	notification_created_at timestamptz default current_timestamp,
+	notification_deleted_at timestamptz default null
+);
+
 -- -- PERMISSIONS MODULE
 -- -- 23. permissions ( general permission actions )
 -- drop table if exists permissions cascade;
