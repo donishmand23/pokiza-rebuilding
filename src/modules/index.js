@@ -18,6 +18,10 @@ import UserModule from './user/user/index.js'
 import ClientModule from './user/client/index.js'
 import StaffModule from './user/staff/index.js'
 
+// service modules
+import ServiceModule from './service/service/index.js'
+
+
 export default {
 	typeDefs: [
 		// address
@@ -37,7 +41,8 @@ export default {
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
   		StaffModule.typeDefs,
-
+  		// service
+  		ServiceModule.typeDefs,
 	],
 	resolvers: [
 		// address
@@ -57,5 +62,7 @@ export default {
   		UserModule.resolvers,
   		ClientModule.resolvers,
   		StaffModule.resolvers,
+  		// service
+  		ServiceModule.resolvers,
 	]
 }

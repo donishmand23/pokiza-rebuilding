@@ -30,54 +30,54 @@ insert into regions (state_id, branch_id, region_name) values (4, 1, 'Chinoz'); 
 
 --NEIGHBORHOODS
 -- neighborhoods of Olmazor
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (1, 'A mahalla', 3);   -- 1
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (1, 'B mahalla', 4);   -- 2
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (1, 'A', 3);   -- 1
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (1, 'B', 4);   -- 2
 
 -- neighborhoods of Chilonzor
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (2, 'C mahalla', 2);   -- 3
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (2, 'D mahalla', 3);   -- 4
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (2, 'C', 2);   -- 3
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (2, 'D', 3);   -- 4
 
 -- neighborhoods of Yunusobod
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (3, 'F mahalla', 2.5); -- 5
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (3, 'E mahalla', 4.3); -- 6
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (3, 'F', 2.5); -- 5
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (3, 'E', 4.3); -- 6
 
 -- neighborhoods of Beshariq
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (4, 'P mahalla', 3.3); -- 7
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (4, 'Q mahalla', 4.1); -- 8
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (4, 'P', 3.3); -- 7
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (4, 'Q', 4.1); -- 8
 
 -- neighborhoods of Buvayda
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (5, 'W mahalla', 2);   -- 9
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (5, 'U mahalla', 1);   -- 10
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (5, 'W', 2);   -- 9
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (5, 'U', 1);   -- 10
 
 -- neighborhoods of Qo'qon
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (6, 'R mahalla', 2);   -- 11
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (6, 'O mahalla', 1);   -- 12
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (6, 'R', 2);   -- 11
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (6, 'O', 1);   -- 12
 
 -- neighborhoods of Qibray
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (7, 'Y mahalla', 2);   -- 13
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (7, 'Z mahalla', 1);   -- 14
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (7, 'Y', 2);   -- 13
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (7, 'Z', 1);   -- 14
 
 -- neighborhoods of Qibray
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (8, 'S mahalla', 2);   -- 15
-insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (8, 'X mahalla', 1);   -- 16
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (8, 'S', 2);   -- 15
+insert into neighborhoods (region_id, neighborhood_name, neighborhood_distance) values (8, 'X', 1);   -- 16
 
 
 --STREETS
-insert into streets (street_name, street_distance) values ('ABX ko''cha', 2.1); -- 1
-insert into streets (street_name, street_distance) values ('POQ ko''cha', 1);   -- 2
-insert into streets (street_name, street_distance) values ('ASD ko''cha', 6);   -- 3
-insert into streets (street_name, street_distance) values ('MNY ko''cha', 7);	-- 4
-insert into streets (street_name, street_distance) values ('MBV ko''cha', 3.5);	-- 5
-insert into streets (street_name, street_distance) values ('CVE ko''cha', 2.5);	-- 6
-insert into streets (street_name, street_distance) values ('AZD ko''cha', 3.5);	-- 7
-insert into streets (street_name, street_distance) values ('BVI ko''cha', 1);	-- 8
-insert into streets (street_name, street_distance) values ('BYP ko''cha', 1.3); -- 9
-insert into streets (street_name, street_distance) values ('IUY ko''cha', 1);   -- 10
-insert into streets (street_name, street_distance) values ('AFD ko''cha', 1);   -- 11
-insert into streets (street_name, street_distance) values ('QTR ko''cha', 2);   -- 12
-insert into streets (street_name, street_distance) values ('LWT ko''cha', 3);   -- 13
-insert into streets (street_name, street_distance) values ('VBT ko''cha', 1);   -- 14
-insert into streets (street_name, street_distance) values ('RTY ko''cha', 2);   -- 15
+insert into streets (street_name, street_distance) values ('ABX', 2.1); -- 1
+insert into streets (street_name, street_distance) values ('POQ', 1);   -- 2
+insert into streets (street_name, street_distance) values ('ASD', 6);   -- 3
+insert into streets (street_name, street_distance) values ('MNY', 7);	-- 4
+insert into streets (street_name, street_distance) values ('MBV', 3.5);	-- 5
+insert into streets (street_name, street_distance) values ('CVE', 2.5);	-- 6
+insert into streets (street_name, street_distance) values ('AZD', 3.5);	-- 7
+insert into streets (street_name, street_distance) values ('BVI', 1);	-- 8
+insert into streets (street_name, street_distance) values ('BYP', 1.3); -- 9
+insert into streets (street_name, street_distance) values ('IUY', 1);   -- 10
+insert into streets (street_name, street_distance) values ('AFD', 1);   -- 11
+insert into streets (street_name, street_distance) values ('QTR', 2);   -- 12
+insert into streets (street_name, street_distance) values ('LWT', 3);   -- 13
+insert into streets (street_name, street_distance) values ('VBT', 1);   -- 14
+insert into streets (street_name, street_distance) values ('RTY', 2);   -- 15
 
 
 --NEIGHBORHOOD_STREETS
@@ -114,26 +114,26 @@ insert into neighborhood_streets (neighborhood_id, street_id) values (12, 15);
 
 
 --AREAS 
-insert into areas (area_name, area_distance) values ('alpha hudud', 2);   -- 1
-insert into areas (area_name, area_distance) values ('betta hudud', 3);   -- 2
-insert into areas (area_name, area_distance) values ('yepoo hudud', 3.5); -- 3
-insert into areas (area_name, area_distance) values ('loopp hudud', 4);   -- 4
-insert into areas (area_name, area_distance) values ('qwert hudud', 1);   -- 5
-insert into areas (area_name, area_distance) values ('tuulp hudud', 4);   -- 6
-insert into areas (area_name, area_distance) values ('jeerp hudud', 3);   -- 7
-insert into areas (area_name, area_distance) values ('cdert hudud', 2.5); -- 8
-insert into areas (area_name, area_distance) values ('zorri hudud', 3);   -- 9
-insert into areas (area_name, area_distance) values ('aswed hudud', 1);   -- 10
-insert into areas (area_name, area_distance) values ('pooll hudud', 2);   -- 11
-insert into areas (area_name, area_distance) values ('tyruu hudud', 1);   -- 12
-insert into areas (area_name, area_distance) values ('twerp hudud', 3);   -- 13
-insert into areas (area_name, area_distance) values ('keepa hudud', 4);   -- 14
-insert into areas (area_name, area_distance) values ('beeen hudud', 2);   -- 15
-insert into areas (area_name, area_distance) values ('reety hudud', 3);   -- 16
-insert into areas (area_name, area_distance) values ('tesrp hudud', 1);   -- 17
-insert into areas (area_name, area_distance) values ('liiia hudud', 2);   -- 18
-insert into areas (area_name, area_distance) values ('toole hudud', 2.5); -- 19
-insert into areas (area_name, area_distance) values ('veeme hudud', 1.5); -- 20
+insert into areas (area_name, area_distance) values ('alpha', 2);   -- 1
+insert into areas (area_name, area_distance) values ('betta', 3);   -- 2
+insert into areas (area_name, area_distance) values ('yepoo', 3.5); -- 3
+insert into areas (area_name, area_distance) values ('loopp', 4);   -- 4
+insert into areas (area_name, area_distance) values ('qwert', 1);   -- 5
+insert into areas (area_name, area_distance) values ('tuulp', 4);   -- 6
+insert into areas (area_name, area_distance) values ('jeerp', 3);   -- 7
+insert into areas (area_name, area_distance) values ('cdert', 2.5); -- 8
+insert into areas (area_name, area_distance) values ('zorri', 3);   -- 9
+insert into areas (area_name, area_distance) values ('aswed', 1);   -- 10
+insert into areas (area_name, area_distance) values ('pooll', 2);   -- 11
+insert into areas (area_name, area_distance) values ('tyruu', 1);   -- 12
+insert into areas (area_name, area_distance) values ('twerp', 3);   -- 13
+insert into areas (area_name, area_distance) values ('keepa', 4);   -- 14
+insert into areas (area_name, area_distance) values ('beeen', 2);   -- 15
+insert into areas (area_name, area_distance) values ('reety', 3);   -- 16
+insert into areas (area_name, area_distance) values ('tesrp', 1);   -- 17
+insert into areas (area_name, area_distance) values ('liiia', 2);   -- 18
+insert into areas (area_name, area_distance) values ('toole', 2.5); -- 19
+insert into areas (area_name, area_distance) values ('veeme', 1.5); -- 20
  
 
 --STREET_AREAS
@@ -277,3 +277,11 @@ insert into notifications(notification_from, notification_to, notification_img, 
 /* to client */ (2, 4, 'cong.jpg', 'Yaxshi yangilik!', 'Siz Pokiza gilam yuvish fabrikasi tomonidan o''tkazilgan aksiyada g''olib bo''ldingiz. Tabriklaymiz!'),
 /* to client */ (2, 5, 'cong.jpg', 'Yaxshi yangilik!', 'Siz Pokiza gilam yuvish fabrikasi tomonidan o''tkazilgan aksiyada g''olib bo''ldingiz. Tabriklaymiz!'),
 /* to client */ (1, 5, 'announcement.jpg', 'Elon', 'Siz fabrikamizga kelib sovg''angizni olib ketishingiz kerak!');
+
+-- services
+insert into services (service_name, service_unit, service_unit_keys, service_price_special, service_price_simple, branch_id) VALUES
+('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 1),
+('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 2),
+('sholcha', 'dona', ARRAY['qiymat'], 9000, 6500, 1),
+('parda', 'kg', ARRAY['qiymat'], 9500, 7500, 1),
+('parda', 'kg', ARRAY['qiymat'], 8000, 6000, 2);

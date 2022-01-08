@@ -1,0 +1,39 @@
+type Query {
+	services(serviceId: ID branchId: [ID!]): [Service!]!
+	disabledServices(serviceId: ID branchId: [ID!]): [Service!]!
+}
+
+type Mutation {
+	addService(
+		branchId: ID!
+		serviceName: String!
+		serviceUnit: String!
+		serviceUnitKeys: [String!] = ["qiymat"]
+		servicePriceSpecial: Float!
+		servicePriceSimple: Float!
+	): MutationResponse!
+
+	changeService(
+		serviceId: ID!
+		branchId: ID
+		serviceName: String
+		serviceUnit: String
+		serviceUnitKeys: [String!]
+		servicePriceSpecial: Float
+		servicePriceSimple: Float
+	): MutationResponse!
+
+	disableService(serviceId: [ID!]!): MutationResponses!
+	enableService(serviceId: [ID!]!): MutationResponses!
+}
+
+type Service {
+	serviceId: ID!
+	serviceName: String!
+	serviceUnit: String!
+	serviceUnitKeys: [String!]!
+	servicePriceSpecial: Float!
+	servicePriceSimple: Float!
+	serviceCreatedAt: DateTime!
+	branch: Branch!
+}

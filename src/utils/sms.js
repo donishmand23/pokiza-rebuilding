@@ -1,4 +1,4 @@
-import ServiceQuery from '#sql/service'
+import ServiceQuery from '#sql/additional-service'
 import { FormData } from 'formdata-node'
 import { fetch } from '#utils/postgres'
 import got from 'got'

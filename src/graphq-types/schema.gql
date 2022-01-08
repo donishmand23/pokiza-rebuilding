@@ -15,7 +15,7 @@ scalar Code
 
 
 # unions
-union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff
+union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service
 union UserType = Staff | Client
 
 #enums

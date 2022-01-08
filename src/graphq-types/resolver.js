@@ -215,6 +215,9 @@ export default {
 			if(obj.staff_id && obj.staff_created_at) {
 				return 'Staff'
 			}
+			if(obj.service_id && obj.service_created_at) {
+				return 'Service'
+			}
 		}
 	},
 

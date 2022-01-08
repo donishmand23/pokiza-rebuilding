@@ -31,7 +31,7 @@ create table branches (
 drop table if exists states cascade;
 create table states (
 	state_id bigserial not null primary key,
-	state_name character varying(64),
+	state_name character varying(64) not null,
 	state_created_at timestamptz default current_timestamp,
 	state_deleted_at timestamptz default null
 );
@@ -40,7 +40,7 @@ create table states (
 drop table if exists regions cascade;
 create table regions (
 	region_id bigserial not null primary key,
-	region_name character varying(64),
+	region_name character varying(64) not null,
 	state_id bigint not null references states (state_id),
 	branch_id bigint not null references branches (branch_id),
 	region_created_at timestamptz default current_timestamp,
@@ -51,8 +51,8 @@ create table regions (
 drop table if exists neighborhoods cascade;
 create table neighborhoods (
 	neighborhood_id bigserial not null primary key,
-	neighborhood_name character varying(70),
-	neighborhood_distance numeric,
+	neighborhood_name character varying(70) not null,
+	neighborhood_distance numeric not null,
 	region_id bigint not null references regions (region_id),
 	neighborhood_created_at timestamptz default current_timestamp,
 	neighborhood_deleted_at timestamptz default null
@@ -62,8 +62,8 @@ create table neighborhoods (
 drop table if exists streets cascade;
 create table streets (
 	street_id bigserial not null primary key,
-	street_name character varying(70),
-	street_distance numeric,
+	street_name character varying(70) not null,
+	street_distance numeric not null,
 	street_created_at timestamptz default current_timestamp,
 	street_deleted_at timestamptz default null
 );
@@ -72,8 +72,8 @@ create table streets (
 drop table if exists areas cascade;
 create table areas (
 	area_id bigserial not null primary key,
-	area_name character varying(70),
-	area_distance numeric,
+	area_name character varying(70) not null,
+	area_distance numeric not null,
 	area_created_at timestamptz default current_timestamp,
 	area_deleted_at timestamptz default null
 );
@@ -178,6 +178,26 @@ create table notifications (
 	notification_deleted_at timestamptz default null
 );
 
+-- SERVICES MODULE
+
+-- 17. services ( services company presents )
+drop table if exists services cascade;
+create table services (
+	service_id bigserial not null primary key,
+	service_name character varying(64) not null,
+	service_unit character varying(64) not null,
+	service_unit_keys varchar[] not null,
+	service_price_special numeric not null,
+	service_price_simple numeric not null,
+	branch_id bigint not null references branches(branch_id),
+	service_created_at timestamptz default current_timestamp,
+	service_deleted_at timestamptz default null,
+	service_active boolean default true,
+	unique(service_name, branch_id, service_deleted_at),
+	unique(service_name, branch_id, service_active)
+);
+
+
 -- -- PERMISSIONS MODULE
 -- -- 23. permissions ( general permission actions )
 -- drop table if exists permissions cascade;
@@ -250,40 +270,6 @@ create table notifications (
 -- 	branch_id bigint not null references branches(branch_id),
 -- 	user_id bigint not null references users(user_id),
 -- 	history_created_at timestamptz default current_timestamp not null
--- );
-
-
--- -- SERVICES MODULE
--- -- 16. units ( units for services such as cm, count, m2 )
--- drop table if exists units cascade;
--- create table units (
--- 	unit_id bigserial not null primary key,
--- 	unit_name character varying(32) not null,
--- 	unit_created_at timestamptz default current_timestamp,
--- 	unit_deleted_at timestamptz default null
--- );
-
--- -- 17. services ( services company presents )
--- drop table if exists services cascade;
--- create table services (
--- 	service_id bigserial not null primary key,
--- 	service_name character varying(64) not null,
--- 	branch_id bigint not null references branches(branch_id),
--- 	service_created_at timestamptz default current_timestamp,
--- 	service_deleted_at timestamptz default null
--- );
-
--- -- 18. service prices ( prices for each service )
--- drop table if exists service_prices cascade;
--- create table service_prices (
--- 	price_id bigserial not null primary key,
--- 	price_amount bigint not null,
--- 	price_per bigint not null default 1,
--- 	price_special boolean not null,
--- 	service_id bigint not null references services(service_id),
--- 	unit_id bigint not null references units(unit_id),
--- 	price_created_at timestamptz default current_timestamp,
--- 	price_deleted_at timestamptz default null
 -- );
 
 

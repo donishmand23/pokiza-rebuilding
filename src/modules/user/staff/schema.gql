@@ -42,7 +42,7 @@ type Mutation {
 	deleteStaff(staffId: [ID!]): MutationResponses!
 	restoreStaff(staffId: [ID!]): MutationResponses!
 	
-	loginStaff(mainContact: Contact! password: Password!): AuthResponse!
+	loginStaff(mainContact: String! password: String!): AuthResponse!
 }
 
 type Staff {
