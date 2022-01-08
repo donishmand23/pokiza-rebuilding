@@ -20,6 +20,7 @@ type Address {
 }
 
 enum AddressType {
+	branch
 	state
 	region
 	neighborhood
@@ -27,9 +28,10 @@ enum AddressType {
 	area
 }
 
-union AddressTypes = State | Region | Neighborhood | Street | Area
+union AddressTypes = Branch | State | Region | Neighborhood | Street | Area
 
 input AddFilter {
+	branch: BranchFilter = {}
 	state: StateFilter = {}
 	region: RegionFilter = {}
 	neighborhood: NeighborhoodFilter = {}
@@ -53,6 +55,10 @@ input AddressInput {
 	areaId: ID
 	homeNumber: Int
 	target: String
+}
+
+input BranchFilter {
+	branchId: ID!
 }
 
 input StateFilter {

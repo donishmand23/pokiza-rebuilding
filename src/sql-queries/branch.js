@@ -31,8 +31,40 @@ const CHANGE_BRANCH = `
 		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
 `
 
+const DISABLE_BRANCH = `
+	UPDATE branches 
+		SET branch_deleted_at = current_timestamp
+	WHERE branch_id = $1
+	RETURNING *,
+	to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
+`
+
+const ENABLE_BRANCH = `
+	UPDATE branches 
+		SET branch_deleted_at = NULL
+	WHERE branch_id = $1
+	RETURNING *,
+	to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
+`
+
+const DISABLED_BRANCHES = ` 
+	SELECT 
+		branch_id,
+		branch_name,
+		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
+	FROM branches
+	WHERE branch_deleted_at IS NOT NULL AND
+	CASE 
+		WHEN $1 > 0 THEN branch_id = $1
+		ELSE TRUE
+	END
+`
+
 
 export default {
+	DISABLED_BRANCHES,
+	DISABLE_BRANCH,
+	ENABLE_BRANCH,
 	CHANGE_BRANCH,
 	ADD_BRANCH,
 	BRANCHES,

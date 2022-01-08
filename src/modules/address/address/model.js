@@ -1,15 +1,18 @@
 import { fetch, fetchAll } from '#utils/postgres'
+import BranchQuery from '#sql/branch'
 import StateQuery from '#sql/state'
 import RegionQuery from '#sql/region'
 import NeighborhoodQuery from '#sql/neighborhood'
 import StreetQuery from '#sql/street'
 import AreaQuery from '#sql/area'
+
 const Query = {
 	...NeighborhoodQuery, 
 	...StreetQuery, 
 	...RegionQuery, 
+	...BranchQuery,
 	...StateQuery, 
-	...AreaQuery
+	...AreaQuery,
 }
 
 const neighborhood = ({ neighborhoodId }) => {
@@ -42,6 +45,11 @@ const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) =>
 
 const addresses = ({ addressField, addressFilter }) => {
 	switch(addressField) {
+		case 'branch': {
+			const { branch = {} } = addressFilter
+			const { branchId } = state
+			return fetchAll(BranchQuery.DISABLED_BRANCHES, branchId)
+		}
 		case 'state': {
 			const { state = {} } = addressFilter
 			const { stateId } = state

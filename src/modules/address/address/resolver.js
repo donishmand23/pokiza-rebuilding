@@ -2,6 +2,7 @@ import addressModel from './model.js'
 import { mError } from '#helpers/error'
 
 const uzNames = {
+	branch: "Filial",
 	state: "Viloyat",
 	region: "Tuman",
 	neighborhood: "Mahalla",
@@ -46,7 +47,7 @@ export default {
 	},
 
 	Address: {
-		addressId: 	        global => global.address_id,
+		addressId: 	       global => global.address_id,
 		addressHomeNumber: global => global.address_home_number,
 		addressTarget:     global => global.address_target, 
 		addressCreatedAt:  global => global.address_created_at,
@@ -59,6 +60,9 @@ export default {
 
 	AddressTypes: {
 		__resolveType (obj, context, info) {
+			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
+				return 'Branch'
+			}
 			if(obj.state_id && obj.state_name && obj.state_created_at) {
 				return 'State'
 			}
