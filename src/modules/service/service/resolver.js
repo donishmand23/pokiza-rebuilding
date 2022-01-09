@@ -3,7 +3,7 @@ import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
-		addService: async (_,arg) => {
+		addService: async (_, arg) => {
 			try {
 				const newService = await serviceModel.addService(arg)
 				if(newService) {
@@ -20,7 +20,7 @@ export default {
 			}
 		},
 
-		changeService: async (_,arg) => {
+		changeService: async (_, arg) => {
 			try {
 				const updatedService = await serviceModel.changeService(arg)
 				if(updatedService) {
@@ -37,7 +37,7 @@ export default {
 			}
 		},
 
-		disableService: async (_,arg) => {
+		disableService: async (_, arg) => {
 			try {
 				const disabledServices = await serviceModel.disableService(arg)
 				if(disabledServices.length) {
@@ -50,7 +50,7 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		enableService: async (_,arg) => {
+		enableService: async (_, arg) => {
 			try {
 				const enabledServices = await serviceModel.enableService(arg)
 				if(enabledServices.length) {
@@ -60,6 +60,19 @@ export default {
 						data: enabledServices
 					}
 				} else throw new Error("Bunday xizmat tur(lar)i mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
+
+		changeDeliveryHour: async (_, arg) => {
+			try {
+				const updatedDeliveryHour = await serviceModel.changeDeliveryHour(arg)
+				if(updatedDeliveryHour) {
+					return {
+						status: 200,
+						message: "Taxminiy yetkazib berish vaqti yangilandi!",
+						data: updatedDeliveryHour
+					}
+				} else throw new Error("Bunday ID mavjud emas!")
 			} catch (error) { return mError(error) }
 		},
 	},
@@ -82,6 +95,15 @@ export default {
 				throw error
 			}
 		},
+
+		deliveryHours: async (_, args) => {
+			try {
+				const deliveryHours = await serviceModel.deliveryHours(args)
+				return deliveryHours
+			} catch(error) {
+				throw error
+			}
+		},
 	},
 	
 	Service: {
@@ -94,4 +116,12 @@ export default {
 		serviceCreatedAt:    global => global.service_created_at,
 		branch:              global => serviceModel.branch({ branchId: global.branch_id }),
 	},
+
+	DeliveryHour: {
+		deliveryHourId:        global => global.delivery_hour_id,
+		deliveryHourSpecial:   global => global.delivery_hour_special,
+		deliveryHourSimple:    global => global.delivery_hour_simple,
+		deliveryHourCreatedAt: global => global.delivery_hour_created_at,
+		branch:                global => serviceModel.branch({ branchId: global.branch_id }),
+	}
 }

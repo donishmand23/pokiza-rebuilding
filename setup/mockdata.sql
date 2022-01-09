@@ -285,3 +285,8 @@ insert into services (service_name, service_unit, service_unit_keys, service_pri
 ('sholcha', 'dona', ARRAY['qiymat'], 9000, 6500, 1),
 ('parda', 'kg', ARRAY['qiymat'], 9500, 7500, 1),
 ('parda', 'kg', ARRAY['qiymat'], 8000, 6000, 2);
+
+-- delivery hours
+insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_id) VALUES 
+(48, 96, 1),
+(24, 72, 2);

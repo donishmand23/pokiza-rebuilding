@@ -10,6 +10,10 @@ const branch = ({ branchId }) => {
 	return fetch(BranchQuery.BRANCHES, branchId)
 }
 
+const deliveryHours = ({ branchId }) => {
+	return fetchAll(ServiceQuery.DELIVERY_HOURS, branchId)
+}
+
 const addService = ({ 
 	branchId, 
 	serviceName, 
@@ -47,10 +51,16 @@ const enableService = ({ serviceId }) => {
 	return fetchAll(ServiceQuery.DISABLE_SERVICE, serviceId, true)
 }
 
+const changeDeliveryHour = ({ deliveryHourId, deliveryHourSpecial, deliveryHourSimple }) => {
+	return fetch(ServiceQuery.CHANGE_DELIVERY_HOUR, deliveryHourId, deliveryHourSpecial, deliveryHourSimple)
+}
+
 
 export default {
+	changeDeliveryHour,
 	disableService,
 	enableService,
+	deliveryHours,
 	changeService,
 	addService,
 	services,

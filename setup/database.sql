@@ -6,17 +6,8 @@ create database pokiza;
 
 create extension "pgcrypto";
 
--- 01. sms service
-drop table if exists sms_service cascade;
-create table sms_service (
-	sms_service_id bigserial not null primary key,
-	sms_service_email character varying(128) not null,
-	sms_service_password character varying(128) not null,
-	sms_service_token text not null,
-	sms_service_created_at timestamptz default current_timestamp
-);
-
--- 03. branches
+-- ADDRESS MODULE
+-- 01. branches
 drop table if exists branches cascade;
 create table branches (
 	branch_id bigserial not null primary key,
@@ -25,9 +16,7 @@ create table branches (
 	branch_deleted_at timestamptz default null
 );
 
-
--- ADDRESSES MODULE
--- 04. states
+-- 02. states
 drop table if exists states cascade;
 create table states (
 	state_id bigserial not null primary key,
@@ -36,7 +25,7 @@ create table states (
 	state_deleted_at timestamptz default null
 );
 
--- 05. regions
+-- 03. regions
 drop table if exists regions cascade;
 create table regions (
 	region_id bigserial not null primary key,
@@ -47,7 +36,7 @@ create table regions (
 	region_deleted_at timestamptz default null
 );
 
--- 06. neighborhoods
+-- 04. neighborhoods
 drop table if exists neighborhoods cascade;
 create table neighborhoods (
 	neighborhood_id bigserial not null primary key,
@@ -58,7 +47,7 @@ create table neighborhoods (
 	neighborhood_deleted_at timestamptz default null
 );
 
--- 07. streets
+-- 05. streets
 drop table if exists streets cascade;
 create table streets (
 	street_id bigserial not null primary key,
@@ -68,7 +57,7 @@ create table streets (
 	street_deleted_at timestamptz default null
 );
 
--- 08. areas
+-- 06. areas
 drop table if exists areas cascade;
 create table areas (
 	area_id bigserial not null primary key,
@@ -78,7 +67,7 @@ create table areas (
 	area_deleted_at timestamptz default null
 );
 
--- 09. neighborhood-streets ( join table to reference neighborhoods and streets )
+-- 07. neighborhood-streets ( join table to reference neighborhoods and streets )
 drop table if exists neighborhood_streets cascade;
 create table neighborhood_streets (
 	neighborhood_street_id bigserial not null primary key,
@@ -88,7 +77,7 @@ create table neighborhood_streets (
 	neighborhood_street_deleted_at timestamptz default null
 );
 
--- 10. street-areas ( join table to reference streets and areas )
+-- 08. street-areas ( join table to reference streets and areas )
 drop table if exists street_areas cascade;
 create table street_areas (
 	street_area_id bigserial not null primary key,
@@ -98,17 +87,7 @@ create table street_areas (
 	street_area_deleted_at timestamptz default null
 );
 
--- USER SYSTEM MODULE
--- analitics
-drop table if exists social_sets cascade;
-create table social_sets (
-	social_set_id serial not null primary key,
-	social_set_name character varying(30) not null,
-	social_set_icon text not null,
-	social_set_created_at timestamptz default current_timestamp
-);
-
--- 11. addresses ( table for storing user and order adresses ) 
+-- 09. addresses ( table for storing user and order adresses ) 
 drop table if exists addresses cascade;
 create table addresses (
 	address_id bigserial not null primary key,
@@ -123,7 +102,18 @@ create table addresses (
 	address_deleted_at timestamptz default null
 );
 
--- 12. users ( general info for staffs and clients )
+
+-- USER SYSTEM MODULE
+-- 10. analitics (social sets to detect where the client hear from)
+drop table if exists social_sets cascade;
+create table social_sets (
+	social_set_id serial not null primary key,
+	social_set_name character varying(30) not null,
+	social_set_icon text not null,
+	social_set_created_at timestamptz default current_timestamp
+);
+
+-- 11. users ( general info for staffs and clients )
 drop table if exists users cascade;
 create table users (
 	user_id bigserial not null primary key,
@@ -141,7 +131,7 @@ create table users (
 	unique(user_main_contact)
 );
 
--- 13. staffs
+-- 12. staffs
 drop table if exists staffs cascade;
 create table staffs (
 	staff_id bigserial not null primary key,
@@ -153,7 +143,7 @@ create table staffs (
 	unique(user_id)
 );
 
--- 14. clients
+-- 13. clients
 drop table if exists clients cascade;
 create table clients (
 	client_id bigserial not null primary key,
@@ -166,21 +156,9 @@ create table clients (
 	unique(user_id)
 );
 
-drop table if exists notifications cascade;
-create table notifications (
-	notification_id serial not null primary key,
-	notification_from bigint not null references staffs(staff_id),
-	notification_to bigint not null references users(user_id),
-	notification_title character varying(300) not null,
-	notification_body text not null,
-	notification_img text,
-	notification_created_at timestamptz default current_timestamp,
-	notification_deleted_at timestamptz default null
-);
 
 -- SERVICES MODULE
-
--- 17. services ( services company presents )
+-- 14. services ( services company presents )
 drop table if exists services cascade;
 create table services (
 	service_id bigserial not null primary key,
@@ -197,6 +175,40 @@ create table services (
 	unique(service_name, branch_id, service_active)
 );
 
+-- 15. delivery hours (storing delivery hours for special and simple orders)
+drop table if exists delivery_hours cascade;
+create table delivery_hours (
+	delivery_hour_id bigserial not null primary key,
+	delivery_hour_special int not null, 
+	delivery_hour_simple int not null,
+	branch_id int not null references branches(branch_id),
+	delivery_hour_created_at timestamptz default current_timestamp
+);
+
+
+-- EXTRA SERVICES 
+-- 16. sms service
+drop table if exists sms_service cascade;
+create table sms_service (
+	sms_service_id bigserial not null primary key,
+	sms_service_email character varying(128) not null,
+	sms_service_password character varying(128) not null,
+	sms_service_token text not null,
+	sms_service_created_at timestamptz default current_timestamp
+);
+
+-- 17. notifications (notifications sent to clients and staffs)
+drop table if exists notifications cascade;
+create table notifications (
+	notification_id serial not null primary key,
+	notification_from bigint not null references staffs(staff_id),
+	notification_to bigint not null references users(user_id),
+	notification_title character varying(300) not null,
+	notification_body text not null,
+	notification_img text,
+	notification_created_at timestamptz default current_timestamp,
+	notification_deleted_at timestamptz default null
+);
 
 -- -- PERMISSIONS MODULE
 -- -- 23. permissions ( general permission actions )
@@ -233,26 +245,6 @@ create table services (
 -- 	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
 -- 	permission_action int not null references permissions(permission_action),
 -- 	unique (group_id, permission_action)
--- );
-
--- -- DATABASE GENERAL INFORMATION
--- -- 01. sms service
--- drop table if exists sms_info cascade;
--- create table sms_info (
--- 	info_id bigserial not null primary key,
--- 	email character varying(128) not null,
--- 	password character varying(128) not null,
--- 	token text not null,
--- 	token_time timestamptz default current_timestamp
--- );
-
--- -- 02. files
--- drop table if exists files cascade;
--- create table files (
--- 	file_id bigserial not null primary key,
--- 	file_field character varying(64) not null,
--- 	file_path text not null,
--- 	file_field_id bigint not null
 -- );
 
 

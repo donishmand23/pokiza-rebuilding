@@ -218,6 +218,9 @@ export default {
 			if(obj.service_id && obj.service_created_at) {
 				return 'Service'
 			}
+			if(obj.delivery_hour_id && obj.delivery_hour_created_at) {
+				return 'DeliveryHour'
+			}
 		}
 	},
 

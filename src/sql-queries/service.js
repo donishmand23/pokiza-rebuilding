@@ -98,9 +98,43 @@ const DISABLE_SERVICE = `
 	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
 `
 
+const DELIVERY_HOURS = `
+	SELECT
+		delivery_hour_id,
+		delivery_hour_special,
+		delivery_hour_simple,
+		branch_id,
+		to_char(delivery_hour_created_at, 'YYYY-MM-DD HH24:MI:SS') delivery_hour_created_at
+	FROM delivery_hours
+	WHERE
+	CASE
+		WHEN $1 > 0 THEN branch_id = $1
+		ELSE TRUE
+	END
+`
+
+const CHANGE_DELIVERY_HOUR = `
+	UPDATE delivery_hours dh SET
+		delivery_hour_special = (
+			CASE 
+				WHEN $2 > 0 THEN $2 ELSE dh.delivery_hour_special 
+			END
+		),
+		delivery_hour_simple = (
+			CASE 
+				WHEN $3 > 0 THEN $3 ELSE dh.delivery_hour_simple 
+			END
+		)
+	WHERE dh.delivery_hour_id = $1
+	RETURNING *,
+	to_char(delivery_hour_created_at, 'YYYY-MM-DD HH24:MI:SS') delivery_hour_created_at
+`
+
 
 export default {
+	CHANGE_DELIVERY_HOUR,
 	DISABLE_SERVICE,
+	DELIVERY_HOURS,
 	CHANGE_SERVICE,
 	ADD_SERVICE,
 	SERVICES

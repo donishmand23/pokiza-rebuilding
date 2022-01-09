@@ -12,10 +12,11 @@ scalar Any
 scalar Link
 scalar Token
 scalar Code
+scalar Hour
 
 
 # unions
-union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service
+union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service | DeliveryHour
 union UserType = Staff | Client
 
 #enums

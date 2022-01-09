@@ -1,6 +1,8 @@
 type Query {
 	services(serviceId: ID branchId: [ID!]): [Service!]!
 	disabledServices(serviceId: ID branchId: [ID!]): [Service!]!
+
+	deliveryHours(branchId: ID): [DeliveryHour!]!
 }
 
 type Mutation {
@@ -25,6 +27,8 @@ type Mutation {
 
 	disableService(serviceId: [ID!]!): MutationResponses!
 	enableService(serviceId: [ID!]!): MutationResponses!
+
+	changeDeliveryHour(deliveryHourId: ID! deliveryHourSpecial: Int deliveryHourSimple: Int): MutationResponse!
 }
 
 type Service {
@@ -36,4 +40,12 @@ type Service {
 	servicePriceSimple: Float!
 	serviceCreatedAt: DateTime!
 	branch: Branch!
+}
+
+type DeliveryHour {
+	deliveryHourId: ID!
+	deliveryHourSpecial: Hour!
+	deliveryHourSimple: Hour!
+	branch: Branch!
+	deliveryHourCreatedAt: DateTime!
 }
