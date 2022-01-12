@@ -69,8 +69,8 @@ const USER = `
 	LEFT JOIN clients c ON u.user_id = c.user_id
 	WHERE
 	CASE 
-		WHEN $1 = FALSE THEN s.staff_deleted_at IS NULL
-		WHEN $1 = TRUE THEN s.staff_deleted_at IS NOT NULL
+		WHEN $1 = FALSE THEN u.user_deleted_contact IS NULL
+		WHEN $1 = TRUE THEN u.user_deleted_contact IS NOT NULL
 	END AND
 	CASE
 		WHEN $2 > 0 THEN u.user_id = $2

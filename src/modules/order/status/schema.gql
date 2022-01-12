@@ -1,0 +1,16 @@
+type Query {
+	orderStatusInfo: [OrderStatusInfo!]!
+}
+
+type OrderStatusInfo {
+	statusCode: OrderStatusValue!
+	statusName: String!
+	statusDescription: String!
+}
+
+type OrderStatus {
+	statusCode: OrderStatusValue!
+	staff: Staff
+	statusChangeTime: DateTime!
+	statusInfo: OrderStatusInfo!
+}

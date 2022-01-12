@@ -21,6 +21,9 @@ import StaffModule from './user/staff/index.js'
 // service modules
 import ServiceModule from './service/service/index.js'
 
+// order modules
+import OrderModule from './order/order/index.js'
+import StatusModule from './order/status/index.js'
 
 export default {
 	typeDefs: [
@@ -43,6 +46,9 @@ export default {
   		StaffModule.typeDefs,
   		// service
   		ServiceModule.typeDefs,
+  		// order
+  		OrderModule.typeDefs,
+  		StatusModule.typeDefs,
 	],
 	resolvers: [
 		// address
@@ -64,5 +70,8 @@ export default {
   		StaffModule.resolvers,
   		// service
   		ServiceModule.resolvers,
+  		// order
+  		OrderModule.resolvers,
+  		StatusModule.resolvers,
 	]
 }

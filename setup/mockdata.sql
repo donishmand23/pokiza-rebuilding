@@ -250,10 +250,10 @@ insert into users (user_main_contact, user_second_contact, user_password, user_f
 
 -- staffs (xodimlar)
 insert into staffs (user_id, staff_img, staff_summary) values 
-(1, 'abdulhakim.jpg', 'super admin'),
-(2, 'hadicha.jpg', 'Yuvuvchi. Yaxshi ishchi'),
-(3, 'sardor.jpg', null),
-(6, 'alisher.jpg', 'Ajoyib xodim');
+/* 1 */(1, 'abdulhakim.jpg', 'super admin'),
+/* 2 */(2, 'hadicha.jpg', 'Yuvuvchi. Yaxshi ishchi'),
+/* 3 */(3, 'sardor.jpg', null),
+/* 4 */(6, 'alisher.jpg', 'Ajoyib xodim');
 
 
 
@@ -290,3 +290,31 @@ insert into services (service_name, service_unit, service_unit_keys, service_pri
 insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_id) VALUES 
 (48, 96, 1),
 (24, 72, 2);
+
+
+
+-----------------------------------------   ORDERS   ------------------------------------------------
+-- addresses (buyurtmalar uchun adresslar)
+insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id, address_home_number, address_target) values
+/* 9  */ (3, 1, 1, 1, 1, 25, 'bozorga yaqin joyda'),                   -- ToshkentSh, Olmazor, A mahalla, ABX ko''cha, alpha hudud   
+/* 10 */ (3, 2, 3, 7, 9, 12, 'bekat yaqinida'),                        -- ToshkentSh, Chilonzor, C mahalla, AZD ko''cha, zorri hudud
+/* 11 */ (3, 2, 4, 10, 10, 16, '13-kvartal'),                          -- ToshkentSh, Chilonzor, D mahalla, IUY ko''cha, aswed hudud
+/* 12 */ (2, 6, 11, 13, 17, 5, 'supreme degan do''kon ro''parasida'),  -- Farg''ona, Qo''qonSh, R mahalla, LWT ko''cha, tesrp hudud
+/* 13 */ (2, 6, 12, 14, 19, 13, 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
+
+-- orders
+insert into orders (client_id, branch_id, address_id, order_special, order_bring_time) VALUES
+/* 1 */ (1, 1, 9, true, '2022-02-08 15:30:00'),
+/* 2 */ (2, 1, 10, false, '2022-03-09 13:30:00'),
+/* 3 */ (2, 1, 10, true, '2022-02-10 12:05:00'),
+/* 4 */ (3, 2, 11, false, '2022-02-01 11:10:00');
+
+-- order statuses
+insert into order_statuses (order_id, staff_id, order_status_code) VALUES
+(1, null, 1),
+(1, 2, 2),
+(1, 3, 3),
+(2, 2, 2),
+(2, 2, 3),
+(3, null, 1),
+(4, null, 1);

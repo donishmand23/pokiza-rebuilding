@@ -6,6 +6,7 @@ scalar ID
 scalar SVG
 scalar Contact
 scalar Password
+scalar OrderStatusValue
 
 # simple scalars that do not have type check
 scalar Any
@@ -13,6 +14,7 @@ scalar Link
 scalar Token
 scalar Code
 scalar Hour
+scalar Second
 
 
 # unions
@@ -34,6 +36,11 @@ enum SortOptions {
 input Range {
 	from: Int!
 	to: Int!
+}
+
+input RangeDate {
+	from: DateTime!
+	to: DateTime!
 }
 
 input Pagination {

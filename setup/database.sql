@@ -167,7 +167,7 @@ create table services (
 	service_unit_keys varchar[] not null,
 	service_price_special numeric not null,
 	service_price_simple numeric not null,
-	branch_id bigint not null references branches(branch_id),
+	branch_id int not null references branches(branch_id),
 	service_created_at timestamptz default current_timestamp,
 	service_deleted_at timestamptz default null,
 	service_active boolean default true,
@@ -186,8 +186,59 @@ create table delivery_hours (
 );
 
 
+-- ORDERS MODULE
+-- 16. orders ( client orders )
+drop table if exists orders cascade;
+create table orders (
+	order_id bigserial not null primary key,
+	order_special boolean default false,	
+	order_summary character varying(256),
+	client_id bigint not null references clients(client_id),
+	branch_id bigint not null references branches(branch_id),
+	address_id bigint not null references addresses(address_id),
+	order_bring_time timestamptz default null,
+	order_brougth_time timestamptz default null,
+	order_delivery_time timestamptz default null,
+	order_delivered_time timestamptz default null,
+	order_created_at timestamptz default current_timestamp,
+	order_deleted_at timestamptz default null
+);
+
+-- 17. order status processes
+drop table if exists order_statuses cascade;
+create table order_statuses(
+	order_status_id bigserial not null primary key,
+	order_status_code smallint not null check (order_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+	order_id bigint not null references orders(order_id),
+	staff_id bigint references staffs(staff_id),
+	order_status_created_at timestamptz default current_timestamp
+);
+
+-- 18. products ( products each order contains )
+drop table if exists products cascade;
+create table products (
+	product_id bigserial not null primary key,
+	product_size smallint default 1,
+	product_size_details json not null,
+	product_summary character varying(356),
+	service_id bigint not null references services(service_id),
+	order_id bigint not null references orders(order_id),
+	product_created_at timestamptz default current_timestamp,
+	product_deleted_at timestamptz default null
+);
+
+-- 19. product status processes
+drop table if exists product_statuses cascade;
+create table product_statuses(
+	product_status_id bigserial not null primary key,
+	product_status_code smallint not null check (order_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9)),
+	product_id bigint not null references products(product_id),
+	staff_id bigint not null references staffs(staff_id),
+	product_status_created_at timestamptz default current_timestamp
+);
+
 -- EXTRA SERVICES 
--- 16. sms service
+-- 20. sms service
 drop table if exists sms_service cascade;
 create table sms_service (
 	sms_service_id bigserial not null primary key,
@@ -197,7 +248,7 @@ create table sms_service (
 	sms_service_created_at timestamptz default current_timestamp
 );
 
--- 17. notifications (notifications sent to clients and staffs)
+-- 21. notifications (notifications sent to clients and staffs)
 drop table if exists notifications cascade;
 create table notifications (
 	notification_id serial not null primary key,
@@ -265,38 +316,6 @@ create table notifications (
 -- );
 
 
--- -- ORDERS MODULE
--- -- 19. orders ( client orders )
--- drop table if exists orders cascade;
--- create table orders (
--- 	order_id bigserial not null primary key,
--- 	order_bring_time timestamptz default null,
--- 	order_delivery_time timestamptz default null,
--- 	order_special boolean default false,
--- 	order_status bigint default 1,
--- 	order_summary character varying(256),
--- 	client_id bigint not null references clients(client_id),
--- 	branch_id bigint not null references branches(branch_id),
--- 	address_id bigint not null references addresses(address_id),
--- 	order_created_at timestamptz default current_timestamp,
--- 	order_deleted_at timestamptz default null
--- );
-
--- -- 20. products ( products each order contains )
--- drop table if exists products cascade;
--- create table products (
--- 	product_id bigserial not null primary key,
--- 	product_size bigint default 1,
--- 	product_simple_price bigint not null,
--- 	product_special_price bigint not null,
--- 	product_name character varying(32) not null,
--- 	product_unit character varying(32) not null,
--- 	product_summary character varying(128),
--- 	product_status bigint not null default 1,
--- 	order_id bigint not null references orders(order_id),
--- 	product_created_at timestamptz default current_timestamp,
--- 	product_deleted_at timestamptz default null
--- );
 
 
 -- -- TRANSPORT MODULE

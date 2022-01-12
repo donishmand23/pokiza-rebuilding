@@ -1,3 +1,4 @@
+console.clear()
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ApolloServer } from 'apollo-server-express'
 import { graphqlUploadExpress } from 'graphql-upload'
@@ -49,10 +50,9 @@ const schema = makeExecutableSchema({
 
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
+    console.log(`🚀 Server ready at http://127.0.0.1:${PORT}${server.graphqlPath}`)
+    console.log(`🚀 Server ready at http://172.28.64.1:${PORT}${server.graphqlPath}`)
 })()
-
-
-
 
 
 /*
@@ -67,7 +67,6 @@ const schema = makeExecutableSchema({
     6. changeClient(userInfo - contact(check), address(branch), )
     5. changeStaff( userInfo, address(not branch), branch, img )
     6. sendMessage to users
-    7. sockets
    
 
     addClient(userInfo, address)
@@ -80,4 +79,7 @@ const schema = makeExecutableSchema({
 
     orderlar chiqarilayotganda ular tegishli bolgan user o'chirilgan yoki
     yo'qligi tekshirilsin
+
+    ORDERS
+        * orders can only be cancelled when their status one of 1, 2, 3, 4
 */

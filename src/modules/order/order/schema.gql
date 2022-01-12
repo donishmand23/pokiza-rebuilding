@@ -1,0 +1,52 @@
+type Query {
+	orders(
+		orderId: ID
+		search: String
+		clientId: [ID!]
+		branchId: [ID!]
+		orderSpecial: Boolean
+		orderStatus: [OrderStatusValue!] 
+		sort: OrderSort = {}
+		pagination: Pagination = {} 
+		dateFilter: OrderDateFilter = {}
+		addressFilter: AddressFilter = {}
+	): [Order!]!
+}
+
+type Order {
+	orderId: ID!
+	special: Boolean!
+	summary: String
+	client: Client!
+	branch: Branch!
+	address: Address!
+	status: OrderStatus!
+	statusProcess: [OrderStatus!]!
+	bringTimeRemaining: Second
+	deliveryTimeRemaining: Second
+	bringTime: DateTime
+	brougthTime: DateTime
+	deliveryTime: DateTime
+	deliveredTime: DateTime
+	orderCreatedAt: DateTime!
+}
+
+input OrderDateFilter {
+	bringTime: RangeDate
+	broughtTime: RangeDate
+	deliveryTime: RangeDate
+	deliveredTime: RangeDate
+	orderCreatedAt: RangeDate
+}
+
+input OrderSort {
+	orderId: SortOptions
+	orderStatus: SortOptions
+	firstName: SortOptions
+	lastName: SortOptions
+	bringTime: SortOptions
+	broughtTime: SortOptions
+	deliveryTime: SortOptions
+	deliveredTime: SortOptions
+}
+
