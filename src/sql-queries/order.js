@@ -23,20 +23,14 @@ const ORDERS = `
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
 	LEFT JOIN LATERAL (
-		SELECT * FROM order_statuses
-		WHERE order_id = o.order_id
-		ORDER BY order_status_id DESC
-		LIMIT 1
+		SELECT * FROM order_statuses WHERE order_id = o.order_id
+		ORDER BY order_status_id DESC LIMIT 1
 	) os ON os.order_id = o.order_id
 	LEFT JOIN (
 		SELECT
 			order_id,
-			EXTRACT( 
-				EPOCH FROM ( order_bring_time::TIMESTAMPTZ - NOW() ) 
-			) AS bring_time_remaining,
-			EXTRACT( 
-				EPOCH FROM ( order_delivery_time::TIMESTAMPTZ - NOW() ) 
-			) AS delivery_time_remaining
+			EXTRACT( EPOCH FROM (order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
+			EXTRACT( EPOCH FROM (order_delivery_time::TIMESTAMPTZ - NOW()) ) AS delivery_time_remaining
 		FROM orders
 	) tm ON tm.order_id = o.order_id
 	WHERE
@@ -72,8 +66,7 @@ const ORDERS = `
 	 		u.user_main_contact ILIKE CONCAT('%', $9::VARCHAR, '%') OR
 	 		u.user_second_contact ILIKE CONCAT('%', $9::VARCHAR, '%')
 		) WHEN LENGTH($9) > 0 THEN (
-			o.order_id::VARCHAR = $9::VARCHAR OR
-			c.client_id::VARCHAR = $9::VARCHAR
+			o.order_id::VARCHAR = $9::VARCHAR
 		) ELSE TRUE
 	END AND
 	CASE
@@ -141,6 +134,90 @@ const ORDERS = `
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
+const ORDER = `
+	SELECT
+		o.order_id,
+		o.order_special,
+		o.order_summary,
+		o.client_id,
+		o.branch_id,
+		o.address_id,
+		tm.bring_time_remaining,
+		tm.delivery_time_remaining,
+		to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
+		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
+		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
+		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	FROM orders o
+	NATURAL JOIN clients c
+	LEFT JOIN LATERAL (
+		SELECT * FROM order_statuses WHERE order_id = o.order_id
+		ORDER BY order_status_id DESC LIMIT 1
+	) os ON os.order_id = o.order_id
+	LEFT JOIN (
+		SELECT
+			order_id,
+			EXTRACT( EPOCH FROM (order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
+			EXTRACT( EPOCH FROM (order_delivery_time::TIMESTAMPTZ - NOW()) ) AS delivery_time_remaining
+		FROM orders
+	) tm ON tm.order_id = o.order_id
+	WHERE
+	CASE 
+		WHEN $1 = FALSE THEN o.order_deleted_at IS NULL
+		WHEN $1 = TRUE THEN o.order_deleted_at IS NOT NULL
+	END AND
+	CASE
+		WHEN $2 > 0 THEN o.order_id = $2
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN c.client_id = ANY($3::INT[])
+		ELSE TRUE
+	END
+`
+
+const ADD_ORDER = `
+	WITH 
+	address AS (
+		INSERT INTO addresses (
+			state_id, region_id, neighborhood_id, street_id, 
+			area_id, address_home_number, address_target
+		) VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING address_id, region_id
+	),
+	new_order AS (
+		INSERT INTO orders (
+			client_id,
+			order_special,
+			order_summary,
+			order_bring_time,
+			branch_id,
+			address_id
+		) SELECT $8, $10, $11, $12, r.branch_id, a.address_id
+		FROM address a
+		LEFT JOIN regions r ON a.region_id = r.region_id
+		RETURNING *,
+		EXTRACT( EPOCH FROM (order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
+		to_char(order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	),
+	new_order_status AS (
+		INSERT INTO order_statuses (
+			order_id,
+			staff_id,
+			order_status_code
+		) SELECT no.order_id, $9::INT, 
+			CASE
+				WHEN $9 > 0 THEN 2
+				ELSE 1
+			END
+		FROM new_order no
+		WHERE no.order_id IS NOT NULL
+		RETURNING *
+	) SELECT * FROM new_order WHERE order_id IS NOT NULL
+`
+
 const ORDER_STATUSES = `
 	SELECT
 		order_status_code,
@@ -154,5 +231,7 @@ const ORDER_STATUSES = `
 
 export default {
 	ORDER_STATUSES,
-	ORDERS
+	ADD_ORDER,
+	ORDERS,
+	ORDER
 }

@@ -24,6 +24,7 @@ export default function ({ req }) {
             'notifications', 
             'sendNotification',
             'sendSMS',
+            'addOrder'
         ].includes(fieldName))
     ) return
 
@@ -65,5 +66,9 @@ export default function ({ req }) {
         return { staffId }
     }
 
+    if(fieldName == 'addOrder') {
+        if(!registered) throw new Error('Siz uchun ruxsat yo\'q')
+        return { staffId, clientId }
+    }
 }
 

@@ -13,6 +13,16 @@ type Query {
 	): [Order!]!
 }
 
+type Mutation {
+	addOrder(
+		clientId: ID
+		special: Boolean!
+		summary: String
+		bringTime: DateTime
+		address: AddressInput!
+	): MutationResponse!
+}
+
 type Order {
 	orderId: ID!
 	special: Boolean!

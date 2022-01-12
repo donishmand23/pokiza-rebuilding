@@ -2,6 +2,21 @@ import orderModel from './model.js'
 import { mError } from '#helpers/error'
 
 export default {
+	Mutation: {
+		addOrder: async (_, args, { clientId, staffId }) => {
+			try {
+				const newOrder = await orderModel.addOrder(args, { clientId, staffId })
+				if(newOrder) {
+					return {
+						status: 200,
+						message: "Buyurtma qabul qilindi!",
+						data: newOrder
+					}
+				} else throw new Error("Buyurtmani qabul qilishda muammolik yuz berdi!")  
+			} catch(error) { return mError(error) }
+		},
+	},
+
 	Query: {
 		orders: async (_, args) => {
 			try {

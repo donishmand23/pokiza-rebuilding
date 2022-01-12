@@ -1,7 +1,8 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
-import ClientQuery from '#sql/client'
 import SocialSetQuery from '#sql/socialSet'
+import ClientQuery from '#sql/client'
+import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
 
 const clients = ({ 
@@ -76,6 +77,12 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 }
 
 const deleteClient = async ({ clientId }) => {
+	const orders = await fetchAll(OrderQuery.ORDER, false, 0, clientId)
+
+	if(orders.length) {
+		throw new Error("Mijozning faol buyurtmalari borligi uchun uni o'chirib bo'lmaydi!")
+	}
+
 	const deletedClients = []
 	for(let id of clientId) {
 		const deletedClient = await fetch(ClientQuery.DELETE_CLIENT, id)

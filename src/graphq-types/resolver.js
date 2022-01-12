@@ -244,6 +244,9 @@ export default {
 			if(obj.delivery_hour_id && obj.delivery_hour_created_at) {
 				return 'DeliveryHour'
 			}
+			if(obj.order_id && obj.order_created_at) {
+				return 'Order'
+			}
 		}
 	},
 

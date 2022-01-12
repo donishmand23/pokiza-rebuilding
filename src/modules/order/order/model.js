@@ -1,3 +1,4 @@
+import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
 import AddressQuery from '#sql/address'
 import BranchQuery from '#sql/branch'
@@ -51,7 +52,7 @@ const branch = ({ branchId }) => {
 }
 
 const address = ({ addressId }) => {
-	return fetchAll(AddressQuery.ADDRESS, addressId)
+	return fetch(AddressQuery.ADDRESS, addressId)
 }
 
 const client = async ({ clientId }) => {
@@ -59,9 +60,27 @@ const client = async ({ clientId }) => {
 	return client
 }
 
+const addOrder = async ({ clientId, special, summary, bringTime, address }, user) => {
+	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
+
+	if(user.staffId && !clientId) {
+		throw new Error("clientId is required!")
+	}
+
+	await checkAddress(address)
+
+	return fetch(
+		OrderQuery.ADD_ORDER,
+		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
+		user.staffId ? clientId : user.clientId, user.staffId,
+		special, summary, bringTime,
+	)
+}
+
 
 export default {
 	orderStatuses,
+	addOrder,
 	address,
 	client,
 	branch,

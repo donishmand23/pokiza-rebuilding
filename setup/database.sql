@@ -231,7 +231,7 @@ create table products (
 drop table if exists product_statuses cascade;
 create table product_statuses(
 	product_status_id bigserial not null primary key,
-	product_status_code smallint not null check (order_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9)),
+	product_status_code smallint not null check (product_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9)),
 	product_id bigint not null references products(product_id),
 	staff_id bigint not null references staffs(staff_id),
 	product_status_created_at timestamptz default current_timestamp
