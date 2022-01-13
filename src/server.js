@@ -55,31 +55,4 @@ const schema = makeExecutableSchema({
 })()
 
 
-/*
-    Plan
-    1. clients (filter, sort, pagination)
-    2. staffs (filter, sort, pagination)
-    3. deleteClient
-        * if not have orders
-    4. deleteStaff
-        * if not have registered cars and orders to receive or deliver
-        * if not an accountant and have money on account
-    6. changeClient(userInfo - contact(check), address(branch), )
-    5. changeStaff( userInfo, address(not branch), branch, img )
-    6. sendMessage to users
-   
-
-    addClient(userInfo, address)
-    enterClientPhone(contact { 3 min })
-    enterClientPassword
-    registerClient
-    checkPhoneNumber (contact)
-
-
-
-    orderlar chiqarilayotganda ular tegishli bolgan user o'chirilgan yoki
-    yo'qligi tekshirilsin
-
-    ORDERS
-        * orders can only be cancelled when their status one of 1, 2, 3, 4
-*/
+console.log((new Date('2020-02-15 20:00:00')).toLocaleString('uz-UZ'))

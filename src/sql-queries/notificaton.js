@@ -45,15 +45,7 @@ const SEND_NOTIFICATION = `
 
 const DELETE_NOTIFICATIONS = `
 	DELETE FROM notifications
-	WHERE
-	CASE
-		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN notification_id = ANY($1::INT[])
-		ELSE TRUE
-	END AND
-	CASE
-		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN notification_to = ANY($2::INT[])
-		ELSE TRUE
-	END
+	WHERE notification_to = $1 AND notification_id = ANY($2::INT[])
 	RETURNING *
 `
 

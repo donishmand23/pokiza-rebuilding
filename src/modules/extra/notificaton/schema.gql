@@ -12,7 +12,7 @@ type Mutation {
 		notificationBody: String!
 	): MutationResponse!
 
-	deleteNotifications(notificationId: [ID!] userId: [ID!]): MutationResponse!
+	deleteNotifications(notificationId: [ID!]!): MutationResponse!
 }
 
 type Notification {

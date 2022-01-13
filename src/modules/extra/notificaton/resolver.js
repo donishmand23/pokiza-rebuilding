@@ -18,16 +18,16 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		deleteNotifications: async (_, args) => {
+		deleteNotifications: async (_, args, { userId }) => {
 			try {
-				const deletedNotifications = await notificationModel.deleteNotifications(args)
+				const deletedNotifications = await notificationModel.deleteNotifications({ userId, ...args })
 				if(deletedNotifications.length) {
 					return {
 						status: 200,
 						message: "Xabarnomalar o'chirildi! Ularni qayta tiklab bo'lmaydi",
 						data: null
 					}
-				} else throw new Error("Xabarnomalar allaqachon o'chirib yuborilgan!")
+				} else throw new Error("Bunday xabarnomalar mavjud emas!")
 			} catch(error) { return mError(error) }
 		}
 	},
