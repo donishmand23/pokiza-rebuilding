@@ -21,6 +21,14 @@ type Mutation {
 		bringTime: DateTime
 		address: AddressInput!
 	): MutationResponse!
+
+	changeOrder(
+		orderId: ID!
+		bringTime: DateTime
+		special: Boolean
+		summary: String
+		address: AddressInput
+	): MutationResponse!
 }
 
 type Order {
@@ -59,4 +67,3 @@ input OrderSort {
 	deliveryTime: SortOptions
 	deliveredTime: SortOptions
 }
-

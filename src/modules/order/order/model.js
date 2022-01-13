@@ -17,7 +17,7 @@ const orders = ({
 	orderStatus,
 	orderSpecial,
 	addressFilter,
-}) => {
+}, user) => {
 	const sortNameValues = { orderId: 1, firstName: 2, lastName: 3, orderStatus: 4, broughtTime: 5, deliveredTime: 6, bringTime: 7, deliveryTime: 8 }
 	const sortObject = Object.keys(sort).map(key => {
 		if(sort[key]) {
@@ -28,6 +28,10 @@ const orders = ({
 	Object.keys(dateFilter).map(key => {
 		dateFilter[key] = [dateFilter[key].from, dateFilter[key].to]
 	})
+
+	if(user.clientId) {
+		clientId = [user.clientId]
+	}
 
 	const { page, limit } = pagination
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
@@ -67,15 +71,29 @@ const addOrder = async ({ clientId, special, summary, bringTime, address }, user
 		throw new Error("clientId is required!")
 	}
 
+	if(user.clientId) {
+		clientId = user.clientId
+	}
+
 	await checkAddress(address)
 
 	return fetch(
 		OrderQuery.ADD_ORDER,
 		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
-		user.staffId ? clientId : user.clientId, user.staffId,
+		clientId, user.staffId,
 		special, summary, bringTime,
 	)
 }
+
+const changeOrder = async ({ orderId, bringTime, special, summary, address }, user) => {
+	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
+
+	if(clientId) {
+		throw new Error("clientId is required!")
+	}
+
+	await checkAddress(address)
+}	
 
 
 export default {

@@ -15,12 +15,25 @@ export default {
 				} else throw new Error("Buyurtmani qabul qilishda muammolik yuz berdi!")  
 			} catch(error) { return mError(error) }
 		},
+
+		changeOrder: async (_, args, { clientId, staffId }) => {
+			try {
+				const updatedOrder = await orderModel.changeOrder(args, { clientId, staffId })
+				if(updatedOrder) {
+					return {
+						status: 200,
+						message: "Buyurtma ma'lumotlari yangilandi!",
+						data: updatedOrder
+					}
+				} else throw new Error("Buyurtma ma'lumotlarini yangilashda muammolik yuz berdi!")  
+			} catch(error) { return mError(error) }
+		},
 	},
 
 	Query: {
-		orders: async (_, args) => {
+		orders: async (_, args, { clientId }) => {
 			try {
-				const orders = await orderModel.orders({ isDeleted: false, ...args })
+				const orders = await orderModel.orders({ isDeleted: false, ...args }, { clientId })
 				return orders
 			} catch(error) {
 				throw error
