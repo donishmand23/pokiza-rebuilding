@@ -15,7 +15,7 @@ const clients = ({
 	clientStatus, 
 	addressFilter,
 	userInfoFilter, 
-}) => {
+}, user) => {
 	const { page, limit } = pagination
 	const { age, gender, branchId } = userInfoFilter
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
@@ -26,6 +26,10 @@ const clients = ({
 			return { sortKey: sortNameValues[key], value: sort[key] }
 		}
 	} ).filter( elem => elem !== undefined )[0]
+
+	if(user.clientId) {
+		clientId = user.clientId
+	}
 
 	return fetchAll(
 		ClientQuery.CLIENTS,
@@ -68,7 +72,7 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 	if(user.staffId && !clientId) {
 		throw new Error("clientId is required!")
 	}
-	
+
 	if(user.clientId) {
 		clientId = user.clientId
 	}
