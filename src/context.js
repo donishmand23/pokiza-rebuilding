@@ -8,6 +8,8 @@ export default function ({ req }) {
     const Token = req.headers.token
     const reqAgent = req['headers']['user-agent'].trim()
 
+    if(fieldName == '__schema') return
+
     // public queries
     if( 
         [      
@@ -116,7 +118,5 @@ export default function ({ req }) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
         return { userId, staffId }
     }
-
-    return
 
 }
