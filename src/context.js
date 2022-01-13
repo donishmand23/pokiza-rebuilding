@@ -93,8 +93,8 @@ export default function ({ req }) {
         [
             'clients',
             'deleteClient',
-            'changeClient',
             'restoreClient',
+            'changeClient',
             'orders',
             'addOrder',
             'changeOrder',
