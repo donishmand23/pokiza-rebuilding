@@ -9,24 +9,53 @@ export default function ({ req }) {
     const reqAgent = req['headers']['user-agent'].trim()
 
     // public queries
-    if(fieldName === 'loginStaff') {
-        return { agent: reqAgent }
-    }
-
-    if(fieldName === 'enterClientPhone') {
-        return { agent: reqAgent }
-    }
-
     if( 
-        !([
-            'enterClientPassword', 
-            'fillClientData', 
-            'notifications', 
-            'sendNotification',
-            'sendSMS',
-            'addOrder'
-        ].includes(fieldName))
-    ) return
+        [      
+            'socialSets',
+            'areas',
+            'branches',
+            'neighborhoods',
+            'regions',
+            'states',
+            'streets',
+            'loginStaff',
+            'enterClientPhone',
+
+            // later will be moved to client and staff only section
+            'searchGlobal',
+            'services',
+            'orderStatusInfo',
+
+            // later will be moved to staffs only section
+            'disabledServices',
+            'deliveryHours',
+            'addService',
+            'changeService',
+            'disableService',
+            'enableService',
+            'changeDeliveryHour',
+            'addSocialSet',
+            'changeSocialSet',
+            'disabledAddresses', 
+            'disableAddress', 
+            'enableAddress',
+            'addArea',
+            'changeArea',
+            'addBranch',
+            'changeBranch',
+            'addNeighborhood',
+            'changeNeighborhood',
+            'addRegion',
+            'changeRegion',
+            'addState',
+            'changeState',
+            'addStreet',
+            'changeStreet',
+        ].includes(fieldName)
+    ) {
+        return { agent: reqAgent }
+    }
+
 
     // private queries
     if(!Token) {
@@ -51,24 +80,29 @@ export default function ({ req }) {
         }
     }
 
-    if(fieldName == 'notifications') {
+    // only registred clients and staffs
+    if(
+        [
+            'orders',
+            'addOrder',
+            'changeOrder',
+            'notifications',
+            'deleteNotifications',
+        ].includes(fieldName)
+    ) {
         if(!registered) throw new Error('Siz uchun ruxsat yo\'q')
-        return { userId }
+        return { userId, staffId, clientId }
     }
 
-    if(fieldName == 'sendNotification') {
+    // only registred staffs
+    if(
+        [   
+            'sendNotifications',
+            'sendSMS',
+        ].includes(fieldName)
+    ) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
-        return { staffId }
-    } 
-
-    if(fieldName == 'sendSMS') {
-        if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
-        return { staffId }
+        return { userId, staffId }
     }
 
-    if(fieldName == 'addOrder') {
-        if(!registered) throw new Error('Siz uchun ruxsat yo\'q')
-        return { staffId, clientId }
-    }
 }
-
