@@ -65,7 +65,7 @@ const addClient = async ({ mainContact, socialSetId, clientStatus, clientSummary
 	)
 }
 
-const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, userAddress }, user) => {
+const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, userAddress = {} }, user) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
 	const { firstName, lastName, mainContact, secondContact, birthDate, gender } = userInfo
 

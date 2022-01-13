@@ -47,7 +47,7 @@ const addStaff = async ({ mainContact, password, branchId, file, staffSummary, u
 	)
 }
 
-const changeStaff = async ({ staffId, password, branchId, file, staffSummary, userInfo, userAddress }) => {
+const changeStaff = async ({ staffId, password, branchId, file, staffSummary, userInfo, userAddress = {} }) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
 	const { firstName, lastName, mainContact, secondContact, birthDate, gender } = userInfo
 	

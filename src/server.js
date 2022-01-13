@@ -53,6 +53,3 @@ const schema = makeExecutableSchema({
     console.log(`🚀 Server ready at http://127.0.0.1:${PORT}${server.graphqlPath}`)
     console.log(`🚀 Server ready at http://172.28.64.1:${PORT}${server.graphqlPath}`)
 })()
-
-
-console.log((new Date('2020-02-15 20:00:00')).toLocaleString('uz-UZ'))
