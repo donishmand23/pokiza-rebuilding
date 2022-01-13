@@ -8,6 +8,7 @@ const ORDERS = `
 		o.address_id,
 		tm.bring_time_remaining,
 		tm.delivery_time_remaining,
+		count(*) OVER() as full_count,
 		to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,

@@ -42,6 +42,7 @@ export default {
 	},
 	
 	Order: {
+		count: 	               global => global.full_count,
 		orderId:        	   global => global.order_id,
 		special:        	   global => global.order_special,
 		summary:        	   global => global.order_summary,

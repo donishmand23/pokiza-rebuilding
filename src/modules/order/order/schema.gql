@@ -47,6 +47,7 @@ type Order {
 	deliveryTime: DateTime
 	deliveredTime: DateTime
 	orderCreatedAt: DateTime!
+	count: Int
 }
 
 input OrderDateFilter {
