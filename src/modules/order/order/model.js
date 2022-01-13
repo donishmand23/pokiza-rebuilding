@@ -85,19 +85,30 @@ const addOrder = async ({ clientId, special, summary, bringTime, address }, user
 	)
 }
 
-const changeOrder = async ({ orderId, bringTime, special, summary, address }, user) => {
+const changeOrder = async ({ orderId, bringTime, special, summary, address = {} }, { clientId }) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
 
-	if(clientId) {
-		throw new Error("clientId is required!")
+	const statuses = await orderStatuses({ orderId })
+	if(
+		![1, 2, 3, 4].includes(+statuses[statuses.length - 1].order_status_code) &&
+		(bringTime || special == false || special == true || address)
+	) {
+		throw new Error("Buyurtmaning ma'lumotlarini o'zgartirish mumkin emas!")
 	}
 
 	await checkAddress(address)
+
+	return fetch(
+		OrderQuery.CHANGE_ORDER, orderId, clientId, Boolean(Object.keys(address).length),
+		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
+		bringTime, special, summary
+	)
 }	
 
 
 export default {
 	orderStatuses,
+	changeOrder,
 	addOrder,
 	address,
 	client,

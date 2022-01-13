@@ -218,6 +218,101 @@ const ADD_ORDER = `
 	) SELECT * FROM new_order WHERE order_id IS NOT NULL
 `
 
+const CHANGE_ORDER = `
+	WITH 
+	address AS (
+		UPDATE addresses a SET
+			state_id = (
+				CASE 
+					WHEN $3 = FALSE THEN a.state_id
+					WHEN $3 = TRUE AND $4 > 0 THEN $4
+					ELSE NULL
+				END
+			), 
+			region_id = (
+				CASE 
+					WHEN $3 = FALSE THEN a.region_id
+					WHEN $3 = TRUE AND $5 > 0 THEN $5
+					ELSE NULL
+				END
+			), 
+			neighborhood_id = (
+				CASE 
+					WHEN $3 = FALSE THEN a.neighborhood_id
+					WHEN $3 = TRUE AND $6 > 0 THEN $6
+					ELSE NULL
+				END
+			), 
+			street_id = (
+				CASE 
+					WHEN $3 = FALSE THEN a.street_id
+					WHEN $3 = TRUE AND $7 > 0 THEN $7
+					ELSE NULL
+				END
+			), 
+			area_id = (
+				CASE 
+					WHEN $3 = FALSE THEN a.area_id
+					WHEN $3 = TRUE AND $8 > 0 THEN $8
+					ELSE NULL
+				END
+			), 
+			address_home_number = (
+				CASE 
+					WHEN $3 = FALSE THEN a.address_home_number
+					WHEN $3 = TRUE AND $9 > 0 THEN $9
+					ELSE NULL
+				END
+			), 
+			address_target = (
+				CASE 
+					WHEN $3 = FALSE THEN a.address_target
+					WHEN $3 = TRUE AND LENGTH($10) > 0 THEN $10
+					ELSE NULL
+				END
+			)
+		FROM orders o
+		WHERE o.order_deleted_at IS NULL AND
+		o.address_id = a.address_id AND o.order_id = $1 AND
+		CASE
+			WHEN $2 > 0 THEN o.client_id = $2
+			ELSE TRUE
+		END
+		RETURNING a.address_id, a.region_id
+	) UPDATE orders o SET
+		order_bring_time = (
+			CASE
+				WHEN LENGTH($11) > 0 THEN $11::TIMESTAMPTZ
+				ELSE o.order_bring_time
+			END
+		),
+		order_special = (
+			CASE
+				WHEN LENGTH($12) > 0 THEN CAST($12 AS BOOLEAN)
+				ELSE o.order_special
+			END
+		),
+		order_summary = (
+			CASE
+				WHEN LENGTH($13) > 0 THEN $13
+				ELSE o.order_summary
+			END
+		),
+		branch_id = r.branch_id
+	FROM address a
+	LEFT JOIN regions r ON r.region_id = a.region_id
+	WHERE o.order_deleted_at IS NULL AND 
+	o.address_id = a.address_id AND o.order_id = $1 AND
+	CASE
+		WHEN $2 > 0 THEN o.client_id = $2
+		ELSE TRUE
+	END
+	RETURNING o.*,
+	EXTRACT( EPOCH FROM (o.order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
+	to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+	to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+`
+
 const ORDER_STATUSES = `
 	SELECT
 		order_status_code,
@@ -231,6 +326,7 @@ const ORDER_STATUSES = `
 
 export default {
 	ORDER_STATUSES,
+	CHANGE_ORDER,
 	ADD_ORDER,
 	ORDERS,
 	ORDER

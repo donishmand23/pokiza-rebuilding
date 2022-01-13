@@ -16,16 +16,16 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeOrder: async (_, args, { clientId, staffId }) => {
+		changeOrder: async (_, args, { clientId }) => {
 			try {
-				const updatedOrder = await orderModel.changeOrder(args, { clientId, staffId })
+				const updatedOrder = await orderModel.changeOrder(args, { clientId })
 				if(updatedOrder) {
 					return {
 						status: 200,
 						message: "Buyurtma ma'lumotlari yangilandi!",
 						data: updatedOrder
 					}
-				} else throw new Error("Buyurtma ma'lumotlarini yangilashda muammolik yuz berdi!")  
+				} else throw new Error("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
 			} catch(error) { return mError(error) }
 		},
 	},
