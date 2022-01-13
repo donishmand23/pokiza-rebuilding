@@ -21,7 +21,6 @@ export default function (body) {
         }
     }
 
-
     const variables = variablesParser(firstOperationDefinition(parsedQuery))
 
     function variablesParser (operationDefinition) {
@@ -39,7 +38,7 @@ export default function (body) {
                 throw new Error(`The value of ${argName} argument of ${fieldName} ${operation} must be $${argName}. Entered $${paramName}`)
             }
         }
-
+        
         return body.variables
     }
  
