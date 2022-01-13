@@ -61,9 +61,17 @@ const addClient = async ({ mainContact, socialSetId, clientStatus, clientSummary
 	)
 }
 
-const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, userAddress }) => {
+const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, userAddress }, user) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
 	const { firstName, lastName, mainContact, secondContact, birthDate, gender } = userInfo
+
+	if(user.staffId && !clientId) {
+		throw new Error("clientId is required!")
+	}
+	
+	if(user.clientId) {
+		clientId = user.clientId
+	}
 	
 	await checkContact(mainContact)
 	await checkAddress(userAddress)
@@ -76,9 +84,12 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 	)
 }
 
-const deleteClient = async ({ clientId }) => {
-	const orders = await fetchAll(OrderQuery.ORDER, false, 0, clientId)
+const deleteClient = async ({ clientId }, user) => {
+	if(user.clientId) {
+		clientId = [user.clientId]
+	}
 
+	const orders = await fetchAll(OrderQuery.ORDER, false, 0, clientId)
 	if(orders.length) {
 		throw new Error("Mijozning faol buyurtmalari borligi uchun uni o'chirib bo'lmaydi!")
 	}
@@ -91,7 +102,11 @@ const deleteClient = async ({ clientId }) => {
 	return deletedClients
 }
 
-const restoreClient = async ({ clientId }) => {
+const restoreClient = async ({ clientId }, user) => {
+	if(user.clientId) {
+		clientId = [user.clientId]
+	}
+
 	const restoredClients = []
 	for(let id of clientId) {
 		const restoredClient = await fetch(ClientQuery.RESTORE_CLIENT, id)

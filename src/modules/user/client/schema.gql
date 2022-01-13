@@ -33,7 +33,7 @@ type Mutation {
 	): MutationResponse!
 
 	changeClient(
-		clientId: ID!
+		clientId: ID
 		clientStatus: Int
 		clientSummary: String
 		userInfo: UserInfoInput = {}

@@ -27,6 +27,8 @@ export default function ({ req }) {
             'orderStatusInfo',
 
             // later will be moved to staffs only section
+            'addClient',
+            'deletedClients',
             'disabledServices',
             'deliveryHours',
             'addService',
@@ -83,6 +85,10 @@ export default function ({ req }) {
     // only registred clients and staffs
     if(
         [
+            'clients',
+            'deleteClient',
+            'changeClient',
+            'restoreClient',
             'orders',
             'addOrder',
             'changeOrder',
