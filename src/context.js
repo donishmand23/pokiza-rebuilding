@@ -27,6 +27,12 @@ export default function ({ req }) {
             'orderStatusInfo',
 
             // later will be moved to staffs only section
+            'staffs',
+            'deletedStaffs',
+            'addStaff',
+            'changeStaff',
+            'deleteStaff',
+            'restoreStaff',
             'addClient',
             'deletedClients',
             'disabledServices',
