@@ -27,6 +27,7 @@ export default function ({ req }) {
             'searchGlobal',
             'services',
             'orderStatusInfo',
+            'productStatusInfo',
 
             // later will be moved to staffs only section
             'staffs',
@@ -98,6 +99,7 @@ export default function ({ req }) {
             'restoreClient',
             'changeClient',
             'orders',
+            'products',
             'addOrder',
             'changeOrder',
             'notifications',

@@ -268,7 +268,7 @@ insert into sms_service (sms_service_email, sms_service_password, sms_service_to
 );
 
 -- notification
-insert into notifications(notification_from, notification_to, notification_img, notification_title, notification_body) VALUES
+insert into notifications(notification_from, notification_to, notification_img, notification_title, notification_body) values
 /* to staff */  (1, 2, 'cong.jpg', 'Tabriknoma', 'Siz jamoamizdagi eng yaxshi xodimsiz. Sizga Pokiza nomidan rahmat aytamiz'),
 /* to staff */  (3, 2, 'alert.jpg', 'Shoshilinch', 'Tezda ombordagi 01256 raqamli gilamni yuvish kerak!'),
 /* to staff */  (1, 2, 'farewell.png', 'Vidolashuv', 'Kompaniyamizga qo''shgan xissangiz uchun rahmat'),
@@ -279,15 +279,15 @@ insert into notifications(notification_from, notification_to, notification_img, 
 /* to client */ (1, 5, 'announcement.jpg', 'Elon', 'Siz fabrikamizga kelib sovg''angizni olib ketishingiz kerak!');
 
 -- services
-insert into services (service_name, service_unit, service_unit_keys, service_price_special, service_price_simple, branch_id) VALUES
-('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 1),
-('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 2),
-('sholcha', 'dona', ARRAY['qiymat'], 9000, 6500, 1),
-('parda', 'kg', ARRAY['qiymat'], 9500, 7500, 1),
-('parda', 'kg', ARRAY['qiymat'], 8000, 6000, 2);
+insert into services (service_name, service_unit, service_unit_keys, service_price_special, service_price_simple, branch_id) values
+/* 1 */('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 1),
+/* 2 */('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 2),
+/* 3 */('sholcha', 'dona', ARRAY['qiymat'], 9000, 6500, 1),
+/* 4 */('parda', 'kg', ARRAY['qiymat'], 9500, 7500, 1),
+/* 5 */('parda', 'kg', ARRAY['qiymat'], 8000, 6000, 2);
 
 -- delivery hours
-insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_id) VALUES 
+insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_id) values 
 (48, 96, 1),
 (24, 72, 2);
 
@@ -303,18 +303,36 @@ insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id,
 /* 13 */ (2, 6, 12, 14, 19, 13, 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
 
 -- orders
-insert into orders (client_id, branch_id, address_id, order_special, order_bring_time) VALUES
+insert into orders (client_id, branch_id, address_id, order_special, order_bring_time) values
 /* 1 */ (1, 1, 9, true, '2022-02-08 15:30:00'),
 /* 2 */ (2, 1, 10, false, '2022-03-09 13:30:00'),
 /* 3 */ (2, 1, 10, true, '2022-02-10 12:05:00'),
 /* 4 */ (3, 2, 11, false, '2022-02-01 11:10:00');
 
 -- order statuses
-insert into order_statuses (order_id, staff_id, order_status_code) VALUES
+insert into order_statuses (order_id, staff_id, order_status_code) values
 (1, null, 1),
 (1, 2, 2),
 (1, 3, 3),
+(1, 3, 4),
 (2, 2, 2),
 (2, 2, 3),
+(2, 3, 4),
 (3, null, 1),
 (4, null, 1);
+
+-- products
+insert into products (order_id, service_id, product_size, product_size_details, product_img, product_summary) values
+/* 1 */(1, 1, 6, '{ "eni": 3, "bo''yi": 2 }', 'gilam01.jpg', 'gilamni cheti kuygan ekan'), 
+/* 2 */(1, 1, 4, '{ "eni": 2, "bo''yi": 2 }', 'gilam02.jpg', null), 
+/* 3 */(1, 3, 1, '{ "qiymat": 1 }', 'sholcha.jpg', null),
+/* 4 */(2, 4, 2, '{ "qiymat": 2 }', 'parda.jpg', 'sarg''ayib ketgan parda ekan'),
+/* 5 */(2, 1, 8, '{ "eni": 4, "bo''yi": 4 }', 'gilam03.jpg', null);
+
+-- product statuses
+insert into product_statuses (product_id, staff_id, product_status_code) values
+(1, 3, 1),
+(2, 3, 1),
+(3, 3, 1),
+(4, 3, 1),
+(5, 3, 1);

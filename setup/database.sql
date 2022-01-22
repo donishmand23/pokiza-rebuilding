@@ -219,6 +219,7 @@ drop table if exists products cascade;
 create table products (
 	product_id bigserial not null primary key,
 	product_size smallint default 1,
+	product_img text,
 	product_size_details json not null,
 	product_summary character varying(356),
 	service_id bigint not null references services(service_id),

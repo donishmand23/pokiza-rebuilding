@@ -1,16 +1,17 @@
 type Query {
-	orderStatusInfo: [OrderStatusInfo!]!
+	orderStatusInfo: [StatusInfo!]!
+	productStatusInfo: [StatusInfo!]!
 }
 
-type OrderStatusInfo {
-	statusCode: OrderStatusValue!
+type StatusInfo {
+	statusCode: StatusValue!
 	statusName: String!
 	statusDescription: String!
 }
 
-type OrderStatus {
-	statusCode: OrderStatusValue!
+type Status {
+	statusCode: StatusValue!
 	staff: Staff
 	statusChangeTime: DateTime!
-	statusInfo: OrderStatusInfo!
+	statusInfo: StatusInfo!
 }

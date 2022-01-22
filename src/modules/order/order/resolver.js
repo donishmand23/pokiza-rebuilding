@@ -46,8 +46,9 @@ export default {
 		orderId:        	   global => global.order_id,
 		special:        	   global => global.order_special,
 		summary:        	   global => global.order_summary,
+		price:        	       global => global.order_price,
 		bringTime:      	   global => global.order_bring_time,
-		brougthTime:    	   global => global.order_brougth_time,
+		broughtTime:    	   global => global.order_brougth_time,
 		deliveryTime:   	   global => global.order_delivery_time,
 		deliveredTime:  	   global => global.order_delivery_time,
 		orderCreatedAt: 	   global => global.order_created_at,
@@ -57,6 +58,7 @@ export default {
 		branch:         	   global => orderModel.branch({ branchId: global.branch_id }),
 		address:        	   global => orderModel.address({ addressId: global.address_id }),
 		statusProcess:  	   global => orderModel.orderStatuses({ orderId: global.order_id }),
+		products:  	           global => orderModel.products({ orderId: global.order_id }),
 		status:          async global => {
 			const statuses = await orderModel.orderStatuses({ orderId: global.order_id })
 			return statuses[statuses.length - 1]

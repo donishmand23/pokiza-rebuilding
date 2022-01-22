@@ -4,6 +4,7 @@ import AddressQuery from '#sql/address'
 import BranchQuery from '#sql/branch'
 import UserQuery from '#sql/user'
 import OrderQuery from '#sql/order'
+import ProductQuery from '#sql/product'
 
 const orders = ({
 	sort,
@@ -18,7 +19,7 @@ const orders = ({
 	orderSpecial,
 	addressFilter,
 }, user) => {
-	const sortNameValues = { orderId: 1, firstName: 2, lastName: 3, orderStatus: 4, broughtTime: 5, deliveredTime: 6, bringTime: 7, deliveryTime: 8 }
+	const sortNameValues = { orderId: 1, firstName: 2, lastName: 3, orderStatus: 4, orderPrice: 5, broughtTime: 6, deliveredTime: 7, bringTime: 8, deliveryTime: 9 }
 	const sortObject = Object.keys(sort).map(key => {
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
@@ -49,6 +50,10 @@ const orders = ({
 
 const orderStatuses = ({ orderId }) => {
 	return fetchAll(OrderQuery.ORDER_STATUSES, orderId)
+}
+
+const products = ({ orderId }) => {
+	return fetchAll(ProductQuery.PRODUCT, false, 0, orderId, 0, 0, 0)
 }
 
 const branch = ({ branchId }) => {
@@ -110,6 +115,7 @@ export default {
 	orderStatuses,
 	changeOrder,
 	addOrder,
+	products,
 	address,
 	client,
 	branch,

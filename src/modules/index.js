@@ -23,6 +23,7 @@ import ServiceModule from './service/service/index.js'
 
 // order modules
 import OrderModule from './order/order/index.js'
+import ProductModule from './order/product/index.js'
 import StatusModule from './order/status/index.js'
 
 export default {
@@ -48,6 +49,7 @@ export default {
   		ServiceModule.typeDefs,
   		// order
   		OrderModule.typeDefs,
+  		ProductModule.typeDefs,
   		StatusModule.typeDefs,
 	],
 	resolvers: [
@@ -72,6 +74,7 @@ export default {
   		ServiceModule.resolvers,
   		// order
   		OrderModule.resolvers,
+  		ProductModule.resolvers,
   		StatusModule.resolvers,
 	]
 }

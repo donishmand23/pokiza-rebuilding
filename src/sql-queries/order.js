@@ -9,6 +9,7 @@ const ORDERS = `
 		tm.bring_time_remaining,
 		tm.delivery_time_remaining,
 		count(*) OVER() as full_count,
+		COALESCE( SUM(op.product_price) ,0) order_price,
 		to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
@@ -34,6 +35,20 @@ const ORDERS = `
 			EXTRACT( EPOCH FROM (order_delivery_time::TIMESTAMPTZ - NOW()) ) AS delivery_time_remaining
 		FROM orders
 	) tm ON tm.order_id = o.order_id
+	LEFT JOIN (
+		SELECT
+			p.order_id,
+			p.product_id,
+			s.service_name,
+			CASE
+				WHEN o.order_special = TRUE THEN s.service_price_special * p.product_size
+				WHEN o.order_special = FALSE THEN s.service_price_simple * p.product_size
+				ELSE 0
+			END product_price
+		FROM products p
+		NATURAL JOIN orders o
+		LEFT JOIN services s ON s.service_id = p.service_id
+	) op ON op.order_id = o.order_id
 	WHERE
 	CASE 
 		WHEN $3 = FALSE THEN o.order_deleted_at IS NULL
@@ -115,6 +130,7 @@ const ORDERS = `
 		WHEN ARRAY_LENGTH($19::INT[], 1) > 0 THEN ar.area_id = ANY($19::INT[]) 
 		ELSE TRUE
 	END
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code
 	ORDER BY
 	(CASE WHEN $20 = 1 AND $21 = 2 THEN o.order_id END) ASC,
 	(CASE WHEN $20 = 1 AND $21 = 1 THEN o.order_id END) DESC,
@@ -124,14 +140,16 @@ const ORDERS = `
 	(CASE WHEN $20 = 3 AND $21 = 1 THEN u.user_last_name END) DESC,
 	(CASE WHEN $20 = 4 AND $21 = 2 THEN os.order_status_code END) ASC,
 	(CASE WHEN $20 = 4 AND $21 = 1 THEN os.order_status_code END) DESC,
-	(CASE WHEN $20 = 5 AND $21 = 2 THEN o.order_brougth_time END) ASC,
-	(CASE WHEN $20 = 5 AND $21 = 1 THEN o.order_brougth_time END) DESC,
-	(CASE WHEN $20 = 6 AND $21 = 2 THEN o.order_delivered_time END) ASC,
-	(CASE WHEN $20 = 6 AND $21 = 1 THEN o.order_delivered_time END) DESC,
-	(CASE WHEN $20 = 7 AND $21 = 2 THEN tm.bring_time_remaining END) ASC,
-	(CASE WHEN $20 = 7 AND $21 = 1 THEN tm.bring_time_remaining END) DESC,
-	(CASE WHEN $20 = 8 AND $21 = 2 THEN tm.delivery_time_remaining END) ASC,
-	(CASE WHEN $20 = 8 AND $21 = 1 THEN tm.delivery_time_remaining END) DESC
+	(CASE WHEN $20 = 5 AND $21 = 2 THEN COALESCE( SUM(op.product_price) ,0) END) ASC,
+	(CASE WHEN $20 = 5 AND $21 = 1 THEN COALESCE( SUM(op.product_price) ,0) END) DESC,
+	(CASE WHEN $20 = 6 AND $21 = 2 THEN o.order_brougth_time END) ASC,
+	(CASE WHEN $20 = 6 AND $21 = 1 THEN o.order_brougth_time END) DESC,
+	(CASE WHEN $20 = 7 AND $21 = 2 THEN o.order_delivered_time END) ASC,
+	(CASE WHEN $20 = 7 AND $21 = 1 THEN o.order_delivered_time END) DESC,
+	(CASE WHEN $20 = 8 AND $21 = 2 THEN tm.bring_time_remaining END) ASC,
+	(CASE WHEN $20 = 8 AND $21 = 1 THEN tm.bring_time_remaining END) DESC,
+	(CASE WHEN $20 = 9 AND $21 = 2 THEN tm.delivery_time_remaining END) ASC,
+	(CASE WHEN $20 = 9 AND $21 = 1 THEN tm.delivery_time_remaining END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
@@ -167,6 +185,7 @@ const ORDER = `
 	CASE 
 		WHEN $1 = FALSE THEN o.order_deleted_at IS NULL
 		WHEN $1 = TRUE THEN o.order_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $2 > 0 THEN o.order_id = $2
@@ -316,9 +335,10 @@ const CHANGE_ORDER = `
 
 const ORDER_STATUSES = `
 	SELECT
-		order_status_code,
+		order_status_id,
+		order_status_code AS status_code,
 		staff_id,
-		to_char(order_status_created_at, 'YYYY-MM-DD HH24:MI:SS') order_status_created_at
+		to_char(order_status_created_at, 'YYYY-MM-DD HH24:MI:SS') status_created_at
 	FROM order_statuses os
 	WHERE order_id = $1
 	ORDER BY order_status_id ASC

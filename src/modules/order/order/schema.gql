@@ -5,7 +5,7 @@ type Query {
 		clientId: [ID!]
 		branchId: [ID!]
 		orderSpecial: Boolean
-		orderStatus: [OrderStatusValue!] 
+		orderStatus: [StatusValue!] 
 		sort: OrderSort = {}
 		pagination: Pagination = {} 
 		dateFilter: OrderDateFilter = {}
@@ -35,15 +35,17 @@ type Order {
 	orderId: ID!
 	special: Boolean!
 	summary: String
+	price: Float
+	products: [Product]!
 	client: Client!
 	branch: Branch!
 	address: Address!
-	status: OrderStatus!
-	statusProcess: [OrderStatus!]!
+	status: Status!
+	statusProcess: [Status!]!
 	bringTimeRemaining: Second
 	deliveryTimeRemaining: Second
 	bringTime: DateTime
-	brougthTime: DateTime
+	broughtTime: DateTime
 	deliveryTime: DateTime
 	deliveredTime: DateTime
 	orderCreatedAt: DateTime!
@@ -61,6 +63,7 @@ input OrderDateFilter {
 input OrderSort {
 	orderId: SortOptions
 	orderStatus: SortOptions
+	orderPrice: SortOptions
 	firstName: SortOptions
 	lastName: SortOptions
 	bringTime: SortOptions

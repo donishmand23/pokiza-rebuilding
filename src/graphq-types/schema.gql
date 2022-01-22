@@ -6,7 +6,7 @@ scalar ID
 scalar SVG
 scalar Contact
 scalar Password
-scalar OrderStatusValue
+scalar StatusValue
 
 # simple scalars that do not have type check
 scalar Any

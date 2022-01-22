@@ -166,27 +166,26 @@ function checkPassword (value) {
 }
 
 
-// OrderStatus scalar
-const orderStatusScalar = new GraphQLScalarType({
-	name: 'OrderStatusValue',
-	description: 'OrderStatusValue custom scalar type. This type only accepts numbers between 1-10',
+// Status scalar
+const statusScalar = new GraphQLScalarType({
+	name: 'StatusValue',
+	description: 'StatusValue custom scalar type. This type only accepts numbers between 1-10',
 	serialize: checkOrderStatus,
 	parseValue: checkOrderStatus,
 	parseLiteral(ast) {
 		if (ast.kind === Kind.INT) {
 	      	return checkOrderStatus(ast.value)
   		} else {
-  			throw new Error('Password type must be Int!"')
+  			throw new Error('StatusValue type must be Int!"')
   		}
 	},
 })
 
 function checkOrderStatus (value) {
-	if(!(typeof(+value) === 'number') && !isNaN(+value)) throw new Error("OrderStatus type must be Int!")
-	if(![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(+value)) throw new Error("OrderStatus must be between 1-10!")
+	if(!(typeof(+value) === 'number') && !isNaN(+value)) throw new Error("StatusValue type must be Int!")
+	if(![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(+value)) throw new Error("StatusValue must be between 1-10!")
 	return value
 }
-
 
 
 export default {
@@ -197,7 +196,7 @@ export default {
 	SVG: svgScalar,
 	Contact: contactScalar,
 	Password: passwordScalar,
-	OrderStatusValue: orderStatusScalar,
+	StatusValue: statusScalar,
 	
 	Gender: {
 		male: 1,

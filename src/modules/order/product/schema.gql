@@ -1,0 +1,53 @@
+type Query {
+	products(
+		productId: ID
+		search: String
+		clientId: [ID!]
+		branchId: [ID!]
+		orderId: [ID!]
+		serviceId: [ID!]
+		productSpecial: Boolean
+		productStatus: [StatusValue!]
+		sort: ProductSort = {}
+		productPrice: Range = {}
+		pagination: Pagination = {} 
+		dateFilter: ProductDateFilter = {}
+		addressFilter: AddressFilter = {}
+	): [Product!]!
+}
+
+type Product {
+	productId: ID!
+	productPrice: Int!
+	productSize: Float!
+	productSpecial: Boolean!
+	productImg: Link
+	productSizeDetails: Any!
+	productStatus: Status!
+	productStatusProcess: [Status!]!
+	productSummary: String
+	service: Service!
+	order: Order!
+}
+
+input ProductDateFilter {
+	bringTime: RangeDate
+	broughtTime: RangeDate
+	deliveryTime: RangeDate
+	deliveredTime: RangeDate
+	productCreatedAt: RangeDate
+}
+
+input ProductSort {
+	productId: SortOptions
+	productPrice: SortOptions
+	addressDistance: SortOptions
+	orderId: SortOptions
+	productStatus: SortOptions
+	firstName: SortOptions
+	lastName: SortOptions
+	bringTime: SortOptions
+	broughtTime: SortOptions
+	deliveryTime: SortOptions
+	deliveredTime: SortOptions
+}
