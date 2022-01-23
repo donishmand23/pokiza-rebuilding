@@ -116,6 +116,7 @@ export default function ({ req }) {
     // only registred staffs
     if(
         [   
+            'changeOrderStatus',
             'sendNotifications',
             'sendSMS',
         ].includes(fieldName)
