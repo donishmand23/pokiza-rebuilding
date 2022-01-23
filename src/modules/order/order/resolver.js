@@ -28,12 +28,47 @@ export default {
 				} else throw new Error("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
 			} catch(error) { return mError(error) }
 		},
+
+		deleteOrder: async (_, args, { clientId }) => {
+			try {
+				const deletedOrders = await orderModel.deleteOrder(args, { clientId })
+				if(deletedOrders.length) {
+					return {
+						status: 200,
+						message: "Buyurtmalar o'chirildi!",
+						data: deletedOrders
+					}
+				} else throw new Error("Bunday buyurtmalar mavjud emas!")
+			} catch(error) { return mError(error) }
+		},
+
+		restoreOrder: async (_, args, { clientId }) => {
+			try {
+				const restoredOrders = await orderModel.restoreOrder(args, { clientId })
+				if(restoredOrders.length) {
+					return {
+						status: 200,
+						message: "Buyurtmalar qayta tiklandi!",
+						data: restoredOrders
+					}
+				} else throw new Error("Bunday buyurtmalar mavjud emas!")
+			} catch(error) { return mError(error) }
+		},
 	},
 
 	Query: {
 		orders: async (_, args, { clientId }) => {
 			try {
 				const orders = await orderModel.orders({ isDeleted: false, ...args }, { clientId })
+				return orders
+			} catch(error) {
+				throw error
+			}
+		},
+
+		deletedOrders: async (_, args, { clientId }) => {
+			try {
+				const orders = await orderModel.orders({ isDeleted: true, ...args }, { clientId })
 				return orders
 			} catch(error) {
 				throw error

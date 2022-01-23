@@ -30,6 +30,7 @@ export default function ({ req }) {
             'productStatusInfo',
 
             // later will be moved to staffs only section
+            'deletedOrders',
             'staffs',
             'deletedStaffs',
             'addStaff',
@@ -102,6 +103,8 @@ export default function ({ req }) {
             'products',
             'addOrder',
             'changeOrder',
+            'deleteOrder',
+            'restoreOrder',
             'notifications',
             'deleteNotifications',
         ].includes(fieldName)

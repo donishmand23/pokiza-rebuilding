@@ -11,6 +11,19 @@ type Query {
 		dateFilter: OrderDateFilter = {}
 		addressFilter: AddressFilter = {}
 	): [Order!]!
+
+	deletedOrders(
+		orderId: ID
+		search: String
+		clientId: [ID!]
+		branchId: [ID!]
+		orderSpecial: Boolean
+		orderStatus: [StatusValue!] 
+		sort: OrderSort = {}
+		pagination: Pagination = {} 
+		dateFilter: OrderDateFilter = {}
+		addressFilter: AddressFilter = {}
+	): [Order!]!
 }
 
 type Mutation {
@@ -29,6 +42,9 @@ type Mutation {
 		summary: String
 		address: AddressInput
 	): MutationResponse!
+
+	deleteOrder(orderId: [ID!]!): MutationResponses!
+	restoreOrder(orderId: [ID!]!): MutationResponses!
 }
 
 type Order {

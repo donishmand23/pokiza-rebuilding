@@ -340,6 +340,50 @@ const CHANGE_ORDER = `
 	to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
 `
 
+const DELETE_ORDER = `
+	WITH deleted_order AS (
+		UPDATE orders SET
+			order_deleted_at = current_timestamp
+		WHERE order_deleted_at IS NULL AND order_id = $1 AND
+		CASE
+			WHEN $2 > 0 THEN client_id = $2
+			ELSE TRUE
+		END
+		RETURNING *,
+		to_char(order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
+		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
+		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	) UPDATE products p SET
+		product_deleted_at = current_timestamp
+	FROM deleted_order dor
+	WHERE dor.order_id = p.order_id
+	RETURNING dor.*
+`
+
+const RESTORE_ORDER = `
+	WITH restored_order AS (
+		UPDATE orders SET
+			order_deleted_at = NULL
+		WHERE order_deleted_at IS NOT NULL AND order_id = $1 AND
+		CASE
+			WHEN $2 > 0 THEN client_id = $2
+			ELSE TRUE
+		END
+		RETURNING *,
+		to_char(order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
+		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
+		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	) UPDATE products p SET
+		product_deleted_at = NULL
+	FROM restored_order dor
+	WHERE dor.order_id = p.order_id
+	RETURNING dor.*
+`
+
 const ORDER_STATUSES = `
 	SELECT
 		order_status_id,
@@ -354,6 +398,8 @@ const ORDER_STATUSES = `
 
 export default {
 	ORDER_STATUSES,
+	RESTORE_ORDER,
+	DELETE_ORDER,
 	CHANGE_ORDER,
 	ADD_ORDER,
 	ORDERS,

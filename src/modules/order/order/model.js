@@ -95,7 +95,7 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 
 	const statuses = await orderStatuses({ orderId })
 	if(
-		![1, 2, 3, 4].includes(+statuses[statuses.length - 1].order_status_code) &&
+		![1, 2, 3, 4].includes(+statuses[statuses.length - 1].status_code) &&
 		(bringTime || special == false || special == true || address)
 	) {
 		throw new Error("Buyurtmaning ma'lumotlarini o'zgartirish mumkin emas!")
@@ -110,9 +110,38 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 	)
 }	
 
+const deleteOrder = async ({ orderId }, { clientId }) => {
+	orderId.map(async id => {
+		const statuses = await orderStatuses({ orderId: id })
+		if(
+			(![1, 2, 3].includes(+statuses[statuses.length - 1].status_code) && clientId) ||
+			(![1, 2, 3, 4, 5].includes(+statuses[statuses.length - 1].status_code) && !clientId)
+		) {
+			throw new Error("Buyurtmani o'chirish mumkin emas!")
+		}
+	})
+
+	const deletedOrders = []
+	for(let id of orderId) {
+		const deletedOrder = await fetch(OrderQuery.DELETE_ORDER, id, clientId)
+		if(deletedOrder) deletedOrders.push(deletedOrder)
+	}
+	return deletedOrders
+}
+
+const restoreOrder = async ({ orderId }, { clientId }) => {
+	const restoredOrders = []
+	for(let id of orderId) {
+		const restoredOrder = await fetch(OrderQuery.RESTORE_ORDER, id, clientId)
+		if(restoredOrder) restoredOrders.push(restoredOrder)
+	}
+	return restoredOrders
+}
 
 export default {
 	orderStatuses,
+	restoreOrder,
+	deleteOrder,
 	changeOrder,
 	addOrder,
 	products,
