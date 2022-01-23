@@ -64,6 +64,7 @@ input OrderSort {
 	orderId: SortOptions
 	orderStatus: SortOptions
 	orderPrice: SortOptions
+	addressDistance: SortOptions
 	firstName: SortOptions
 	lastName: SortOptions
 	bringTime: SortOptions

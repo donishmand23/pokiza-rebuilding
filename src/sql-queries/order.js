@@ -130,7 +130,8 @@ const ORDERS = `
 		WHEN ARRAY_LENGTH($19::INT[], 1) > 0 THEN ar.area_id = ANY($19::INT[]) 
 		ELSE TRUE
 	END
-	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code,
+		     n.neighborhood_distance, st.street_distance, ar.area_distance
 	ORDER BY
 	(CASE WHEN $20 = 1 AND $21 = 2 THEN o.order_id END) ASC,
 	(CASE WHEN $20 = 1 AND $21 = 1 THEN o.order_id END) DESC,
@@ -149,7 +150,13 @@ const ORDERS = `
 	(CASE WHEN $20 = 8 AND $21 = 2 THEN tm.bring_time_remaining END) ASC,
 	(CASE WHEN $20 = 8 AND $21 = 1 THEN tm.bring_time_remaining END) DESC,
 	(CASE WHEN $20 = 9 AND $21 = 2 THEN tm.delivery_time_remaining END) ASC,
-	(CASE WHEN $20 = 9 AND $21 = 1 THEN tm.delivery_time_remaining END) DESC
+	(CASE WHEN $20 = 9 AND $21 = 1 THEN tm.delivery_time_remaining END) DESC,
+	(CASE WHEN $20 = 10 AND $21 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
+	(CASE WHEN $20 = 10 AND $21 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
+	(CASE WHEN $20 = 10 AND $21 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
+	(CASE WHEN $20 = 10 AND $21 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
+	(CASE WHEN $20 = 10 AND $21 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
+	(CASE WHEN $20 = 10 AND $21 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 

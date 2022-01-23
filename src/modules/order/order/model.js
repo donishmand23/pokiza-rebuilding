@@ -19,7 +19,7 @@ const orders = ({
 	orderSpecial,
 	addressFilter,
 }, user) => {
-	const sortNameValues = { orderId: 1, firstName: 2, lastName: 3, orderStatus: 4, orderPrice: 5, broughtTime: 6, deliveredTime: 7, bringTime: 8, deliveryTime: 9 }
+	const sortNameValues = { orderId: 1, firstName: 2, lastName: 3, orderStatus: 4, orderPrice: 5, broughtTime: 6, deliveredTime: 7, bringTime: 8, deliveryTime: 9, addressDistance: 10 }
 	const sortObject = Object.keys(sort).map(key => {
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
