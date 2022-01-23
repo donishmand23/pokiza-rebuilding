@@ -37,7 +37,7 @@ const products = ({
 		dateFilter[key] = [dateFilter[key].from, dateFilter[key].to]
 	})
 
-	productPrice = (productPrice.from && productPrice.to) ? [productPrice.from, productPrice.to] : []
+	productPrice = (productPrice?.from && productPrice?.to) ? [productPrice.from, productPrice.to] : []
 
 	if(user.clientId) {
 		clientId = [user.clientId]
@@ -46,7 +46,7 @@ const products = ({
 	const { page, limit } = pagination
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
 	const { bringTime, broughtTime, deliveryTime, deliveredTime, productCreatedAt } = dateFilter
-	console.log(productPrice)
+
 	return fetchAll(
 		ProductQuery.PRODUCTS,
 		(page - 1) * limit, limit, isDeleted,
