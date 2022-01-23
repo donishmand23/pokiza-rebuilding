@@ -29,6 +29,19 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
+		changeOrderStatus: async (_, args, { staffId }) => {
+			try {
+				const updatedOrder = await orderModel.changeOrderStatus({ staffId, ...args })
+				if(updatedOrder) {
+					return {
+						status: 200,
+						message: "Buyurtma holati yangilandi!",
+						data: updatedOrder
+					}
+				} else throw new Error("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
+			} catch(error) { return mError(error) }
+		},
+
 		deleteOrder: async (_, args, { clientId }) => {
 			try {
 				const deletedOrders = await orderModel.deleteOrder(args, { clientId })

@@ -395,8 +395,28 @@ const ORDER_STATUSES = `
 	ORDER BY order_status_id ASC
 `
 
+const CHANGE_ORDER_STATUS = `
+	WITH new_status AS (
+		INSERT INTO order_statuses (
+			order_id,
+			order_status_code,
+			staff_id
+		) VALUES ($1, $2, $3)
+		RETURNING *
+	) SELECT 
+		*,
+		to_char(order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
+		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
+		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	FROM orders 
+	WHERE order_id = $1
+`
+
 
 export default {
+	CHANGE_ORDER_STATUS,
 	ORDER_STATUSES,
 	RESTORE_ORDER,
 	DELETE_ORDER,

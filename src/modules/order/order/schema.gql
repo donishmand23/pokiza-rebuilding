@@ -43,6 +43,8 @@ type Mutation {
 		address: AddressInput
 	): MutationResponse!
 
+	changeOrderStatus(orderId: ID! status: StatusValue!): MutationResponse!
+
 	deleteOrder(orderId: [ID!]!): MutationResponses!
 	restoreOrder(orderId: [ID!]!): MutationResponses!
 }

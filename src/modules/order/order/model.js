@@ -108,6 +108,24 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
 		bringTime, special, summary
 	)
+}
+
+const changeOrderStatus = async ({ orderId, status, staffId }) => {
+	if(![1, 2, 3, 7].includes(+status)) {
+		throw new Error("Buyurtmani holatini faqat 'Moderator', 'Kutilmoqda', 'Biriktirilgan', 'Yetkazib berishda' holatlariga o'tkazish mumkin!")
+	}
+
+	const statuses = await orderStatuses({ orderId })
+	const orderStatus = +statuses[statuses.length - 1].status_code
+	if(status < orderStatus) {
+		throw new Error("Buyurtma holatini orqaga qaytarish mumkin emas!")
+	}
+
+	if(status == orderStatus) {
+		throw new Error("Buyurtma holatini allaqachon yangilangan!")
+	}
+
+	return fetch(OrderQuery.CHANGE_ORDER_STATUS, orderId, status, staffId)
 }	
 
 const deleteOrder = async ({ orderId }, { clientId }) => {
@@ -138,7 +156,9 @@ const restoreOrder = async ({ orderId }, { clientId }) => {
 	return restoredOrders
 }
 
+
 export default {
+	changeOrderStatus,
 	orderStatuses,
 	restoreOrder,
 	deleteOrder,
