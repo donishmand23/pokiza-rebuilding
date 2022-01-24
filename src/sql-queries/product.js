@@ -285,6 +285,28 @@ const ADD_PRODUCT = `
 	NATURAL JOIN orders o
 `
 
+const CHANGE_PRODUCT = `
+	UPDATE products p SET
+		service_id = (
+			CASE WHEN $2 > 0 THEN $2 ELSE p.service_id END
+		),
+		product_img = (
+			CASE WHEN LENGTH($3) > 0 THEN $3 ELSE p.product_img END
+		),
+		product_size_details = (
+			CASE WHEN LENGTH($4) > 0 THEN CAST($4 AS JSON) ELSE p.product_size_details END
+		),
+		product_size = (
+			CASE WHEN $5 > 0 THEN $5 ELSE p.product_size END
+		),
+		product_summary = (
+			CASE WHEN LENGTH($6) > 0 THEN $6 ELSE p.product_summary END
+		)
+	WHERE p.product_deleted_at IS NULL AND p.product_id = $1
+	RETURNING p.*,
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at	
+`
+
 const PRODUCT_PHOTO = `
 	SELECT
 		product_img
@@ -305,6 +327,7 @@ const PRODUCT_STATUSES = `
 
 export default {
 	PRODUCT_STATUSES,
+	CHANGE_PRODUCT,
 	PRODUCT_PHOTO,
 	ADD_PRODUCT,
 	PRODUCTS,

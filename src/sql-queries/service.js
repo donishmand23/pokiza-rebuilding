@@ -10,10 +10,15 @@ const SERVICES = `
 		to_char(s.service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
 	FROM services s
 	INNER JOIN branches b ON b.branch_id = s.branch_id AND b.branch_deleted_at IS NULL
-	WHERE s.service_deleted_at IS NULL AND
+	WHERE 
 	CASE
 		WHEN $1 = FALSE THEN s.service_active = TRUE
 		WHEN $1 = TRUE THEN s.service_active = FALSE
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $1 = FALSE THEN s.service_deleted_at IS NULL
+		WHEN $1 = TRUE THEN s.service_deleted_at IS NOT NULL
 		ELSE TRUE
 	END AND
 	CASE

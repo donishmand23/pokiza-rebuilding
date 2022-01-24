@@ -57,8 +57,8 @@ const products = ({
 	)
 }
 
-const service = ({ serviceId }) => {
-	return fetch(ServiceQuery.SERVICES, null, serviceId, [])
+const service = async ({ serviceId, isDeleted = null }) => {
+	return fetch(ServiceQuery.SERVICES, isDeleted, serviceId, [])
 }
 
 const productStatuses = ({ productId }) => {
@@ -74,7 +74,7 @@ const addProduct = async ({ orderId, serviceId, file, productSizeDetails, produc
 		throw new Error("productSizeDetails should be a valid javaScript object type")
 	}
 
-	const productService = await service({ serviceId })
+	const productService = await service({ serviceId, isDeleted: false })
 	if(!productService) {
 		throw new Error("Bunday xizmat turi mavjud emas!")
 	} else if(
@@ -95,8 +95,32 @@ const addProduct = async ({ orderId, serviceId, file, productSizeDetails, produc
 	return fetch(ProductQuery.ADD_PRODUCT, orderId, serviceId, file, productSizeDetails, productSize, productSummary, staffId)
 }
 
+const changeProduct = async ({ productId, serviceId, file, productSizeDetails, productSummary }) => {
+	if(productSizeDetails && (typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails))) {
+		throw new Error("productSizeDetails should be a valid javaScript object type")
+	}
+
+	if(serviceId) {
+		const productService = await service({ serviceId, isDeleted: false })
+		if(!productService) {
+			throw new Error("Bunday xizmat turi mavjud emas!")
+		} else if(
+			!productService.service_unit_keys?.map(key => {
+				return Object.keys(productSizeDetails).includes(key) && typeof(productSizeDetails[key]) === 'number'
+			}).every(el => el ===  true)
+		) {
+			throw new Error(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
+		}
+	}
+
+	const productSize = productSizeDetails ? Object.values(productSizeDetails).reduce((acc, el) => acc * el) : undefined
+
+	return fetch(ProductQuery.CHANGE_PRODUCT, productId, serviceId, file, productSizeDetails, productSize, productSummary)
+}
+
 export default {
 	productStatuses,
+	changeProduct,
 	addProduct,
 	products,
 	service,
