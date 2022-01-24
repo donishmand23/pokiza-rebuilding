@@ -9,6 +9,7 @@ const PRODUCTS = `
 		p.product_img,
 		o.order_special,
 		pp.product_price,
+		count(*) OVER() as full_count,
 		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
 	FROM products p
 	NATURAL JOIN orders o
@@ -284,6 +285,12 @@ const ADD_PRODUCT = `
 	NATURAL JOIN orders o
 `
 
+const PRODUCT_PHOTO = `
+	SELECT
+		product_img
+	FROM products WHERE product_id = $1
+`
+
 const PRODUCT_STATUSES = `
 	SELECT
 		product_status_id,
@@ -295,8 +302,10 @@ const PRODUCT_STATUSES = `
 	ORDER BY product_status_id ASC
 `
 
+
 export default {
 	PRODUCT_STATUSES,
+	PRODUCT_PHOTO,
 	ADD_PRODUCT,
 	PRODUCTS,
 	PRODUCT

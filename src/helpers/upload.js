@@ -31,6 +31,11 @@ export default async (args) => {
       		if(oldFile.staff_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.staff_img))
       	}
 
+      	if(args.productId) {
+      		const oldFile = fetch(ProductQuery.PRODUCT_PHOTO, args.productId)
+      		if(oldFile.product_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.product_img))
+      	}
+
       	return
 	} else return
 }

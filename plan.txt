@@ -44,3 +44,8 @@ addProduct
     -> new status for order
     -> new status for product
     -> delivery time for order
+
+changeProduct
+    -> check service
+        * service matches order's branch
+    -> check productSize details

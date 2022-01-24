@@ -24,6 +24,14 @@ type Mutation {
 		productSizeDetails: Object!
 		productSummary: String
 	): MutationResponse!
+
+	changeProduct(
+		productId: ID!
+		serviceId: ID
+		file: Upload
+		productSizeDetails: Object
+		productSummary: String
+	): MutationResponse!
 }
 
 type Product {
@@ -38,6 +46,7 @@ type Product {
 	productSummary: String
 	service: Service!
 	order: Order!
+	count: Int
 }
 
 input ProductDateFilter {

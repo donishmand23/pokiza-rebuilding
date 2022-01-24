@@ -16,7 +16,21 @@ export default {
 					}
 				} else throw new Error("buyumni qabul qilishda muammolik yuz berdi!")  
 			} catch(error) { return mError(error) }
-		}
+		},
+
+		changeProduct: async (_, args) => {
+			try {
+				await upload(args)
+				const updatedProduct = await productModel.changeProduct(args)
+				if(updatedProduct) {
+					return {
+						status: 200,
+						message: "Buyum ma'lumotlari yangilandi!",
+						data: updatedProduct
+					}
+				} else throw new Error("Buyum ma'lumotlarini yangilashda muammolik yuz berdi!")  
+			} catch(error) { return mError(error) }
+		},
 	},
 	Query: {
 		products: async (_, args, { clientId }) => {
@@ -31,6 +45,7 @@ export default {
 
 	Product: {
 		productId:            global => global.product_id,
+		count:                global => global.full_count,
 		productSize:          global => global.product_size,
 		productPrice:         global => global.product_price,
 		productSummary:       global => global.product_summary,
