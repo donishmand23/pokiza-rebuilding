@@ -288,8 +288,8 @@ insert into services (service_name, service_unit, service_unit_keys, service_pri
 
 -- delivery hours
 insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_id) values 
-(48, 96, 1),
-(24, 72, 2);
+(172800, 259200, 1),
+(172800, 259200, 2);
 
 
 

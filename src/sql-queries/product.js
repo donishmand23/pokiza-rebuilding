@@ -278,6 +278,18 @@ const ADD_PRODUCT = `
 		) os ON os.order_id = np.order_id
 		WHERE os.order_status_code <> 4
 		RETURNING *
+	),
+	update_order AS (
+		UPDATE orders o SET
+			order_delivery_time = (
+				CASE
+					WHEN o.order_special = TRUE THEN NOW() + CONCAT(dh.delivery_hour_special, ' second')::INTERVAL
+					WHEN o.order_special = FALSE THEN NOW() + CONCAT(dh.delivery_hour_simple, ' second')::INTERVAL
+				END
+			)
+		FROM delivery_hours dh
+		WHERE o.order_id = $1
+		RETURNING *
 	) SELECT
 		np.*,
 		o.order_special,

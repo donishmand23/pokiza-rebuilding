@@ -44,8 +44,8 @@ type Service {
 
 type DeliveryHour {
 	deliveryHourId: ID!
-	deliveryHourSpecial: Hour!
-	deliveryHourSimple: Hour!
+	deliveryHourSpecial: Second!
+	deliveryHourSimple: Second!
 	branch: Branch!
 	deliveryHourCreatedAt: DateTime!
 }
