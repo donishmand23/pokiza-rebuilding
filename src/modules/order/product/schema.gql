@@ -16,6 +16,17 @@ type Query {
 	): [Product!]!
 }
 
+type Mutation {
+	addProduct(
+		orderId: ID!
+		serviceId: ID!
+		file: Upload
+		productSizeDetails: Object!
+		productSize: Int = 1
+		productSummary: String
+	): MutationResponse!
+}
+
 type Product {
 	productId: ID!
 	productPrice: Int!

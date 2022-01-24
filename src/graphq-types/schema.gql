@@ -7,6 +7,7 @@ scalar SVG
 scalar Contact
 scalar Password
 scalar StatusValue
+scalar Object
 
 # simple scalars that do not have type check
 scalar Any
@@ -18,7 +19,7 @@ scalar Second
 
 
 # unions
-union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service | DeliveryHour | Order
+union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service | DeliveryHour | Order | Product
 union UserType = Staff | Client
 
 #enums

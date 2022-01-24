@@ -117,6 +117,7 @@ export default function ({ req }) {
     if(
         [   
             'changeOrderStatus',
+            'addProduct',
             'sendNotifications',
             'sendSMS',
         ].includes(fieldName)

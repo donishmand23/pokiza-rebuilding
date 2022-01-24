@@ -39,3 +39,8 @@ orders
 
 (checkBringTime) (Bu oxiriga qoldirildi)
     * bringTime must be older than the create time
+
+addProduct 
+    -> new status for order
+    -> new status for product
+    -> delivery time for order

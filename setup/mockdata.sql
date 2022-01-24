@@ -280,8 +280,8 @@ insert into notifications(notification_from, notification_to, notification_img, 
 
 -- services
 insert into services (service_name, service_unit, service_unit_keys, service_price_special, service_price_simple, branch_id) values
-/* 1 */('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 1),
-/* 2 */('gilam', 'm2', ARRAY['eni', 'bo''yi'], 12000, 7000, 2),
+/* 1 */('gilam', 'm2', ARRAY['eni', 'boyi'], 12000, 7000, 1),
+/* 2 */('gilam', 'm2', ARRAY['eni', 'boyi'], 12000, 7000, 2),
 /* 3 */('sholcha', 'dona', ARRAY['qiymat'], 9000, 6500, 1),
 /* 4 */('parda', 'kg', ARRAY['qiymat'], 9500, 7500, 1),
 /* 5 */('parda', 'kg', ARRAY['qiymat'], 8000, 6000, 2);

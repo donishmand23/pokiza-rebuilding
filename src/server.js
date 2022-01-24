@@ -42,11 +42,11 @@ const schema = makeExecutableSchema({
     })
 
     await server.start()
+
     server.applyMiddleware({
         app,
         path: '/graphql',
     })
-
 
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)

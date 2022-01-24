@@ -246,6 +246,9 @@ export default {
 			if(obj.order_id && obj.order_created_at) {
 				return 'Order'
 			}
+			if(obj.product_id && obj.product_created_at) {
+				return 'Product'
+			}
 		}
 	},
 

@@ -241,6 +241,49 @@ const PRODUCT = `
 	END
 `
 
+const ADD_PRODUCT = `
+	WITH
+	new_product AS (
+		INSERT INTO products (
+			order_id,
+			service_id,
+			product_img,
+			product_size_details,
+			product_size,
+			product_summary				
+		) VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING *
+	),
+	product_status AS (
+		INSERT INTO product_statuses (
+			product_id,
+			staff_id,
+			product_status_code
+		) SELECT np.product_id, $7, 1 FROM new_product np
+		RETURNING *
+	),
+	order_status AS (
+		INSERT INTO order_statuses (
+			order_id,
+			staff_id,
+			order_status_code
+		) SELECT np.order_id, $7, 4 FROM new_product np
+		LEFT JOIN (
+			SELECT order_status_code, order_id FROM order_statuses
+			WHERE order_id = $1
+			ORDER BY order_status_code DESC
+			LIMIT 1
+		) os ON os.order_id = np.order_id
+		WHERE os.order_status_code <> 4
+		RETURNING *
+	) SELECT
+		np.*,
+		o.order_special,
+		to_char(np.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	FROM new_product np
+	NATURAL JOIN orders o
+`
+
 const PRODUCT_STATUSES = `
 	SELECT
 		product_status_id,
@@ -254,6 +297,7 @@ const PRODUCT_STATUSES = `
 
 export default {
 	PRODUCT_STATUSES,
+	ADD_PRODUCT,
 	PRODUCTS,
 	PRODUCT
 }

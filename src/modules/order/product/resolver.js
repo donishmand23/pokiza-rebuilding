@@ -1,14 +1,29 @@
 import productModel from './model.js'
+import upload from '#helpers/upload'
 import { mError } from '#helpers/error'
 
 export default {
+	Mutation: {
+		addProduct: async (_, args, { staffId }) => {
+			try {
+				await upload(args)
+				const newProduct = await productModel.addProduct(args, { staffId })
+				if(newProduct) {
+					return {
+						status: 200,
+						message: "Buyum qabul qilindi!",
+						data: newProduct
+					}
+				} else throw new Error("buyumni qabul qilishda muammolik yuz berdi!")  
+			} catch(error) { return mError(error) }
+		}
+	},
 	Query: {
 		products: async (_, args, { clientId }) => {
 			try {
 				const products = await productModel.products({ isDeleted: false, ...args }, { clientId })
 				return products
 			} catch(error) {
-				console.log(error)
 				throw error
 			}
 		},
