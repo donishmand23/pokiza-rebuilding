@@ -22,7 +22,6 @@ type Mutation {
 		serviceId: ID!
 		file: Upload
 		productSizeDetails: Object!
-		productSize: Int = 1
 		productSummary: String
 	): MutationResponse!
 }

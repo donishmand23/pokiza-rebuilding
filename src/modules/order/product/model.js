@@ -69,21 +69,28 @@ const order = ({ orderId }) => {
 	return fetch(OrderQuery.ORDER, null, orderId, [])
 }
 
-const addProduct = async ({ orderId, serviceId, file, productSizeDetails, productSize, productSummary }, { staffId }) => {
+const addProduct = async ({ orderId, serviceId, file, productSizeDetails, productSummary }, { staffId }) => {
 	if(typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails)) {
 		throw new Error("productSizeDetails should be a valid javaScript object type")
 	}
 
 	const productService = await service({ serviceId })
-	if(
-		!productService.service_unit_keys.map(key => {
+	if(!productService) {
+		throw new Error("Bunday xizmat turi mavjud emas!")
+	} else if(
+		!productService?.service_unit_keys?.map(key => {
 			return Object.keys(productSizeDetails).includes(key) && typeof(productSizeDetails[key]) === 'number'
 		}).every(el => el ===  true)
 	) {
-		throw new Error(`The keys ${productService.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
+		throw new Error(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
 	}
 
-	productSize = Object.values(productSizeDetails).reduce((acc, el) => acc * el)
+	const productOrder = await order({ orderId })
+	if(productOrder && productOrder.branch_id != productService.branch_id) {
+		throw new Error("Bu xizmat buyurtma berilgan filialda ishlamaydi!")
+	}
+
+	const productSize = Object.values(productSizeDetails).reduce((acc, el) => acc * el)
 
 	return fetch(ProductQuery.ADD_PRODUCT, orderId, serviceId, file, productSizeDetails, productSize, productSummary, staffId)
 }
