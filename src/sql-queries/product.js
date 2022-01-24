@@ -37,6 +37,7 @@ const PRODUCTS = `
 		FROM products p
 		NATURAL JOIN orders o
 		NATURAL JOIN services s
+		WHERE p.product_deleted_at IS NULL
 	) pp ON pp.product_id = p.product_id
 	LEFT JOIN (
 		SELECT

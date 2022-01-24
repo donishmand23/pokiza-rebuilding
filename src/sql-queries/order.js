@@ -48,6 +48,7 @@ const ORDERS = `
 		FROM products p
 		NATURAL JOIN orders o
 		LEFT JOIN services s ON s.service_id = p.service_id
+		WHERE p.product_deleted_at IS NULL
 	) op ON op.order_id = o.order_id
 	WHERE
 	CASE 
