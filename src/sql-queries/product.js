@@ -12,8 +12,8 @@ const PRODUCTS = `
 		count(*) OVER() as full_count,
 		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
 	FROM products p
-	NATURAL JOIN orders o
-	NATURAL JOIN addresses a
+	LEFT JOIN orders o ON o.order_id = p.order_id AND o.order_deleted_at IS NULL
+	LEFT JOIN addresses a ON a.address_id = o.address_id
 	LEFT JOIN clients c ON c.client_id = o.client_id
 	LEFT JOIN users u ON u.user_id = c.user_id
 	LEFT JOIN states sta ON sta.state_id = a.state_id
@@ -48,8 +48,9 @@ const PRODUCTS = `
 	) tm ON tm.order_id = o.order_id
 	WHERE
 	CASE 
-		WHEN $3 = FALSE THEN o.order_deleted_at IS NULL
-		WHEN $3 = TRUE THEN o.order_deleted_at IS NOT NULL
+		WHEN $3 = FALSE THEN p.product_deleted_at IS NULL
+		WHEN $3 = TRUE THEN p.product_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $4 > 0 THEN p.product_id = $4
@@ -218,8 +219,9 @@ const PRODUCT = `
 	) tm ON tm.order_id = o.order_id
 	WHERE
 	CASE 
-		WHEN $1 = FALSE THEN o.order_deleted_at IS NULL
-		WHEN $1 = TRUE THEN o.order_deleted_at IS NOT NULL
+		WHEN $1 = FALSE THEN p.product_deleted_at IS NULL
+		WHEN $1 = TRUE THEN p.product_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $2 > 0 THEN p.product_id = $2
@@ -320,6 +322,22 @@ const CHANGE_PRODUCT = `
 		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at	
 `
 
+const DELETE_PRODUCT = `
+	UPDATE products SET
+		product_deleted_at = current_timestamp
+	WHERE product_deleted_at IS NULL AND product_id = $1
+	RETURNING *,
+		to_char(product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+`
+
+const RESTORE_PRODUCT = `
+	UPDATE products SET
+		product_deleted_at = NULL
+	WHERE product_deleted_at IS NOT NULL AND product_id = $1
+	RETURNING *,
+		to_char(product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+`
+
 const PRODUCT_PHOTO = `
 	SELECT
 		product_img
@@ -340,6 +358,8 @@ const PRODUCT_STATUSES = `
 
 export default {
 	PRODUCT_STATUSES,
+	RESTORE_PRODUCT,
+	DELETE_PRODUCT,
 	CHANGE_PRODUCT,
 	PRODUCT_PHOTO,
 	ADD_PRODUCT,

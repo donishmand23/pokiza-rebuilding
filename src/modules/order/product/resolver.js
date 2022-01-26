@@ -31,11 +31,46 @@ export default {
 				} else throw new Error("Buyum ma'lumotlarini yangilashda muammolik yuz berdi!")  
 			} catch(error) { return mError(error) }
 		},
+
+		deleteProduct: async (_, args) => {
+			try {
+				const deletedProducts = await productModel.deleteProduct(args)
+				if(deletedProducts.length) {
+					return {
+						status: 200,
+						message: "Buyumlar o'chirildi!",
+						data: deletedProducts
+					}
+				} else throw new Error("Bunday buyumlar mavjud emas!")
+			} catch(error) { return mError(error) }
+		},
+
+		restoreProduct: async (_, args) => {
+			try {
+				const restoredProducts = await productModel.restoreProduct(args)
+				if(restoredProducts.length) {
+					return {
+						status: 200,
+						message: "Buyumlar qayta tiklandi!",
+						data: restoredProducts
+					}
+				} else throw new Error("Bunday buyumlar mavjud emas!")
+			} catch(error) { return mError(error) }
+		},
 	},
 	Query: {
 		products: async (_, args, { clientId }) => {
 			try {
 				const products = await productModel.products({ isDeleted: false, ...args }, { clientId })
+				return products
+			} catch(error) {
+				throw error
+			}
+		},
+
+		deletedProducts: async (_, args) => {
+			try {
+				const products = await productModel.products({ isDeleted: true, ...args })
 				return products
 			} catch(error) {
 				throw error

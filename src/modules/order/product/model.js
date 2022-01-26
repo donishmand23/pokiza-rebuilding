@@ -39,7 +39,7 @@ const products = ({
 
 	productPrice = (productPrice?.from && productPrice?.to) ? [productPrice.from, productPrice.to] : []
 
-	if(user.clientId) {
+	if(user?.clientId) {
 		clientId = [user.clientId]
 	}
 
@@ -118,8 +118,35 @@ const changeProduct = async ({ productId, serviceId, file, productSizeDetails, p
 	return fetch(ProductQuery.CHANGE_PRODUCT, productId, serviceId, file, productSizeDetails, productSize, productSummary)
 }
 
+const deleteProduct = async ({ productId }) => {
+	productId.map(async id => {
+		const statuses = await productStatuses({ productId: id })
+		if(+statuses[statuses.length - 1].status_code > 6) {
+			throw new Error("Buyumni o'chirish mumkin emas!")
+		}
+	})
+
+	const deletedProducts = []
+	for(let id of productId) {
+		const deletedProduct = await fetch(ProductQuery.DELETE_PRODUCT, id)
+		if(deletedProduct) deletedProducts.push(deletedProduct)
+	}
+	return deletedProducts
+}
+
+const restoreProduct = async ({ productId }) => {
+	const restoredProducts = []
+	for(let id of productId) {
+		const restoredProduct = await fetch(ProductQuery.RESTORE_PRODUCT, id)
+		if(restoredProduct) restoredProducts.push(restoredProduct)
+	}
+	return restoredProducts
+}
+
 export default {
 	productStatuses,
+	restoreProduct,
+	deleteProduct,
 	changeProduct,
 	addProduct,
 	products,

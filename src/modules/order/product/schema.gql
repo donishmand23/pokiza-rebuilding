@@ -14,6 +14,22 @@ type Query {
 		dateFilter: ProductDateFilter = {}
 		addressFilter: AddressFilter = {}
 	): [Product!]!
+
+	deletedProducts(
+		productId: ID
+		search: String
+		clientId: [ID!]
+		branchId: [ID!]
+		orderId: [ID!]
+		serviceId: [ID!]
+		productSpecial: Boolean
+		productStatus: [StatusValue!]
+		sort: ProductSort = {}
+		productPrice: Range = {}
+		pagination: Pagination = {} 
+		dateFilter: ProductDateFilter = {}
+		addressFilter: AddressFilter = {}
+	): [Product!]!
 }
 
 type Mutation {
@@ -32,6 +48,9 @@ type Mutation {
 		productSizeDetails: Object
 		productSummary: String
 	): MutationResponse!
+
+	deleteProduct(productId: [ID!]!): MutationResponses!
+	restoreProduct(productId: [ID!]!): MutationResponses!
 }
 
 type Product {
