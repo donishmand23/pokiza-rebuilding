@@ -32,6 +32,19 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
+		changeProductStatus: async (_, args, { staffId }) => {
+			try {
+				const updatedProduct = await productModel.changeProductStatus({ staffId, ...args })
+				if(updatedProduct) {
+					return {
+						status: 200,
+						message: "Buyum holati o'zgardi!",
+						data: updatedProduct
+					}
+				} else throw new Error("Buyum holatini o'zgartirishda muammolik yuz berdi!")  
+			} catch(error) { return mError(error) }
+		},
+
 		deleteProduct: async (_, args) => {
 			try {
 				const deletedProducts = await productModel.deleteProduct(args)

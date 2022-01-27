@@ -49,15 +49,17 @@ type Mutation {
 		productSummary: String
 	): MutationResponse!
 
+	changeProductStatus(productId: ID! status: StatusValue!): MutationResponse!
+
 	deleteProduct(productId: [ID!]!): MutationResponses!
 	restoreProduct(productId: [ID!]!): MutationResponses!
 }
 
 type Product {
 	productId: ID!
-	productPrice: Int!
+	productPrice: Int
 	productSize: Float!
-	productSpecial: Boolean!
+	productSpecial: Boolean
 	productImg: Link
 	productSizeDetails: Any!
 	productStatus: Status!

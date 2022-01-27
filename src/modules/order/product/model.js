@@ -118,6 +118,21 @@ const changeProduct = async ({ productId, serviceId, file, productSizeDetails, p
 	return fetch(ProductQuery.CHANGE_PRODUCT, productId, serviceId, file, productSizeDetails, productSize, productSummary)
 }
 
+const changeProductStatus = async ({ productId, status, staffId }) => {
+	if(status > 9) {
+		throw new Error("Buyumni bu holatga o'tkazish mumkin emas!")
+	}
+
+	const statuses = await productStatuses({ productId })
+	const productStatus = +statuses[statuses.length - 1].status_code
+
+	if(status == productStatus) {
+		throw new Error("Buyurtma holati allaqachon yangilangan!")
+	}
+
+	return fetch(ProductQuery.CHANGE_PRODUCT_STATUS, productId, status, staffId)
+}
+
 const deleteProduct = async ({ productId }) => {
 	productId.map(async id => {
 		const statuses = await productStatuses({ productId: id })
@@ -144,6 +159,7 @@ const restoreProduct = async ({ productId }) => {
 }
 
 export default {
+	changeProductStatus,
 	productStatuses,
 	restoreProduct,
 	deleteProduct,

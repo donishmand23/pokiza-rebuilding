@@ -355,8 +355,24 @@ const PRODUCT_STATUSES = `
 	ORDER BY product_status_id ASC
 `
 
+const CHANGE_PRODUCT_STATUS = `
+	WITH new_status AS (
+		INSERT INTO product_statuses (
+			product_id,
+			product_status_code,
+			staff_id
+		) VALUES ($1, $2, $3)
+		RETURNING *
+	) SELECT 
+		p.*
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	FROM products p 
+	WHERE p.product_id = $1
+`
+
 
 export default {
+	CHANGE_PRODUCT_STATUS,
 	PRODUCT_STATUSES,
 	RESTORE_PRODUCT,
 	DELETE_PRODUCT,
