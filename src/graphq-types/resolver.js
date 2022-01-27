@@ -212,43 +212,33 @@ export default {
 		__resolveType (obj, context, info) {
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'
-			}
-			if(obj.state_id && obj.state_name && obj.state_created_at) {
+			} else if(obj.state_id && obj.state_name && obj.state_created_at) {
 				return 'State'
-			}
-			if(obj.region_id && obj.region_name && obj.region_created_at) {
+			} else if(obj.region_id && obj.region_name && obj.region_created_at) {
 				return 'Region'
-			}
-			if(obj.neighborhood_id && obj.neighborhood_name && obj.neighborhood_created_at) {
+			} else if(obj.neighborhood_id && obj.neighborhood_name && obj.neighborhood_created_at) {
 				return 'Neighborhood'
-			}
-			if(obj.street_id && obj.street_name && obj.street_created_at) {
+			} else if(obj.street_id && obj.street_name && obj.street_created_at) {
 				return 'Street'
-			}
-			if(obj.area_id && obj.area_name && obj.area_created_at) {
+			} else if(obj.area_id && obj.area_name && obj.area_created_at) {
 				return 'Area'
-			}
-			if(obj.social_set_id && obj.social_set_name && obj.social_set_created_at) {
+			} else if(obj.social_set_id && obj.social_set_name && obj.social_set_created_at) {
 				return 'SocialSet'
-			}
-			if(obj.client_id && obj.client_status && obj.client_created_at) {
+			} else if(obj.client_id && obj.client_status && obj.client_created_at) {
 				return 'Client'
-			}
-			if(obj.staff_id && obj.staff_created_at) {
+			} else if(obj.staff_id && obj.staff_created_at) {
 				return 'Staff'
-			}
-			if(obj.service_id && obj.service_created_at) {
+			} else if(obj.service_id && obj.service_created_at) {
 				return 'Service'
-			}
-			if(obj.delivery_hour_id && obj.delivery_hour_created_at) {
+			} else if(obj.delivery_hour_id && obj.delivery_hour_created_at) {
 				return 'DeliveryHour'
-			}
-			if(obj.order_id && obj.order_created_at) {
+			} else if(obj.order_id && obj.order_created_at) {
 				return 'Order'
-			}
-			if(obj.product_id && obj.product_created_at) {
+			} else if(obj.product_id && obj.product_created_at) {
 				return 'Product'
-			}
+			} else if(obj.transport_id && obj.transport_created_at) {
+				return 'Transport'
+			} else return null
 		}
 	},
 

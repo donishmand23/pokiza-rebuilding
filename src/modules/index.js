@@ -20,6 +20,7 @@ import StaffModule from './user/staff/index.js'
 
 // service modules
 import ServiceModule from './service/service/index.js'
+import TransportModule from './service/transport/index.js'
 
 // order modules
 import OrderModule from './order/order/index.js'
@@ -47,6 +48,7 @@ export default {
   		StaffModule.typeDefs,
   		// service
   		ServiceModule.typeDefs,
+  		TransportModule.typeDefs,
   		// order
   		OrderModule.typeDefs,
   		ProductModule.typeDefs,
@@ -72,6 +74,7 @@ export default {
   		StaffModule.resolvers,
   		// service
   		ServiceModule.resolvers,
+  		TransportModule.resolvers,
   		// order
   		OrderModule.resolvers,
   		ProductModule.resolvers,

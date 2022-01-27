@@ -185,7 +185,6 @@ create table delivery_hours (
 	delivery_hour_created_at timestamptz default current_timestamp
 );
 
-
 -- ORDERS MODULE
 -- 16. orders ( client orders )
 drop table if exists orders cascade;
@@ -238,6 +237,23 @@ create table product_statuses(
 	product_status_created_at timestamptz default current_timestamp
 );
 
+
+-- TRANSPORT MODULE
+-- 21. transport
+drop table if exists transports cascade;
+create table transports (
+	transport_id bigserial not null primary key,
+	transport_model character varying(64) not null,
+	transport_color character varying(32) not null,
+	transport_number character varying(64) not null,
+	transport_summary character varying(128),
+	branch_id bigint not null references branches(branch_id),
+	transport_broken boolean default false,
+	transport_created_at timestamptz default current_timestamp,
+	transport_deleted_at timestamptz default null
+);
+
+
 -- EXTRA SERVICES 
 -- 20. sms service
 drop table if exists sms_service cascade;
@@ -261,6 +277,7 @@ create table notifications (
 	notification_created_at timestamptz default current_timestamp,
 	notification_deleted_at timestamptz default null
 );
+
 
 -- -- PERMISSIONS MODULE
 -- -- 23. permissions ( general permission actions )
@@ -316,26 +333,6 @@ create table notifications (
 -- 	history_created_at timestamptz default current_timestamp not null
 -- );
 
-
-
-
--- -- TRANSPORT MODULE
--- -- 21. transport
--- drop table if exists transports cascade;
--- create table transports (
--- 	transport_id bigserial not null primary key,
--- 	transport_model character varying(64) not null,
--- 	transport_color character varying(32) not null,
--- 	transport_number character varying(64) not null,
--- 	transport_summary character varying(128),
--- 	branch_id bigint not null references branches(branch_id),
--- 	transport_broken boolean default false,
--- 	driver_id bigint references staffs(staff_id) default null,
--- 	transport_created_at timestamptz default current_timestamp,
--- 	transport_deleted_at timestamptz default null,
--- 	unique(driver_id)
--- );
-
 -- -- 22. load order ( info about orders to which car they are loaded )
 -- drop table if exists load_order cascade;
 -- create table load_order (
@@ -346,10 +343,6 @@ create table notifications (
 -- 	load_order_deleted_at timestamptz default null,
 -- 	unique (order_id, transport_id)
 -- );
-
-
-
-
 
 -- -- CASHIER MODULE
 -- -- 27. transaction types

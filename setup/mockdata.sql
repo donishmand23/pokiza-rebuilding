@@ -303,11 +303,11 @@ insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id,
 /* 13 */ (2, 6, 12, 14, 19, 13, 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
 
 -- orders
-insert into orders (client_id, branch_id, address_id, order_special, order_bring_time) values
-/* 1 */ (1, 1, 9, true, '2022-02-08 15:30:00'),
-/* 2 */ (2, 1, 10, false, '2022-03-09 13:30:00'),
-/* 3 */ (2, 1, 10, true, '2022-02-10 12:05:00'),
-/* 4 */ (3, 2, 11, false, '2022-02-01 11:10:00');
+insert into orders (client_id, branch_id, address_id, order_special, order_bring_time, order_delivery_time) values
+/* 1 */ (1, 1, 9, true, NOW() + '86400 second'::INTERVAL, NOW() + '172800 second'::INTERVAL),
+/* 2 */ (2, 1, 10, false, NOW() + '64800 second'::INTERVAL, NOW() + '259200 second'::INTERVAL),
+/* 3 */ (2, 1, 10, true, NOW() + '172800 second'::INTERVAL, null),
+/* 4 */ (3, 2, 11, false, NOW() + '100800 second'::INTERVAL, null);
 
 -- order statuses
 insert into order_statuses (order_id, staff_id, order_status_code) values
@@ -336,3 +336,11 @@ insert into product_statuses (product_id, staff_id, product_status_code) values
 (3, 3, 1),
 (4, 3, 1),
 (5, 3, 1);
+
+
+-- Transport
+insert into transports(branch_id, transport_model, transport_color, transport_number, transport_summary) values
+(1, 'Damas', 'white', 'AB987G', 'yaxshi'),
+(1, 'Nexia', 'red', 'AB879G', 'yomon'),
+(2, 'Gazel', 'green', 'AB123G', 'ajoyib'),
+(2, 'Porsh', 'blue', 'AB987G', 'ajoyib');

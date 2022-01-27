@@ -30,6 +30,7 @@ export default function ({ req }) {
             'productStatusInfo',
 
             // later will be moved to staffs only section
+            'transports',
             'deletedProducts',
             'deleteProduct',
             'restoreProduct',

@@ -1,0 +1,26 @@
+type Query {
+	transports(
+		transportId: ID
+		search: String
+		branchId: [ID!]
+		available: Boolean
+		sort: TransportSort = {}
+		pagination: Pagination = {} 
+	): [Transport!]!
+}
+
+type Transport {
+	transportId: ID!
+	transportModel: String!
+	transportColor: String!
+	transportNumber: String!
+	transportSummary: String
+	transportBroken: Boolean!
+	transportCreatedAt: DateTime!
+	branch: Branch!
+	count: Int
+}
+
+input TransportSort {
+	transportId: SortOptions
+}
