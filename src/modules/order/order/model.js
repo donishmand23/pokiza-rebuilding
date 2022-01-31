@@ -1,12 +1,13 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
-import transportModel from '../../service/transport/model.js'
+import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
 import AddressQuery from '#sql/address'
 import BranchQuery from '#sql/branch'
 import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
-console.log(transportModel)
+
+
 const orders = ({
 	sort,
 	search,
@@ -67,8 +68,7 @@ const address = ({ addressId }) => {
 }
 
 const transport = async ({ orderId }) => {
-	const [ transport ] = await transportModel.transports({ orderId, pagination: {} })
-	return transport
+	return fetch(TransportQuery.TRANSPORT, null, 0, 0, orderId, 0)
 }
 
 const client = async ({ clientId }) => {

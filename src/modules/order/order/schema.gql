@@ -55,12 +55,12 @@ type Order {
 	special: Boolean!
 	summary: String
 	price: Float
-	products: [Product]!
 	client: Client!
 	branch: Branch!
 	address: Address!
 	status: Status!
-	# transport: Transport
+	transport: Transport
+	products: [Product]!
 	statusProcess: [Status!]!
 	bringTimeRemaining: Second
 	deliveryTimeRemaining: Second
