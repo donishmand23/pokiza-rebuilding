@@ -103,6 +103,7 @@ export default {
 		productStatusProcess: global => productModel.productStatuses({ productId: global.product_id }),
 		service:              global => productModel.service({ serviceId: global.service_id }),
 		order:                global => productModel.order({ orderId: global.order_id }),
+		transport:            global => productModel.transport({ productId: global.product_id }),
 		productStatus:  async global => {
 			const statuses = await productModel.productStatuses({ productId: global.product_id })
 			return statuses[statuses.length - 1]

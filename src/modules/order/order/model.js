@@ -27,7 +27,7 @@ const orders = ({
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
 		}
-	} ).filter( elem => elem !== undefined )[0]
+	}).filter( elem => elem !== undefined )[0]
 
 	Object.keys(dateFilter).map(key => {
 		dateFilter[key] = [dateFilter[key].from, dateFilter[key].to]
@@ -67,7 +67,7 @@ const address = ({ addressId }) => {
 	return fetch(AddressQuery.ADDRESS, addressId)
 }
 
-const transport = async ({ orderId }) => {
+const transport = ({ orderId }) => {
 	return fetch(TransportQuery.TRANSPORT, null, 0, 0, orderId, 0)
 }
 

@@ -64,6 +64,7 @@ type Product {
 	productImg: Link
 	productSizeDetails: Any!
 	productStatus: Status!
+	transport: Transport
 	productStatusProcess: [Status!]!
 	productSummary: String
 	service: Service!

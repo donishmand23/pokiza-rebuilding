@@ -1,5 +1,6 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
+import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
 import OrderQuery from '#sql/order'
 import ServiceQuery from '#sql/service'
@@ -16,6 +17,7 @@ const products = ({
 	serviceId,
 	pagination,
 	dateFilter,
+	transportId,
 	productPrice,
 	productStatus,
 	addressFilter,
@@ -31,7 +33,7 @@ const products = ({
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
 		}
-	} ).filter( elem => elem !== undefined )[0]
+	}).filter( elem => elem !== undefined )[0]
 
 	Object.keys(dateFilter).map(key => {
 		dateFilter[key] = [dateFilter[key].from, dateFilter[key].to]
@@ -52,12 +54,12 @@ const products = ({
 		(page - 1) * limit, limit, isDeleted,
 		productId, orderId, clientId, branchId, serviceId, productStatus, productPrice, productSpecial, search,
 		bringTime, broughtTime, deliveryTime, deliveredTime, productCreatedAt,
-		stateId, regionId, neighborhoodId, streetId, areaId,
+		stateId, regionId, neighborhoodId, streetId, areaId, transportId,
 		sortObject?.sortKey || 1, sortObject?.value || 1
 	)
 }
 
-const service = async ({ serviceId, isDeleted = null }) => {
+const service = ({ serviceId, isDeleted = null }) => {
 	return fetch(ServiceQuery.SERVICES, isDeleted, serviceId, [])
 }
 
@@ -67,6 +69,10 @@ const productStatuses = ({ productId }) => {
 
 const order = ({ orderId }) => {
 	return fetch(OrderQuery.ORDER, null, orderId, [])
+}
+
+const transport = ({ productId }) => {
+	return fetch(TransportQuery.TRANSPORT, null, 0, 0, 0, productId)
 }
 
 const addProduct = async ({ orderId, serviceId, file, productSizeDetails, productSummary }, { staffId }) => {
@@ -158,6 +164,7 @@ const restoreProduct = async ({ productId }) => {
 	return restoredProducts
 }
 
+
 export default {
 	changeProductStatus,
 	productStatuses,
@@ -165,6 +172,7 @@ export default {
 	deleteProduct,
 	changeProduct,
 	addProduct,
+	transport,
 	products,
 	service,
 	order,
