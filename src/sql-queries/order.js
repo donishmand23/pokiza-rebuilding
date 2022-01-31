@@ -133,7 +133,7 @@ const ORDERS = `
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN ARRAY_LENGTH($20::INT[], 1) > 0 THEN ob.transport_id = ANY($20::INT[]) 
+		WHEN $20 > 0 THEN ob.transport_id = $20
 		ELSE TRUE
 	END
 	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code,

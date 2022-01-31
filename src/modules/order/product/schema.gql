@@ -2,6 +2,7 @@ type Query {
 	products(
 		productId: ID
 		search: String
+		transportId: ID
 		clientId: [ID!]
 		branchId: [ID!]
 		orderId: [ID!]

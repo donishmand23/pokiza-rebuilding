@@ -2,9 +2,9 @@ type Query {
 	orders(
 		orderId: ID
 		search: String
+		transportId: ID
 		clientId: [ID!]
 		branchId: [ID!]
-		transportId: [ID!]
 		orderSpecial: Boolean
 		orderStatus: [StatusValue!] 
 		sort: OrderSort = {}
