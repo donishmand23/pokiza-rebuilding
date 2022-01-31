@@ -1,11 +1,12 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
+import transportModel from '../../service/transport/model.js'
+import ProductQuery from '#sql/product'
 import AddressQuery from '#sql/address'
 import BranchQuery from '#sql/branch'
-import UserQuery from '#sql/user'
 import OrderQuery from '#sql/order'
-import ProductQuery from '#sql/product'
-
+import UserQuery from '#sql/user'
+console.log(transportModel)
 const orders = ({
 	sort,
 	search,
@@ -15,6 +16,7 @@ const orders = ({
 	isDeleted,
 	pagination,
 	dateFilter,
+	transportId,
 	orderStatus,
 	orderSpecial,
 	addressFilter,
@@ -43,7 +45,7 @@ const orders = ({
 		(page - 1) * limit, limit, isDeleted,
 		orderId, clientId, branchId, orderStatus, orderSpecial, search,
 		bringTime, broughtTime, deliveryTime, deliveredTime, orderCreatedAt,
-		stateId, regionId, neighborhoodId, streetId, areaId,
+		stateId, regionId, neighborhoodId, streetId, areaId, transportId,
 		sortObject?.sortKey || 1, sortObject?.value || 1
 	)
 }
@@ -62,6 +64,11 @@ const branch = ({ branchId }) => {
 
 const address = ({ addressId }) => {
 	return fetch(AddressQuery.ADDRESS, addressId)
+}
+
+const transport = async ({ orderId }) => {
+	const [ transport ] = await transportModel.transports({ orderId, pagination: {} })
+	return transport
 }
 
 const client = async ({ clientId }) => {
@@ -163,6 +170,7 @@ export default {
 	restoreOrder,
 	deleteOrder,
 	changeOrder,
+	transport,
 	addOrder,
 	products,
 	address,

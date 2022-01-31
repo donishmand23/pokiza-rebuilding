@@ -51,3 +51,16 @@ changeProduct
     -> check productSize details
 
 transport
+
+
+trasport_register
+    tranport_id
+    staff_id
+
+transport registration
+    
+transportId staffId registed_at unregistered_at
+
+
+load
+    transportId productId orderId type finished_at

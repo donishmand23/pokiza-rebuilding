@@ -33,6 +33,11 @@ enum SortOptions {
 	toLargest
 }
 
+enum BindType {
+	deliver
+	bring
+}
+
 # inputs
 input Range {
 	from: Int!

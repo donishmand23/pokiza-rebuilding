@@ -107,6 +107,7 @@ export default {
 		address:        	   global => orderModel.address({ addressId: global.address_id }),
 		statusProcess:  	   global => orderModel.orderStatuses({ orderId: global.order_id }),
 		products:  	           global => orderModel.products({ orderId: global.order_id }),
+		// transport:  	       global => orderModel.transport({ orderId: global.order_id }),
 		status:          async global => {
 			const statuses = await orderModel.orderStatuses({ orderId: global.order_id })
 			return statuses[statuses.length - 1]

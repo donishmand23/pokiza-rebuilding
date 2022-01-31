@@ -339,8 +339,18 @@ insert into product_statuses (product_id, staff_id, product_status_code) values
 
 
 -- Transport
-insert into transports(branch_id, transport_model, transport_color, transport_number, transport_summary) values
-(1, 'Damas', 'white', 'AB987G', 'yaxshi'),
-(1, 'Nexia', 'red', 'AB879G', 'yomon'),
-(2, 'Gazel', 'green', 'AB123G', 'ajoyib'),
-(2, 'Porsh', 'blue', 'AB987G', 'ajoyib');
+insert into transports(branch_id, transport_model, transport_color, transport_number, transport_img, transport_summary) values
+(1, 'Damas', 'white', 'AB987G', 'damas.jpg', 'yaxshi'),
+(1, 'Nexia', 'red', 'AB879G', 'nexia.jpg', 'yomon'),
+(2, 'Gazel', 'green', 'AB123G', 'gazel.jpg', 'ajoyib'),
+(2, 'Labo', 'blue', 'AB987G', 'labo.jpg', 'ajoyib');
+
+
+-- transport registration
+insert into transport_registration (staff_id, transport_id, unregistered_at) values (1, 1, current_timestamp);
+insert into transport_registration (staff_id, transport_id, unregistered_at) values (3, 1, null);
+
+-- order_bindings
+insert into order_bindings (transport_id, order_id, order_binding_type) values
+(1, 1, 2),
+(1, 2, 2);

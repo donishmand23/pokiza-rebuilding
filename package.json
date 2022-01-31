@@ -30,5 +30,8 @@
         "#sql/*": "./src/sql-queries/*.js",
         "#helpers/*": "./src/helpers/*.js",
         "#utils/*": "./src/utils/*.js"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
     }
 }

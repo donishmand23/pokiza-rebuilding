@@ -205,7 +205,7 @@ create table orders (
 
 -- 17. order status processes
 drop table if exists order_statuses cascade;
-create table order_statuses(
+create table order_statuses (
 	order_status_id bigserial not null primary key,
 	order_status_code smallint not null check (order_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
 	order_id bigint not null references orders(order_id),
@@ -229,7 +229,7 @@ create table products (
 
 -- 19. product status processes
 drop table if exists product_statuses cascade;
-create table product_statuses(
+create table product_statuses (
 	product_status_id bigserial not null primary key,
 	product_status_code smallint not null check (product_status_code in (1, 2, 3, 4, 5, 6, 7, 8, 9)),
 	product_id bigint not null references products(product_id),
@@ -247,12 +247,35 @@ create table transports (
 	transport_color character varying(32) not null,
 	transport_number character varying(64) not null,
 	transport_summary character varying(128),
-	branch_id bigint not null references branches(branch_id),
+	transport_img text,
 	transport_broken boolean default false,
+	branch_id bigint not null references branches(branch_id),
 	transport_created_at timestamptz default current_timestamp,
 	transport_deleted_at timestamptz default null
 );
 
+-- transport registration
+drop table if exists transport_registration cascade;
+create table transport_registration (
+	registration_id bigserial not null primary key,
+	staff_id bigint not null references staffs(staff_id),
+	transport_id bigint not null references transports(transport_id),
+	registered_at timestamptz default current_timestamp,
+	unregistered_at timestamptz default null
+);
+
+-- order bindings
+drop table if exists order_bindings cascade;
+create table order_bindings (
+	order_binding_id bigserial not null primary key,
+	order_binding_type smallint not null check (order_binding_type in (1, 2)),
+	transport_id bigint not null references transports(transport_id),
+	order_id bigint references orders(order_id),
+	product_id bigint references products(product_id),
+	finished boolean default false,
+	order_binding_created_at timestamptz default current_timestamp,
+	order_binding_deleted_at timestamptz default null
+);
 
 -- EXTRA SERVICES 
 -- 20. sms service

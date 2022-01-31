@@ -24,6 +24,7 @@ const ORDERS = `
 	LEFT JOIN neighborhoods n ON n.neighborhood_id = a.neighborhood_id
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
+	LEFT JOIN order_bindings ob ON o.order_id = ob.order_id
 	LEFT JOIN LATERAL (
 		SELECT * FROM order_statuses WHERE order_id = o.order_id
 		ORDER BY order_status_id DESC LIMIT 1
@@ -130,34 +131,38 @@ const ORDERS = `
 	CASE 
 		WHEN ARRAY_LENGTH($19::INT[], 1) > 0 THEN ar.area_id = ANY($19::INT[]) 
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN ARRAY_LENGTH($20::INT[], 1) > 0 THEN ob.transport_id = ANY($20::INT[]) 
+		ELSE TRUE
 	END
 	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code,
 		     n.neighborhood_distance, st.street_distance, ar.area_distance
 	ORDER BY
-	(CASE WHEN $20 = 1 AND $21 = 2 THEN o.order_id END) ASC,
-	(CASE WHEN $20 = 1 AND $21 = 1 THEN o.order_id END) DESC,
-	(CASE WHEN $20 = 2 AND $21 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $20 = 2 AND $21 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $20 = 3 AND $21 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $20 = 3 AND $21 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $20 = 4 AND $21 = 2 THEN os.order_status_code END) ASC,
-	(CASE WHEN $20 = 4 AND $21 = 1 THEN os.order_status_code END) DESC,
-	(CASE WHEN $20 = 5 AND $21 = 2 THEN COALESCE( SUM(op.product_price) ,0) END) ASC,
-	(CASE WHEN $20 = 5 AND $21 = 1 THEN COALESCE( SUM(op.product_price) ,0) END) DESC,
-	(CASE WHEN $20 = 6 AND $21 = 2 THEN o.order_brougth_time END) ASC,
-	(CASE WHEN $20 = 6 AND $21 = 1 THEN o.order_brougth_time END) DESC,
-	(CASE WHEN $20 = 7 AND $21 = 2 THEN o.order_delivered_time END) ASC,
-	(CASE WHEN $20 = 7 AND $21 = 1 THEN o.order_delivered_time END) DESC,
-	(CASE WHEN $20 = 8 AND $21 = 2 THEN tm.bring_time_remaining END) ASC,
-	(CASE WHEN $20 = 8 AND $21 = 1 THEN tm.bring_time_remaining END) DESC,
-	(CASE WHEN $20 = 9 AND $21 = 2 THEN tm.delivery_time_remaining END) ASC,
-	(CASE WHEN $20 = 9 AND $21 = 1 THEN tm.delivery_time_remaining END) DESC,
-	(CASE WHEN $20 = 10 AND $21 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
-	(CASE WHEN $20 = 10 AND $21 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
-	(CASE WHEN $20 = 10 AND $21 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
-	(CASE WHEN $20 = 10 AND $21 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
-	(CASE WHEN $20 = 10 AND $21 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
-	(CASE WHEN $20 = 10 AND $21 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC
+	(CASE WHEN $21 = 1 AND $22 = 2 THEN o.order_id END) ASC,
+	(CASE WHEN $21 = 1 AND $22 = 1 THEN o.order_id END) DESC,
+	(CASE WHEN $21 = 2 AND $22 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $21 = 2 AND $22 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $21 = 3 AND $22 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $21 = 3 AND $22 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $21 = 4 AND $22 = 2 THEN os.order_status_code END) ASC,
+	(CASE WHEN $21 = 4 AND $22 = 1 THEN os.order_status_code END) DESC,
+	(CASE WHEN $21 = 5 AND $22 = 2 THEN COALESCE( SUM(op.product_price) ,0) END) ASC,
+	(CASE WHEN $21 = 5 AND $22 = 1 THEN COALESCE( SUM(op.product_price) ,0) END) DESC,
+	(CASE WHEN $21 = 6 AND $22 = 2 THEN o.order_brougth_time END) ASC,
+	(CASE WHEN $21 = 6 AND $22 = 1 THEN o.order_brougth_time END) DESC,
+	(CASE WHEN $21 = 7 AND $22 = 2 THEN o.order_delivered_time END) ASC,
+	(CASE WHEN $21 = 7 AND $22 = 1 THEN o.order_delivered_time END) DESC,
+	(CASE WHEN $21 = 8 AND $22 = 2 THEN tm.bring_time_remaining END) ASC,
+	(CASE WHEN $21 = 8 AND $22 = 1 THEN tm.bring_time_remaining END) DESC,
+	(CASE WHEN $21 = 9 AND $22 = 2 THEN tm.delivery_time_remaining END) ASC,
+	(CASE WHEN $21 = 9 AND $22 = 1 THEN tm.delivery_time_remaining END) DESC,
+	(CASE WHEN $21 = 10 AND $22 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
+	(CASE WHEN $21 = 10 AND $22 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
+	(CASE WHEN $21 = 10 AND $22 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
+	(CASE WHEN $21 = 10 AND $22 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
+	(CASE WHEN $21 = 10 AND $22 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
+	(CASE WHEN $21 = 10 AND $22 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 

@@ -4,6 +4,7 @@ type Query {
 		search: String
 		clientId: [ID!]
 		branchId: [ID!]
+		transportId: [ID!]
 		orderSpecial: Boolean
 		orderStatus: [StatusValue!] 
 		sort: OrderSort = {}
@@ -59,6 +60,7 @@ type Order {
 	branch: Branch!
 	address: Address!
 	status: Status!
+	# transport: Transport
 	statusProcess: [Status!]!
 	bringTimeRemaining: Second
 	deliveryTimeRemaining: Second

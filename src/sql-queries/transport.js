@@ -7,9 +7,16 @@ const TRANSPORTS = `
 		t.transport_summary,
 		t.branch_id,
 		t.transport_broken,
+		t.transport_img,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
+	LEFT JOIN (
+		SELECT staff_id, transport_id
+		FROM transport_registration
+		ORDER BY registration_id DESC
+		LIMIT 1
+	) tr ON tr.transport_id = t.transport_id
 	WHERE
 	CASE 
 		WHEN $3 = FALSE THEN t.transport_deleted_at IS NULL
@@ -37,14 +44,44 @@ const TRANSPORTS = `
 		) WHEN LENGTH($7) > 0 THEN (
 			t.transport_id::VARCHAR = $7::VARCHAR
 		) ELSE TRUE
+	END AND
+	CASE
+		WHEN $8 > 0 THEN tr.staff_id = $8
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $9 > 0 OR $10 > 0 THEN t.transport_id = (
+			SELECT transport_id FROM
+			order_bindings WHERE
+			CASE
+				WHEN $9 > 0 THEN order_id = $9
+				ELSE TRUE
+			END AND
+			CASE
+				WHEN $10 > 0 THEN product_id = $10
+				ELSE TRUE
+			END
+		)
+		ELSE TRUE
 	END
 	ORDER BY
-	(CASE WHEN $8 = 1 AND $9 = 2 THEN t.transport_id END) ASC,
-	(CASE WHEN $8 = 1 AND $9 = 1 THEN t.transport_id END) DESC
+	(CASE WHEN $11 = 1 AND $12 = 2 THEN t.transport_id END) ASC,
+	(CASE WHEN $11 = 1 AND $12 = 1 THEN t.transport_id END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
+`
+
+const DRIVERS = `
+	SELECT
+		staff_id,
+		to_char(registered_at, 'YYYY-MM-DD HH24:MI:SS') registered_at,
+		to_char(unregistered_at, 'YYYY-MM-DD HH24:MI:SS') unregistered_at
+	FROM transport_registration
+	WHERE transport_id = $1
+	ORDER BY registration_id ASC
 `
 
 
 export default {
-	TRANSPORTS
+	TRANSPORTS,
+	DRIVERS
 }
