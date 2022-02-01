@@ -1,5 +1,6 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
+import changeStatus from '#helpers/status'
 import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
 import OrderQuery from '#sql/order'
@@ -125,7 +126,7 @@ const changeProduct = async ({ productId, serviceId, file, productSizeDetails, p
 }
 
 const changeProductStatus = async ({ productId, status, staffId }) => {
-	if(status > 9) {
+	if(status > 10) {
 		throw new Error("Buyumni bu holatga o'tkazish mumkin emas!")
 	}
 
@@ -136,7 +137,11 @@ const changeProductStatus = async ({ productId, status, staffId }) => {
 		throw new Error("Buyurtma holati allaqachon yangilangan!")
 	}
 
-	return fetch(ProductQuery.CHANGE_PRODUCT_STATUS, productId, status, staffId)
+	const updatedStatus = await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, productId, status, staffId)
+
+	await changeStatus({ productId, staffId })
+
+	return updatedStatus
 }
 
 const deleteProduct = async ({ productId }) => {

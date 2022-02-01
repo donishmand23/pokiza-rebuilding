@@ -92,11 +92,16 @@ const productStatusInfo = {
 	},
 	8: {
 		code: 8,
-		name: 'Yetkazib berishda',
-		description: 'Mijozning uyiga yetkazib berish jarayonida bo\'lgan buyum statusi'
+		name: 'Yuklangan',
+		description: 'Yetkazib berish uchun mashinaga biriktirilgan buyum statusi'
 	},
 	9: {
 		code: 9,
+		name: 'Yetkazib berishda',
+		description: 'Mijozning uyiga yetkazib berish jarayonida bo\'lgan buyum statusi'
+	},
+	10: {
+		code: 10,
 		name: 'Yetkazildi',
 		description: 'Mijozga to\'liq yetkazib berilgan buyum statusi'
 	}

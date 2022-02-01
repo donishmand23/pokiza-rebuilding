@@ -1,5 +1,6 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { fetch, fetchAll } from '#utils/postgres'
+import changeStatus from '#helpers/status'
 import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
 import AddressQuery from '#sql/address'
@@ -119,7 +120,7 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 
 const changeOrderStatus = async ({ orderId, status, staffId }) => {
 	if(![1, 2, 3, 7].includes(+status)) {
-		throw new Error("Buyurtmani holatini faqat 'Moderator', 'Kutilmoqda', 'Biriktirilgan', 'Yetkazib berishda' holatlariga o'tkazish mumkin!")
+		throw new Error("Buyurtmani holatini faqat 'Moderator', 'Kutilmoqda', 'Biriktirilgan', 'Yuklangan' holatlariga o'tkazish mumkin!")
 	}
 
 	const statuses = await orderStatuses({ orderId })
@@ -132,7 +133,15 @@ const changeOrderStatus = async ({ orderId, status, staffId }) => {
 		throw new Error("Buyurtma holatini allaqachon yangilangan!")
 	}
 
-	return fetch(OrderQuery.CHANGE_ORDER_STATUS, orderId, status, staffId)
+	if(orderStatus != 6 && status == 7) {
+		throw new Error("Tayyor bo'lmagan buyurtmani mashinaga biriktirish mumkin emas!")
+	}
+
+	const updatedStatus = await fetch(OrderQuery.CHANGE_ORDER_STATUS, orderId, status, staffId)
+
+	await changeStatus({ productId, staffId })
+
+	return updatedStatus
 }	
 
 const deleteOrder = async ({ orderId }, { clientId }) => {

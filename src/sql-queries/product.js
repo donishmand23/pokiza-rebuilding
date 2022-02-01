@@ -369,14 +369,59 @@ const CHANGE_PRODUCT_STATUS = `
 		) VALUES ($1, $2, $3)
 		RETURNING *
 	) SELECT 
-		p.*
+		p.*,
 		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
 	FROM products p 
 	WHERE p.product_id = $1
 `
 
+const ORDER_AND_PRODUCT_STATUS_INFO = `
+	SELECT 
+		o.order_id,
+		SUM(p.status_code) / COUNT(p.product_id) AS product_general_status,
+		SUM(p.status_code) AS product_status_sum, 
+		COUNT(p.product_id) AS product_length,
+		JSON_AGG(p.*) AS products,
+		os.status_code AS order_status
+	FROM orders o
+	LEFT JOIN LATERAL (
+		SELECT
+			p.order_id,
+			p.product_id,
+			p.product_size,
+			p.product_img,
+			p.product_size_details,
+			p.product_summary,
+			ps.status_code
+		FROM products p
+		LEFT JOIN LATERAL (
+			SELECT product_status_code as status_code, product_id
+			FROM product_statuses WHERE product_id = p.product_id
+			ORDER BY product_status_id DESC
+			LIMIT 1
+		) ps ON ps.product_id = p.product_id
+	) p ON p.order_id = o.order_id
+	LEFT JOIN LATERAL (
+		SELECT order_status_code as status_code, order_id
+		FROM order_statuses WHERE order_id = o.order_id
+		ORDER BY order_status_id DESC
+		LIMIT 1
+	) os ON os.order_id = o.order_id
+	WHERE
+	CASE
+		WHEN $1 > 0 THEN o.order_id = $1
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $2 > 0 THEN p.product_id = $2
+		ELSE TRUE
+	END
+	GROUP BY o.order_id, os.status_code
+`
+
 
 export default {
+	ORDER_AND_PRODUCT_STATUS_INFO,
 	CHANGE_PRODUCT_STATUS,
 	PRODUCT_STATUSES,
 	RESTORE_PRODUCT,
