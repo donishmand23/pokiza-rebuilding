@@ -13,6 +13,15 @@ type Query {
 }
 
 type Mutation {
+	addTransport(
+		file: Upload
+		branchId: ID!
+		transportModel: String!
+		transportColor: String!
+		transportNumber: String!
+		transportSummary: String
+	): MutationResponse!
+
 	bindOrder(
 		transportId: ID!
 		orderId: [ID!]

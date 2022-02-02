@@ -52,6 +52,13 @@ const staff = async ({ staffId }) => {
 	return staff
 }
 
+const addTransport = ({ file, branchId, transportModel, transportColor, transportNumber, transportSummary }) => {
+	return fetch(
+		TransportQuery.ADD_TRANSPORT, 
+		branchId, transportModel, transportColor, transportNumber, transportSummary, file
+	)
+}
+
 const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { staffId }) => {
 	for(let id of orderId) {
 		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
@@ -117,6 +124,7 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 
 
 export default {
+	addTransport,
 	unbindOrder,
 	transports,
 	bindOrder,

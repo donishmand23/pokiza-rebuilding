@@ -1,8 +1,23 @@
 import transportModel from './model.js'
+import upload from '#helpers/upload'
 import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
+		addTransport: async (_, args) => {
+			try {
+				await upload(args)
+				const newTransport = await transportModel.addTransport(args)
+				if(newTransport) {
+					return {
+						status: 200,
+						message: "Yangi transport qo'shildi!",
+						data: newTransport
+					}
+				} else throw new Error("Transport qo'shishda muammolik yuz berdi!")
+			} catch (error) { return mError(error) }
+		},
+
 		bindOrder: async (_, args, context) => {
 			try {
 				const boundOrders = await transportModel.bindOrder(args, context)
@@ -24,7 +39,6 @@ export default {
 		unbindOrder: async (_, args, context) => {
 			try {
 				const unboundOrders = await transportModel.unbindOrder(args, context)
-				console.log(unboundOrders)
 				if(unboundOrders.length) {
 					return {
 						status: 200,
@@ -56,7 +70,7 @@ export default {
 		transportBroken:    global => global.transport_broken, 
 		transportSummary:   global => global.transport_summary,		
 		transportCreatedAt: global => global.transport_created_at, 
-		transportImg:       global => '/data/uploads/' + global.transport_img || 'avto.jpg',
+		transportImg:       global => '/data/uploads/' + (global.transport_img || 'avto.jpg'),
 		branch:             global => transportModel.branch({ branchId: global.branch_id }),
 		driversList:        global => transportModel.drivers({ transportId: global.transport_id }),
 		driver:       async global => {
