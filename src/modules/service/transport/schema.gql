@@ -19,6 +19,11 @@ type Mutation {
 		productId: [ID!]
 		type: BindType!
 	): MutationResponses!
+
+	unbindOrder(
+		orderId: [ID!]
+		productId: [ID!]
+	): MutationResponses!
 }
 
 type Transport {

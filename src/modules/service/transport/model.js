@@ -80,23 +80,44 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 
 	for(let id of orderId) {
 		const bound = await fetch(TransportQuery.BIND_ORDER, id, null, type, transportId)
-		await fetch(OrderQuery.CHANGE_ORDER_STATUS, id, 7, staffId)
-		await changeStatus({ orderId: id, staffId })
-		boundOrders.push(bound)
+		bound && await fetch(OrderQuery.CHANGE_ORDER_STATUS, id, 7, staffId)
+		bound && await changeStatus({ orderId: id, staffId })
+		bound && boundOrders.push(bound)
 	}
 
 	for(let id of productId) {
 		const bound = await fetch(TransportQuery.BIND_ORDER, null, id, type, transportId)
-		await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 8, staffId)
-		await changeStatus({ productId: id, staffId })
-		boundOrders.push(bound)
+		bound && await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 8, staffId)
+		bound && await changeStatus({ productId: id, staffId })
+		bound && boundOrders.push(bound)
 	}
 
 	return boundOrders
 }
 
+const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
+	const unboundOrders = []
+
+	for(let id of orderId) {
+		const bound = await fetch(TransportQuery.UNBOUND_ORDER, id, null)
+		bound && await fetch(OrderQuery.CHANGE_ORDER_STATUS, id, 6, staffId)
+		bound && await changeStatus({ orderId: id, staffId })
+		bound && unboundOrders.push(bound)
+	}
+
+	for(let id of productId) {
+		const bound = await fetch(TransportQuery.UNBOUND_ORDER, null, id)
+		bound && await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 7, staffId)
+		bound && await changeStatus({ productId: id, staffId })
+		bound && unboundOrders.push(bound)
+	}
+
+	return unboundOrders
+}	
+
 
 export default {
+	unbindOrder,
 	transports,
 	bindOrder,
 	drivers,

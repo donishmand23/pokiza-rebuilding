@@ -140,8 +140,23 @@ const BIND_ORDER = `
 	RETURNING *
 `
 
+const UNBOUND_ORDER = `
+	DELETE FROM order_bindings
+	WHERE
+	CASE
+		WHEN $1 > 0 THEN order_id = $1
+		ELSE FALSE
+	END OR
+	CASE
+		WHEN $2 > 0 THEN product_id = $2
+		ELSE FALSE
+	END
+	RETURNING *
+`
+
 
 export default {
+	UNBOUND_ORDER,
 	BIND_ORDER,
 	TRANSPORTS,
 	TRANSPORT,

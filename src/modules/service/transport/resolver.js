@@ -19,7 +19,21 @@ export default {
 				}
 				return mError(error)
 			}
-		}
+		},
+
+		unbindOrder: async (_, args, context) => {
+			try {
+				const unboundOrders = await transportModel.unbindOrder(args, context)
+				console.log(unboundOrders)
+				if(unboundOrders.length) {
+					return {
+						status: 200,
+						message: "Buyurtma va buyumlar mashinadan chiqarildi!",
+						data: []
+					}
+				} else throw new Error("Buyurtma va buyumlar allaqachon mashinadan chiqarilgan!")
+			} catch (error) { return mError(error) }
+		},
 	},
 
 	Query: {

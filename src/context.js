@@ -122,6 +122,7 @@ export default function ({ req }) {
     if(
         [   
             'bindOrder',
+            'unbindOrder',
             'changeProductStatus',
             'changeOrderStatus',
             'addProduct',
