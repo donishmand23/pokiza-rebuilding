@@ -10,6 +10,18 @@ type Query {
 		sort: TransportSort = {}
 		pagination: Pagination = {} 
 	): [Transport!]!
+
+	deletedTransports(
+		transportId: ID
+		search: String
+		productId: ID
+		orderId: ID
+		staffId: ID
+		branchId: [ID!]
+		available: Boolean
+		sort: TransportSort = {}
+		pagination: Pagination = {} 
+	): [Transport!]!
 }
 
 type Mutation {
@@ -21,6 +33,19 @@ type Mutation {
 		transportNumber: String!
 		transportSummary: String
 	): MutationResponse!
+
+	changeTransport(
+		transportId: ID!
+		file: Upload
+		branchId: ID
+		transportModel: String
+		transportColor: String
+		transportNumber: String
+		transportSummary: String
+	): MutationResponse!
+
+	deleteTransport(transportId: [ID!]!): MutationResponses!
+	restoreTransport(transportId: [ID!]!): MutationResponses!
 
 	bindOrder(
 		transportId: ID!

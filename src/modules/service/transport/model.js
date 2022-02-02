@@ -59,6 +59,47 @@ const addTransport = ({ file, branchId, transportModel, transportColor, transpor
 	)
 }
 
+const changeTransport = ({ transportId, file, branchId, transportModel, transportColor, transportNumber, transportSummary }) => {
+	return fetch(
+		TransportQuery.CHANGE_TRANSPORT, transportId, 
+		branchId, transportModel, transportColor, transportNumber, transportSummary, file
+	)
+}
+
+const deleteTransport = async ({ transportId }) => {
+	for(let id of transportId) {
+		const transport = await fetch(TransportQuery.CHECK_TRANSPORT, id)
+		console.log(transport)
+		if(transport.registered) {
+			throw new Error("Transportni o'chirish mumkin emas. Unga haydovchi biriktirilgan!")
+		}
+
+		if(transport.bound) {
+			throw new Error("Transportni o'chirish mumkin emas. Unga buyurtma yoki buyumlar biriktirilgan!")
+		}
+	}
+
+	const deletedTransports = []
+
+	for(let id of transportId) {
+		const deleted = await fetch(TransportQuery.DELETE_TRANSPORT, id)
+		deleted && deletedTransports.push(deleted)
+	}
+
+	return deletedTransports
+}
+
+const restoreTransport = async ({ transportId }) => {
+	const restoredTransports = []
+
+	for(let id of transportId) {
+		const restored = await fetch(TransportQuery.RESTORE_TRANSPORT, id)
+		restored && restoredTransports.push(restored)
+	}
+
+	return restoredTransports
+}
+
 const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { staffId }) => {
 	for(let id of orderId) {
 		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
@@ -124,6 +165,9 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 
 
 export default {
+	restoreTransport,
+	deleteTransport,
+	changeTransport,
 	addTransport,
 	unbindOrder,
 	transports,

@@ -18,6 +18,46 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
+		changeTransport: async (_, args) => {
+			try {
+				await upload(args)
+				const updatedTransport = await transportModel.changeTransport(args)
+				if(updatedTransport) {
+					return {
+						status: 200,
+						message: "Transport ma'lumotlari yangilandi!",
+						data: updatedTransport
+					}
+				} else throw new Error("Bunday transport mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
+
+		deleteTransport: async (_, args) => {
+			try {
+				const deletedTransports = await transportModel.deleteTransport(args)
+				if(deletedTransports.length) {
+					return {
+						status: 200,
+						message: "Transportlar o'chirildi. Ularni qayta tiklash mumkin.",
+						data: deletedTransports
+					}
+				} else throw new Error("Bunday transportlar mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
+
+		restoreTransport: async (_, args) => {
+			try {
+				const restoredTransports = await transportModel.restoreTransport(args)
+				if(restoredTransports.length) {
+					return {
+						status: 200,
+						message: "Transportlar qayta tiklandi!",
+						data: restoredTransports
+					}
+				} else throw new Error("Bunday transportlar mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
+
 		bindOrder: async (_, args, context) => {
 			try {
 				const boundOrders = await transportModel.bindOrder(args, context)
@@ -58,7 +98,16 @@ export default {
 			} catch(error) {
 				throw error
 			}
-		}
+		},
+
+		deletedTransports: async (_, args) => {
+			try {
+				const transports = await transportModel.transports({ isDeleted: true, ...args })
+				return transports
+			} catch(error) {
+				throw error
+			}
+		},
 	},
 	
 	Transport: {

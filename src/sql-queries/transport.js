@@ -143,13 +143,81 @@ const ADD_TRANSPORT = `
 	to_char(transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 `
 
+const CHANGE_TRANSPORT = `
+	UPDATE transports t SET
+		branch_id = (
+			CASE WHEN $2 > 0 THEN $2 ELSE t.branch_id END
+		),
+		transport_model = (
+			CASE WHEN LENGTH($3) > 0 THEN $3 ELSE t.transport_model END
+		),
+		transport_color = (
+			CASE WHEN LENGTH($4) > 0 THEN $4 ELSE t.transport_color END
+		),
+		transport_number = (
+			CASE WHEN LENGTH($5) > 0 THEN $5 ELSE t.transport_number END
+		),
+		transport_summary = (
+			CASE WHEN LENGTH($6) > 0 THEN $6 ELSE t.transport_summary END
+		),
+		transport_img = (
+			CASE WHEN LENGTH($7) > 0 THEN $7 ELSE t.transport_img END
+		)
+	WHERE t.transport_deleted_at IS NULL AND t.transport_id = $1
+	RETURNING *,
+	to_char(transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+`
+
+const CHECK_TRANSPORT = `
+	SELECT
+		t.transport_id,
+		CASE
+			WHEN tr.transport_id IS NULL THEN FALSE
+			ELSE TRUE
+		END AS registered,
+		CASE
+			WHEN ob.transport_id IS NULL THEN FALSE
+			ELSE TRUE
+		END AS bound
+	FROM transports t
+	LEFT JOIN (
+		SELECT * FROM
+		transport_registration
+		WHERE unregistered_at IS NULL AND transport_id = $1
+		ORDER BY registration_id DESC
+		LIMIT 1
+	) tr ON tr.transport_id = t.transport_id
+	LEFT JOIN (
+		SELECT * FROM order_bindings
+		WHERE finished = FALSE AND transport_id = $1
+		ORDER BY order_binding_id DESC
+		LIMIT 1
+	) ob ON ob.transport_id = t.transport_id
+`
+
+const DELETE_TRANSPORT = `
+	UPDATE transports SET
+		transport_deleted_at = current_timestamp
+	WHERE transport_deleted_at IS NULL AND transport_id = $1
+	RETURNING *
+`
+
+const RESTORE_TRANSPORT = `
+	UPDATE transports SET
+		transport_deleted_at = NULL
+	WHERE transport_deleted_at IS NOT NULL AND transport_id = $1
+	RETURNING *
+`
+
 const BIND_ORDER = `
 	INSERT INTO order_bindings (
 		order_id,
 		product_id,
 		order_binding_type,
 		transport_id
-	) VALUES ($1, $2, $3, $4)
+	) SELECT $1, $2, $3, $4 FROM transports t
+	LEFT JOIN branches b ON b.branch_id = t.branch_id AND b.branch_deleted_at IS NULL
+	WHERE t.transport_id = $4
 	RETURNING *
 `
 
@@ -167,8 +235,18 @@ const UNBOUND_ORDER = `
 	RETURNING *
 `
 
+const TRANSPORT_PHOTO = `
+	SELECT transport_img FROM transports
+	WHERE transport_id = $1
+`
+
 
 export default {
+	RESTORE_TRANSPORT,
+	DELETE_TRANSPORT,
+	CHANGE_TRANSPORT,
+	CHECK_TRANSPORT,
+	TRANSPORT_PHOTO,
 	UNBOUND_ORDER,
 	ADD_TRANSPORT,
 	BIND_ORDER,

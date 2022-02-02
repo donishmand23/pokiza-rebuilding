@@ -1,6 +1,8 @@
+import TransportQuery from '#sql/transport'
+import ProductQuery from '#sql/product'
+import StaffQuery from '#sql/staff'
 import { fetch } from '#utils/postgres'
 import { finished } from 'stream'
-import StaffQuery from '#sql/staff'
 import path from 'path'
 import fs from 'fs'
 
@@ -34,6 +36,11 @@ export default async (args) => {
       	if(args.productId) {
       		const oldFile = fetch(ProductQuery.PRODUCT_PHOTO, args.productId)
       		if(oldFile.product_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.product_img))
+      	}
+
+      	if(args.transportId) {
+      		const oldFile = fetch(TransportQuery.TRANSPORT_PHOTO, args.transportId)
+      		if(oldFile.transport_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.transport_img))
       	}
 
       	return

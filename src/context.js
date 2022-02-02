@@ -31,6 +31,11 @@ export default function ({ req }) {
 
             // later will be moved to staffs only section
             'transports',
+            'addTransport',
+            'deletedTransports',
+            'changeTransport',
+            'deleteTransport',
+            'restoreTransport',
             'deletedProducts',
             'deleteProduct',
             'restoreProduct',
