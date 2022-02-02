@@ -130,6 +130,19 @@ const DRIVERS = `
 	ORDER BY registration_id ASC
 `
 
+const ADD_TRANSPORT = `
+	INSERT INTO transports (
+		branch_id,
+		transport_model,
+		transport_color,
+		transport_number,
+		transport_summary,
+		transport_img
+	) VALUES ($1, $2, $3, $4, $5, $6)
+	RETURNING *,
+	to_char(transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+`
+
 const BIND_ORDER = `
 	INSERT INTO order_bindings (
 		order_id,
@@ -157,6 +170,7 @@ const UNBOUND_ORDER = `
 
 export default {
 	UNBOUND_ORDER,
+	ADD_TRANSPORT,
 	BIND_ORDER,
 	TRANSPORTS,
 	TRANSPORT,
