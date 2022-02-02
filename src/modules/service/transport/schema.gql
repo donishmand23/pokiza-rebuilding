@@ -12,14 +12,14 @@ type Query {
 	): [Transport!]!
 }
 
-# type Mutation {
-# 	bindOrder(
-# 		transportId: ID!
-# 		orderId: [ID!]
-# 		productId: [ID!]
-# 		type: BindType!
-# 	): MutationResponses!
-# }
+type Mutation {
+	bindOrder(
+		transportId: ID!
+		orderId: [ID!]
+		productId: [ID!]
+		type: BindType!
+	): MutationResponses!
+}
 
 type Transport {
 	transportId: ID!

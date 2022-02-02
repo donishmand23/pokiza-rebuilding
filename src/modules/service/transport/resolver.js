@@ -2,6 +2,26 @@ import transportModel from './model.js'
 import { mError } from '#helpers/error'
 
 export default {
+	Mutation: {
+		bindOrder: async (_, args, context) => {
+			try {
+				const boundOrders = await transportModel.bindOrder(args, context)
+				if(boundOrders.length) {
+					return {
+						status: 200,
+						message: "Buyurtma va buyumlar mashinaga biriktirildi!",
+						data: []
+					}
+				} else throw new Error("Xatolik yuz berdi!")
+			} catch (error) {
+				if(error.message.includes('order_bindings_product_id_key')) {
+					return mError("Buyurtma yoki buyum allaqachon mashinaga biriktirilgan!")
+				}
+				return mError(error)
+			}
+		}
+	},
+
 	Query: {
 		transports: async (_, args) => {
 			try {

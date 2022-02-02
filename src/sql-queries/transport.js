@@ -130,8 +130,19 @@ const DRIVERS = `
 	ORDER BY registration_id ASC
 `
 
+const BIND_ORDER = `
+	INSERT INTO order_bindings (
+		order_id,
+		product_id,
+		order_binding_type,
+		transport_id
+	) VALUES ($1, $2, $3, $4)
+	RETURNING *
+`
+
 
 export default {
+	BIND_ORDER,
 	TRANSPORTS,
 	TRANSPORT,
 	DRIVERS,

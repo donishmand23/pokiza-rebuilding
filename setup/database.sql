@@ -270,8 +270,8 @@ create table order_bindings (
 	order_binding_id bigserial not null primary key,
 	order_binding_type smallint not null check (order_binding_type in (1, 2)),
 	transport_id bigint not null references transports(transport_id),
-	order_id bigint references orders(order_id),
-	product_id bigint references products(product_id),
+	order_id bigint references orders(order_id) unique,
+	product_id bigint references products(product_id) unique,
 	finished boolean default false,
 	order_binding_created_at timestamptz default current_timestamp,
 	order_binding_deleted_at timestamptz default null

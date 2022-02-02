@@ -121,6 +121,7 @@ export default function ({ req }) {
     // only registred staffs
     if(
         [   
+            'bindOrder',
             'changeProductStatus',
             'changeOrderStatus',
             'addProduct',

@@ -1,4 +1,3 @@
-import { ApolloError } from 'apollo-server-errors'
 import { PG } from '#config'
 import pg from 'pg'
 
@@ -10,7 +9,7 @@ const fetch = async (SQL, ...params) => {
 		const { rows: [row] } = await client.query(SQL, params.length ? params : null)
 		return row
 	} catch (error) {
-		throw new ApolloError(error)
+		throw new Error(error)
 	}
 	finally {
 		client.release()
@@ -23,7 +22,7 @@ const fetchAll = async (SQL, ...params) => {
 		const { rows } = await client.query(SQL, params.length ? params : null)
 		return rows
 	}catch (error) {
-		throw new ApolloError(error)
+		throw new Error(error)
 	}finally {
 		client.release()
 	}
