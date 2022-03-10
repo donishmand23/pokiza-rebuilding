@@ -73,6 +73,8 @@ export default function ({ req }) {
             'changeState',
             'addStreet',
             'changeStreet',
+            'monitoring',
+            'monitoringSections',
         ].includes(fieldName)
     ) {
         return { agent: reqAgent }
@@ -138,5 +140,4 @@ export default function ({ req }) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
         return { userId, staffId }
     }
-
 }

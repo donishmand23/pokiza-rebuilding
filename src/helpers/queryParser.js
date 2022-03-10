@@ -1,23 +1,23 @@
 import { parse } from 'graphql'
 
 export default function (body) {
-    const parsedQuery = parse(body.query || {})
+    const parsedQuery = parse(body.query)
     const fieldName = firstFieldValueNameFromOperation(firstOperationDefinition(parsedQuery))
     const operation = firstOperationDefinition(parsedQuery).operation
-
-	function firstOperationDefinition (ast) {
+	
+    function firstOperationDefinition (ast) {
         return ast.definitions[0]
     }
 
     function firstFieldValueNameFromOperation (operationDefinition) {
-        return operationDefinition.selectionSet.selections[0].name.value
+        return operationDefinition?.selectionSet?.selections[0]?.name?.value
     }
 
-    if(Object.keys(body.variables).length == 0) {
+    if(Object.keys(body.variables || {}).length == 0) {
         return {
             operation,
             fieldName,
-            variables: null,
+            variables: {},
         }
     }
 
