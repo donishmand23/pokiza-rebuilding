@@ -1,7 +1,7 @@
 import { parse } from 'graphql'
 
 export default function (body) {
-    const parsedQuery = parse(body.query)
+    const parsedQuery = parse(body.query || {})
     const fieldName = firstFieldValueNameFromOperation(firstOperationDefinition(parsedQuery))
     const operation = firstOperationDefinition(parsedQuery).operation
 
