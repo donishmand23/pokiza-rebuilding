@@ -14,7 +14,7 @@ export default {
 						message: "Buyum qabul qilindi!",
 						data: newProduct
 					}
-				} else throw new Error("buyumni qabul qilishda muammolik yuz berdi!")  
+				} else throw new Error("Buyumni qabul qilishda muammolik yuz berdi!")  
 			} catch(error) { return mError(error) }
 		},
 
