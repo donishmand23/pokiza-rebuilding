@@ -107,6 +107,8 @@ const productStatusInfo = {
 	}
 }
 
+process.PRODUCT_STATUSES = productStatusInfo
+process.ORDER_STATUSES = orderStatusInfo
 
 export default {
 	Query: {

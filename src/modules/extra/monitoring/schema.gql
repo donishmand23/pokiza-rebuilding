@@ -1,0 +1,77 @@
+type Query {
+	monitoring(
+		userId: ID
+		branchId: ID
+		search: String
+		dateFilter: RangeDate = {}
+		pagination: Pagination = {} 
+		sectionFilter: SectionFilter = {}
+		operationType: MonitoringOperationTypes
+	): [Monitoring]!
+	monitoringSections: [MonitoringSection!]!
+}
+
+type Monitoring {
+	branch: Branch
+	user: UserType!
+	oldValue: Any
+	newValue: Any
+	operationType: MonitoringOperationTypes!
+	sectionName: MonitoringSectionNames!
+	sectionId: ID!
+	sectionField: MonitoringSectionFields!
+	createdAt: DateTime!
+}
+
+type MonitoringSection {
+	sectionName: MonitoringSectionNames!
+	sectionFields: [MonitoringSectionFields!]!
+}
+
+input SectionFilter {
+	sectionId: ID
+	sectionName: MonitoringSectionNames
+	sectionField: MonitoringSectionFields
+}
+
+enum MonitoringOperationTypes {
+	added
+	deleted
+	changed
+}
+
+enum MonitoringSectionFields {
+	status
+	firstName
+	lastName
+	mainContact
+	secondContact
+	address
+	age
+	gender
+	summary
+	service
+	unit
+	size
+	name
+	price
+	bringTime
+	plan
+	transport
+	file
+	branch
+	color
+	number
+	deliveryTime
+	unitKeys
+}
+
+enum MonitoringSectionNames {
+	clients
+	staffs
+	orders
+	products
+	transports
+	settings
+	services
+}

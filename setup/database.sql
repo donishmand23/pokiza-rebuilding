@@ -301,6 +301,22 @@ create table notifications (
 	notification_deleted_at timestamptz default null
 );
 
+-- HISTORY
+-- 15. monitoring ( store order, product, service, price, client and staff history data )
+drop table if exists monitoring cascade;
+create table monitoring (
+	monitoring_id bigserial not null primary key,
+	user_id bigint not null references users(user_id),
+	branch_id bigint not null references branches(branch_id),
+	operation_type character varying(25) not null check (operation_type in ('deleted', 'changed', 'added')),
+	section_name character varying(25) check (section_name in ('clients', 'staffs', 'orders', 'products', 'transports', 'settings')),
+	section_field character varying(100),
+	section_id bigint not null,
+	old_value character varying(250),
+	new_value character varying(250),
+	created_at timestamptz default current_timestamp
+);
+
 
 -- -- PERMISSIONS MODULE
 -- -- 23. permissions ( general permission actions )
@@ -337,23 +353,6 @@ create table notifications (
 -- 	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
 -- 	permission_action int not null references permissions(permission_action),
 -- 	unique (group_id, permission_action)
--- );
-
-
-
--- -- HISTORY
--- -- 15. history ( store order, product, service, price, client and staff history data )
--- drop table if exists history cascade;
--- create table history (
--- 	history_id bigserial not null primary key,
--- 	history_table_name character varying(25) not null,
--- 	history_row_id bigint not null,
--- 	history_column_name character varying(25) not null,
--- 	history_old_value character varying(35),
--- 	history_new_value character varying(35),
--- 	branch_id bigint not null references branches(branch_id),
--- 	user_id bigint not null references users(user_id),
--- 	history_created_at timestamptz default current_timestamp not null
 -- );
 
 -- -- 22. load order ( info about orders to which car they are loaded )

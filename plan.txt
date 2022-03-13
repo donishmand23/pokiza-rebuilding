@@ -64,3 +64,8 @@ transportId staffId registed_at unregistered_at
 
 load
     transportId productId orderId type finished_at
+
+
+monitoring
+    
+    
