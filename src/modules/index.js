@@ -13,6 +13,7 @@ import SearchModule from './extra/search/index.js'
 import NotificationModule from './extra/notificaton/index.js'
 import SMSModule from './extra/sms/index.js'
 import MonitoringModule from './extra/monitoring/index.js'
+import TokenModule from './extra/token/index.js'
 
 // user modules
 import UserModule from './user/user/index.js'
@@ -44,6 +45,7 @@ export default {
   		NotificationModule.typeDefs,
   		SMSModule.typeDefs,
   		MonitoringModule.typeDefs,
+  		TokenModule.typeDefs,
   		// user
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
@@ -71,6 +73,7 @@ export default {
   		NotificationModule.resolvers,
   		SMSModule.resolvers,
   		MonitoringModule.resolvers,
+  		TokenModule.resolvers,
   		// user
   		UserModule.resolvers,
   		ClientModule.resolvers,

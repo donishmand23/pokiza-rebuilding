@@ -1,0 +1,8 @@
+type Query {
+	checkToken(token: Token): TokenInfo!
+}
+
+type TokenInfo {
+	expired: Boolean!
+	remainingTime: Int!
+}

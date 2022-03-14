@@ -22,6 +22,7 @@ export default function ({ req }) {
             'streets',
             'loginStaff',
             'enterClientPhone',
+            'checkToken',
 
             // later will be moved to client and staff only section
             'searchGlobal',
