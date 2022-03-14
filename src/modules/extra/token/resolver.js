@@ -30,7 +30,6 @@ export default {
     			}
 				
 			} catch(error) {
-				console.log(error)
 				throw 'Invalid Token!'
 			}
 		}
