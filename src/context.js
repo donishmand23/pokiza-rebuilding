@@ -45,9 +45,6 @@ export default function ({ req }) {
             'staffs',
             'deletedStaffs',
             'addStaff',
-            'changeStaff',
-            'deleteStaff',
-            'restoreStaff',
             'addClient',
             'deletedClients',
             'disabledServices',
@@ -136,6 +133,9 @@ export default function ({ req }) {
             'addProduct',
             'sendNotifications',
             'sendSMS',
+            'changeStaff',
+            'deleteStaff',
+            'restoreStaff',
         ].includes(fieldName)
     ) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')

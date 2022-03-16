@@ -194,11 +194,31 @@ const CHANGE_STAFF = `
 					ELSE NULL
 				END
 			)
-		FROM users u
+		FROM (
+			SELECT a.* FROM addresses a
+			NATURAL JOIN users u
+			INNER JOIN staffs s ON s.user_id = u.user_id
+			WHERE u.address_id = a.address_id AND s.staff_id = $1 FOR UPDATE
+		) oa, users u
 		NATURAL JOIN staffs s
 		WHERE s.staff_deleted_at IS NULL AND
 		u.address_id = a.address_id AND s.staff_id = $1
-		RETURNING a.address_id
+		RETURNING
+		a.address_id,
+		a.state_id as new_state_id,
+		a.region_id as new_region_id,
+		a.neighborhood_id as new_neighborhood_id,
+		a.street_id as new_street_id,
+		a.area_id as new_area_id,
+		a.address_home_number as new_address_home_number,
+		a.address_target as new_address_target,
+		oa.state_id as old_state_id,
+		oa.region_id as old_region_id,
+		oa.neighborhood_id as old_neighborhood_id,
+		oa.street_id as old_street_id,
+		oa.area_id as old_area_id,
+		oa.address_home_number as old_address_home_number,
+		oa.address_target as old_address_target
 	),
 	updated_user AS (
 		UPDATE users u SET
@@ -242,11 +262,30 @@ const CHANGE_STAFF = `
 					WHEN $17 > 0 THEN $17 ELSE u.branch_id 
 				END
 			)
-		FROM address a
+		FROM address a, (
+			SELECT u.* FROM users u
+			NATURAL JOIN staffs s
+			WHERE u.user_deleted_contact IS NULL AND 
+			s.staff_id = $1
+		) ou
 		NATURAL JOIN staffs s
 		WHERE u.user_deleted_contact IS NULL AND
 		s.staff_id = $1 AND a.address_id = u.address_id
-		RETURNING u.user_gender
+		RETURNING
+		u.user_main_contact as new_main_contact,
+		u.user_second_contact as new_second_contact,
+		u.user_first_name as new_first_name,
+		u.user_last_name as new_last_name,
+		u.user_birth_date as new_birth_date,
+		u.user_gender as new_gender,
+		u.branch_id as new_branch_id,
+		ou.user_main_contact as old_main_contact,
+		ou.user_second_contact as old_second_contact,
+		ou.user_first_name as old_first_name,
+		ou.user_last_name as old_last_name,
+		ou.user_birth_date as old_birth_date,
+		ou.user_gender as old_gender,
+		ou.branch_id as old_branch_id
 	) 
 	UPDATE staffs s SET
 		staff_img = (
@@ -259,10 +298,18 @@ const CHANGE_STAFF = `
 				WHEN LENGTH($19) > 0 THEN $19 ELSE s.staff_summary 
 			END
 		)
-	FROM updated_user u
+	FROM updated_user u, address a, (
+		SELECT * FROM staffs WHERE staff_id = $1
+	) os
 	WHERE s.staff_deleted_at IS NULL AND s.staff_id = $1
-	RETURNING s.*,
-	u.user_gender,
+	RETURNING
+	s.staff_img as new_file,
+	s.staff_summary as new_summary,
+	os.staff_img as old_file,
+	os.staff_summary as old_summary,
+	s.*,
+	a.*,
+	u.*,
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
 
@@ -279,7 +326,7 @@ const DELETE_STAFF = `
 		FROM staffs s
 		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NULL AND
 		s.staff_id = $1
-		RETURNING u.user_id, u.user_gender
+		RETURNING u.*
 	) UPDATE staffs s SET
 		staff_deleted_at = current_timestamp
 	FROM deleted_user du
@@ -287,6 +334,7 @@ const DELETE_STAFF = `
 	du.user_id = s.user_id AND s.staff_id = $1
 	RETURNING s.*,
 	du.user_gender,
+	du.branch_id,
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
 
@@ -298,7 +346,7 @@ const RESTORE_STAFF = `
 		FROM staffs s
 		WHERE u.user_id = s.user_id AND u.user_deleted_contact IS NOT NULL AND
 		s.staff_id = $1
-		RETURNING u.user_id, u.user_gender
+		RETURNING u.*
 	) UPDATE staffs s SET
 		staff_deleted_at = NULL
 	FROM restored_user ru
@@ -306,6 +354,7 @@ const RESTORE_STAFF = `
 	ru.user_id = s.user_id AND s.staff_id = $1
 	RETURNING s.*,
 	ru.user_gender,
+	ru.branch_id,
 	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
 `
 

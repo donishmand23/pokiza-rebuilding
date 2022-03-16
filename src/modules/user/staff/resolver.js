@@ -19,10 +19,10 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeStaff: async (_, args) => {
+		changeStaff: async (_, args, user) => {
 			try {
 				await upload(args)
-				const updatedStaff = await staffModel.changeStaff(args)
+				const updatedStaff = await staffModel.changeStaff(args, user)
 				if(updatedStaff) {
 					return {
 						status: 200,
@@ -33,9 +33,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		deleteStaff: async (_, args) => {
+		deleteStaff: async (_, args, user) => {
 			try {
-				const deletedStaffs = await staffModel.deleteStaff(args)
+				const deletedStaffs = await staffModel.deleteStaff(args, user)
 				if(deletedStaffs.length) {
 					return {
 						status: 200,
@@ -46,9 +46,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		restoreStaff: async (_, args) => {
+		restoreStaff: async (_, args, user) => {
 			try {
-				const restoredStaffs = await staffModel.restoreStaff(args)
+				const restoredStaffs = await staffModel.restoreStaff(args, user)
 				if(restoredStaffs.length) {
 					return {
 						status: 200,

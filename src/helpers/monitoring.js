@@ -141,6 +141,14 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 		})
 	}
 
+	if(data.new_file && (data.new_file != data.old_file)) {
+		innerSetMonitor({ 
+			sectionField: 'file', 
+			oldValue: `value: ${data.old_file}`, 
+			newValue: `value: ${data.new_file}` 
+		})
+	}
+
 	if(['deleted', 'restored'].includes(operationType)) {
 		innerSetMonitor({})
 	}
