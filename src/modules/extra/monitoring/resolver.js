@@ -2,8 +2,8 @@ import monitoringModel from './model.js'
 import { mError } from '#helpers/error'
 
 const sections = {
-	clients: ['status', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'age', 'gender', 'summary'],
-	staffs: ['file', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'age', 'gender', 'summary'],
+	clients: ['branch', 'status', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'birthDate', 'gender', 'summary'],
+	staffs: ['branch', 'file', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'birthDate', 'gender', 'summary'],
 	orders: ['status', 'address', 'branch', 'summary', 'bringTime', 'plan', 'transport'],
 	products: ['status', 'summary', 'service', 'file', 'transport', 'size'],
 	transports: ['file', 'branch', 'name', 'color', 'status', 'number', 'summary'],
@@ -31,6 +31,25 @@ export default {
 						el.new_value = 'value: ' + process.ORDER_STATUSES[el.new_value]?.name
 						return el
 					}
+
+					if((['clients', 'staffs']).includes(el.section_name) && el.section_field == 'birthDate') {
+						let [, oldDate] = el.old_value.split('value: ')
+						let [, newDate] = el.new_value.split('value: ')
+						oldDate = new Date(oldDate)
+						newDate = new Date(newDate)
+						el.old_value = oldDate.toISOString().split('T')[0]
+						el.new_value = newDate.toISOString().split('T')[0]
+						return el
+					}
+
+					if((['clients', 'staffs']).includes(el.section_name) && el.section_field == 'gender') {
+						let [, oldBirthDate] = el.old_value.split('value: ')
+						let [, newBirthDate] = el.new_value.split('value: ')
+						el.old_value = oldBirthDate == 1 ? 'value: male' : oldBirthDate == 2 ? 'value: female' : el.old_value
+						el.new_value = newBirthDate == 1 ? 'value: male' : newBirthDate == 2 ? 'value: female' : el.new_value
+						return el
+					}
+
 					return el
 				}).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 

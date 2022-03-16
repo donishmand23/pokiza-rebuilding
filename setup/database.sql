@@ -308,7 +308,7 @@ create table monitoring (
 	monitoring_id bigserial not null primary key,
 	user_id bigint not null references users(user_id),
 	branch_id bigint not null references branches(branch_id),
-	operation_type character varying(25) not null check (operation_type in ('deleted', 'changed', 'added')),
+	operation_type character varying(25) not null check (operation_type in ('deleted', 'restored', 'changed', 'added')),
 	section_name character varying(25) check (section_name in ('clients', 'staffs', 'orders', 'products', 'transports', 'settings')),
 	section_field character varying(100),
 	section_id bigint not null,

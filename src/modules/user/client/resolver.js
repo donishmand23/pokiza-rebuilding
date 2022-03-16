@@ -20,9 +20,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeClient: async (_, args, { clientId, staffId }) => {
+		changeClient: async (_, args, { clientId, staffId, userId }) => {
 			try {
-				const updatedClient = await clientModel.changeClient(args, { clientId, staffId })
+				const updatedClient = await clientModel.changeClient(args, { clientId, staffId, userId })
 				if(updatedClient) {
 					return {
 						status: 200,
@@ -34,9 +34,9 @@ export default {
 		},
 
 
-		deleteClient: async (_, args, { clientId }) => {
+		deleteClient: async (_, args, { clientId, userId }) => {
 			try {
-				const deletedClients = await clientModel.deleteClient(args, { clientId })
+				const deletedClients = await clientModel.deleteClient(args, { clientId, userId })
 				if(deletedClients.length) {
 					return {
 						status: 200,
@@ -47,9 +47,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		restoreClient: async (_, args, { clientId }) => {
+		restoreClient: async (_, args, { clientId, userId }) => {
 			try {
-				const restoredClients = await clientModel.restoreClient(args, { clientId })
+				const restoredClients = await clientModel.restoreClient(args, { clientId, userId })
 				if(restoredClients.length) {
 					return {
 						status: 200,

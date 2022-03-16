@@ -19,7 +19,7 @@ type Monitoring {
 	operationType: MonitoringOperationTypes!
 	sectionName: MonitoringSectionNames!
 	sectionId: ID!
-	sectionField: MonitoringSectionFields!
+	sectionField: MonitoringSectionFields
 	createdAt: DateTime!
 }
 
@@ -36,19 +36,20 @@ input SectionFilter {
 
 enum MonitoringOperationTypes {
 	added
-	deleted
 	changed
+	deleted
+	restored
 }
 
 enum MonitoringSectionFields {
-	status
 	firstName
 	lastName
 	mainContact
 	secondContact
-	address
-	age
+	birthDate
 	gender
+	status
+	address
 	summary
 	service
 	unit
@@ -56,13 +57,13 @@ enum MonitoringSectionFields {
 	name
 	price
 	bringTime
+	deliveryTime
 	plan
 	transport
 	file
 	branch
 	color
 	number
-	deliveryTime
 	unitKeys
 }
 

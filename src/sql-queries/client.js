@@ -203,11 +203,31 @@ const CHANGE_CLIENT = `
 					ELSE NULL
 				END
 			)
-		FROM users u
+		FROM (
+			SELECT a.* FROM addresses a
+			NATURAL JOIN users u
+			INNER JOIN clients c ON c.user_id = u.user_id
+			WHERE u.address_id = a.address_id AND c.client_id = $1 FOR UPDATE
+		) oa, users u
 		NATURAL JOIN clients c
 		WHERE c.client_deleted_at IS NULL AND 
 		u.address_id = a.address_id AND c.client_id = $1
-		RETURNING a.address_id
+		RETURNING 
+		a.address_id,
+		a.state_id as new_state_id,
+		a.region_id as new_region_id,
+		a.neighborhood_id as new_neighborhood_id,
+		a.street_id as new_street_id,
+		a.area_id as new_area_id,
+		a.address_home_number as new_address_home_number,
+		a.address_target as new_address_target,
+		oa.state_id as old_state_id,
+		oa.region_id as old_region_id,
+		oa.neighborhood_id as old_neighborhood_id,
+		oa.street_id as old_street_id,
+		oa.area_id as old_area_id,
+		oa.address_home_number as old_address_home_number,
+		oa.address_target as old_address_target
 	),
 	updated_user AS (
 		UPDATE users u SET
@@ -246,11 +266,31 @@ const CHANGE_CLIENT = `
 					WHEN r.branch_id IS NOT NULL THEN r.branch_id ELSE u.branch_id 
 				END
 			)
-		FROM address a
+		FROM address a, (
+			SELECT u.* FROM users u
+			NATURAL JOIN clients c
+			WHERE u.user_deleted_contact IS NULL AND 
+			c.client_id = $1
+		) ou
 		NATURAL JOIN clients c
 		LEFT JOIN regions r ON r.region_id = $4
 		WHERE u.user_deleted_contact IS NULL AND 
 		c.client_id = $1 AND a.address_id = u.address_id
+		RETURNING 
+		u.user_main_contact as new_main_contact,
+		u.user_second_contact as new_second_contact,
+		u.user_first_name as new_first_name,
+		u.user_last_name as new_last_name,
+		u.user_birth_date as new_birth_date,
+		u.user_gender as new_gender,
+		u.branch_id as new_branch_id,
+		ou.user_main_contact as old_main_contact,
+		ou.user_second_contact as old_second_contact,
+		ou.user_first_name as old_first_name,
+		ou.user_last_name as old_last_name,
+		ou.user_birth_date as old_birth_date,
+		ou.user_gender as old_gender,
+		ou.branch_id as old_branch_id
 	) 
 	UPDATE clients c SET
 		client_status = (
@@ -263,10 +303,20 @@ const CHANGE_CLIENT = `
 				WHEN LENGTH($17) > 0 THEN $17 ELSE c.client_summary 
 			END
 		)
+	FROM address a, updated_user u, (
+		SELECT * FROM clients WHERE client_id = $1
+	) oc
 	WHERE c.client_deleted_at IS NULL AND
 	c.client_id = $1
-	RETURNING *,
-	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	RETURNING
+	c.client_status as new_status,
+	c.client_summary as new_summary,
+	oc.client_status as old_status,
+	oc.client_summary as old_summary,
+	a.*,
+	u.*,
+	c.*,
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 `
 
 const DELETE_CLIENT = `
@@ -277,7 +327,7 @@ const DELETE_CLIENT = `
 		FROM clients c
 		WHERE u.user_id = c.user_id AND u.user_deleted_contact IS NULL AND
 		c.client_id = $1
-		RETURNING u.user_id, u.user_gender
+		RETURNING u.*
 	) UPDATE clients c SET
 		client_deleted_at = current_timestamp
 	FROM deleted_user du
@@ -286,6 +336,7 @@ const DELETE_CLIENT = `
 	RETURNING c.*,
 	ROW_TO_JSON(du.*) as user,
 	du.user_gender,
+	du.branch_id,
 	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 `
 
@@ -297,7 +348,7 @@ const RESTORE_CLIENT = `
 		FROM clients c
 		WHERE u.user_id = c.user_id AND u.user_deleted_contact IS NOT NULL AND
 		c.client_id = $1
-		RETURNING u.user_id, u.user_gender
+		RETURNING u.*
 	) UPDATE clients c SET
 		client_deleted_at = NULL
 	FROM restored_user ru
@@ -305,6 +356,7 @@ const RESTORE_CLIENT = `
 	ru.user_id = c.user_id AND c.client_id = $1
 	RETURNING c.*,
 	ru.user_gender,
+	ru.branch_id,
 	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
 `
 

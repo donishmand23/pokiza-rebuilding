@@ -126,7 +126,7 @@ const MONITORING = `
 		m.section_id,
 		m.old_value,
 		m.new_value,
-		m.created_at
+		to_char(m.created_at, 'YYYY-MM-DD HH24:MI:SS') created_at
 	FROM monitoring m
 	WHERE
 	CASE

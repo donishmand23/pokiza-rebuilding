@@ -1,4 +1,5 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import SocialSetQuery from '#sql/socialSet'
 import ClientQuery from '#sql/client'
@@ -80,12 +81,22 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 	await checkContact(mainContact)
 	await checkAddress(userAddress)
 
-	return fetch(
+	const updatedClient = await fetch(
 		ClientQuery.CHANGE_CLIENT, clientId, Boolean(Object.keys(userAddress).length),
 		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
 		mainContact, secondContact, firstName, lastName, birthDate, gender,
 		clientStatus, clientSummary
 	)
+
+	setMonitoring({ 
+		userId: user.userId, 
+		sectionId: clientId,
+		sectionName: 'clients', 
+		operationType: 'changed',
+		branchId: updatedClient.old_branch_id,
+	}, updatedClient)
+
+	return updatedClient
 }
 
 const deleteClient = async ({ clientId }, user) => {
@@ -101,8 +112,19 @@ const deleteClient = async ({ clientId }, user) => {
 	const deletedClients = []
 	for(let id of clientId) {
 		const deletedClient = await fetch(ClientQuery.DELETE_CLIENT, id)
-		if(deletedClient) deletedClients.push(deletedClient)
+		if(deletedClient) {
+			deletedClients.push(deletedClient)
+
+			setMonitoring({ 
+				userId: user.userId, 
+				sectionId: id,
+				sectionName: 'clients', 
+				operationType: 'deleted',
+				branchId: deletedClient.branch_id,
+			}, deletedClient)
+		}
 	}
+
 	return deletedClients
 }
 
@@ -114,8 +136,19 @@ const restoreClient = async ({ clientId }, user) => {
 	const restoredClients = []
 	for(let id of clientId) {
 		const restoredClient = await fetch(ClientQuery.RESTORE_CLIENT, id)
-		if(restoredClient) restoredClients.push(restoredClient)
+		if(restoredClient) {
+			restoredClients.push(restoredClient)
+
+			setMonitoring({ 
+				userId: user.userId, 
+				sectionId: id,
+				sectionName: 'clients', 
+				operationType: 'restored',
+				branchId: restoredClient.branch_id,
+			}, restoredClient)
+		} 
 	}
+
 	return restoredClients
 }
 
