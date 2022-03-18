@@ -1,4 +1,5 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
 import TransportQuery from '#sql/transport'
@@ -98,7 +99,7 @@ const addOrder = async ({ clientId, special, summary, bringTime, address }, user
 	)
 }
 
-const changeOrder = async ({ orderId, bringTime, special, summary, address = {} }, { clientId }) => {
+const changeOrder = async ({ orderId, bringTime, special, summary, address = {} }, { clientId, userId }) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
 
 	const statuses = await orderStatuses({ orderId })
@@ -111,11 +112,21 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 
 	await checkAddress(address)
 
-	return fetch(
+	const updatedOrder = await  fetch(
 		OrderQuery.CHANGE_ORDER, orderId, clientId, Boolean(Object.keys(address).length),
 		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
 		bringTime, special, summary
 	)
+
+	if(updatedOrder) setMonitoring({ 
+		userId, 
+		sectionId: orderId,
+		sectionName: 'orders', 
+		operationType: 'changed',
+		branchId: updatedOrder.old_branch_id,
+	}, updatedOrder)
+
+	return updatedOrder
 }
 
 const changeOrderStatus = async ({ orderId, status, staffId }) => {
@@ -144,7 +155,7 @@ const changeOrderStatus = async ({ orderId, status, staffId }) => {
 	return updatedStatus
 }	
 
-const deleteOrder = async ({ orderId }, { clientId }) => {
+const deleteOrder = async ({ orderId }, { clientId, userId }) => {
 	orderId.map(async id => {
 		const statuses = await orderStatuses({ orderId: id })
 		if(
@@ -158,16 +169,38 @@ const deleteOrder = async ({ orderId }, { clientId }) => {
 	const deletedOrders = []
 	for(let id of orderId) {
 		const deletedOrder = await fetch(OrderQuery.DELETE_ORDER, id, clientId)
-		if(deletedOrder) deletedOrders.push(deletedOrder)
+
+		if(deletedOrder) {
+			deletedOrders.push(deletedOrder)
+
+			setMonitoring({ 
+				userId, 
+				sectionId: id,
+				sectionName: 'orders', 
+				operationType: 'deleted',
+				branchId: deletedOrder.branch_id,
+			}, deletedOrder)
+		} 
 	}
+
 	return deletedOrders
 }
 
-const restoreOrder = async ({ orderId }, { clientId }) => {
+const restoreOrder = async ({ orderId }, { clientId, userId }) => {
 	const restoredOrders = []
 	for(let id of orderId) {
 		const restoredOrder = await fetch(OrderQuery.RESTORE_ORDER, id, clientId)
-		if(restoredOrder) restoredOrders.push(restoredOrder)
+		if(restoredOrder) {
+			restoredOrders.push(restoredOrder)
+
+			setMonitoring({ 
+				userId, 
+				sectionId: id,
+				sectionName: 'orders', 
+				operationType: 'restored',
+				branchId: restoredOrder.branch_id,
+			}, restoredOrder)
+		}
 	}
 	return restoredOrders
 }

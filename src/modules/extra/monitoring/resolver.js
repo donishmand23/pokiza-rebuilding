@@ -32,17 +32,24 @@ export default {
 						return el
 					}
 
-					if((['clients', 'staffs']).includes(el.section_name) && el.section_field == 'birthDate') {
+					if((['birthDate', 'bringTime']).includes(el.section_field)) {
 						let [, oldDate] = el.old_value.split('value: ')
 						let [, newDate] = el.new_value.split('value: ')
 						oldDate = new Date(oldDate)
 						newDate = new Date(newDate)
-						el.old_value = oldDate.toISOString().split('T')[0]
-						el.new_value = newDate.toISOString().split('T')[0]
+
+						const oldD = oldDate.toISOString().split('T')[0]
+						const newD = newDate.toISOString().split('T')[0]
+
+						const oldT = oldDate.toTimeString().split(' ')[0]
+						const newT = newDate.toTimeString().split(' ')[0]
+
+						el.old_value = 'value: ' + oldD + ' ' + oldT
+						el.new_value = 'value: ' + newD + ' ' + newT
 						return el
 					}
 
-					if((['clients', 'staffs']).includes(el.section_name) && el.section_field == 'gender') {
+					if(el.section_field == 'gender') {
 						let [, oldBirthDate] = el.old_value.split('value: ')
 						let [, newBirthDate] = el.new_value.split('value: ')
 						el.old_value = oldBirthDate == 1 ? 'value: male' : oldBirthDate == 2 ? 'value: female' : el.old_value

@@ -16,9 +16,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeOrder: async (_, args, { clientId }) => {
+		changeOrder: async (_, args, { clientId, userId }) => {
 			try {
-				const updatedOrder = await orderModel.changeOrder(args, { clientId })
+				const updatedOrder = await orderModel.changeOrder(args, { clientId, userId })
 				if(updatedOrder) {
 					return {
 						status: 200,
@@ -29,9 +29,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeOrderStatus: async (_, args, { staffId }) => {
+		changeOrderStatus: async (_, args, { staffId, userId }) => {
 			try {
-				const updatedOrder = await orderModel.changeOrderStatus({ staffId, ...args })
+				const updatedOrder = await orderModel.changeOrderStatus({ staffId, ...args }, { userId, staffId })
 				if(updatedOrder) {
 					return {
 						status: 200,
@@ -42,9 +42,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		deleteOrder: async (_, args, { clientId }) => {
+		deleteOrder: async (_, args, { clientId, userId }) => {
 			try {
-				const deletedOrders = await orderModel.deleteOrder(args, { clientId })
+				const deletedOrders = await orderModel.deleteOrder(args, { clientId, userId })
 				if(deletedOrders.length) {
 					return {
 						status: 200,
@@ -55,9 +55,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		restoreOrder: async (_, args, { clientId }) => {
+		restoreOrder: async (_, args, { clientId, userId }) => {
 			try {
-				const restoredOrders = await orderModel.restoreOrder(args, { clientId })
+				const restoredOrders = await orderModel.restoreOrder(args, { clientId, userId })
 				if(restoredOrders.length) {
 					return {
 						status: 200,

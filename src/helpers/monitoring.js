@@ -145,7 +145,23 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 		innerSetMonitor({ 
 			sectionField: 'file', 
 			oldValue: `value: ${data.old_file}`, 
-			newValue: `value: ${data.new_file}` 
+			newValue: `value: ${data.new_file}`
+		})
+	}
+
+	if(data.new_bring_time && (data.new_bring_time?.getTime() != data.old_bring_time?.getTime())) {
+		innerSetMonitor({ 
+			sectionField: 'bringTime', 
+			oldValue: `value: ${data.old_bring_time}`, 
+			newValue: `value: ${data.new_bring_time}`
+		})
+	}
+
+	if(data.new_plan && (data.new_plan != data.old_plan)) {
+		innerSetMonitor({ 
+			sectionField: 'plan', 
+			oldValue: `value: ${data.old_plan}`, 
+			newValue: `value: ${data.new_plan}`
 		})
 	}
 

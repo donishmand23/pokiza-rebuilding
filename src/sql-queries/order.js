@@ -304,14 +304,37 @@ const CHANGE_ORDER = `
 					ELSE NULL
 				END
 			)
-		FROM orders o
+		FROM (
+			SELECT a.* FROM addresses a
+			NATURAL JOIN orders o
+			WHERE o.address_id = a.address_id AND o.order_id = $1 AND
+			CASE
+				WHEN $2 > 0 THEN o.client_id = $2
+				ELSE TRUE
+			END FOR UPDATE
+		) oa, orders o
 		WHERE o.order_deleted_at IS NULL AND
 		o.address_id = a.address_id AND o.order_id = $1 AND
 		CASE
 			WHEN $2 > 0 THEN o.client_id = $2
 			ELSE TRUE
 		END
-		RETURNING a.address_id, a.region_id
+		RETURNING
+		a.*,
+		a.state_id as new_state_id,
+		a.region_id as new_region_id,
+		a.neighborhood_id as new_neighborhood_id,
+		a.street_id as new_street_id,
+		a.area_id as new_area_id,
+		a.address_home_number as new_address_home_number,
+		a.address_target as new_address_target,
+		oa.state_id as old_state_id,
+		oa.region_id as old_region_id,
+		oa.neighborhood_id as old_neighborhood_id,
+		oa.street_id as old_street_id,
+		oa.area_id as old_area_id,
+		oa.address_home_number as old_address_home_number,
+		oa.address_target as old_address_target
 	) UPDATE orders o SET
 		order_bring_time = (
 			CASE
@@ -332,7 +355,9 @@ const CHANGE_ORDER = `
 			END
 		),
 		branch_id = r.branch_id
-	FROM address a
+	FROM (
+		SELECT * FROM orders WHERE order_id = $1
+	) oo, address a
 	LEFT JOIN regions r ON r.region_id = a.region_id
 	WHERE o.order_deleted_at IS NULL AND 
 	o.address_id = a.address_id AND o.order_id = $1 AND
@@ -340,7 +365,21 @@ const CHANGE_ORDER = `
 		WHEN $2 > 0 THEN o.client_id = $2
 		ELSE TRUE
 	END
-	RETURNING o.*,
+	RETURNING o.*, a.*,
+	o.order_bring_time as new_bring_time,
+	o.order_summary as new_summary,
+	o.branch_id as new_branch_id,
+	CASE 
+		WHEN o.order_special = TRUE THEN 'special'
+		WHEN o.order_special = FALSE THEN 'simple' 
+	END as new_plan,
+	oo.order_bring_time as old_bring_time,
+	oo.order_summary as old_summary,
+	oo.branch_id as old_branch_id,
+	CASE 
+		WHEN oo.order_special = TRUE THEN 'special' 
+		WHEN oo.order_special = FALSE THEN 'simple' 
+	END as old_plan,
 	EXTRACT( EPOCH FROM (o.order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
 	to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
 	to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
@@ -361,11 +400,13 @@ const DELETE_ORDER = `
 		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
 		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
-	) UPDATE products p SET
-		product_deleted_at = current_timestamp
-	FROM deleted_order dor
-	WHERE dor.order_id = p.order_id
-	RETURNING dor.*
+	), deleted_product AS (
+		UPDATE products p SET
+			product_deleted_at = current_timestamp
+		FROM deleted_order dor
+		WHERE dor.order_id = p.order_id
+		RETURNING dor.*
+	) SELECT * FROM deleted_order
 `
 
 const RESTORE_ORDER = `
@@ -383,11 +424,13 @@ const RESTORE_ORDER = `
 		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
 		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
-	) UPDATE products p SET
-		product_deleted_at = NULL
-	FROM restored_order dor
-	WHERE dor.order_id = p.order_id
-	RETURNING dor.*
+	), restored_product AS (
+		UPDATE products p SET
+			product_deleted_at = NULL
+		FROM restored_order dor
+		WHERE dor.order_id = p.order_id
+		RETURNING dor.*
+	) SELECT * FROM restored_order
 `
 
 const ORDER_STATUSES = `
