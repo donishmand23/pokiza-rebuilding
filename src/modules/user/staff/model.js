@@ -61,7 +61,7 @@ const changeStaff = async ({ staffId, password, branchId, file, staffSummary, us
 		file, staffSummary
 	)
 
-	setMonitoring({ 
+	if(updatedStaff) setMonitoring({ 
 		userId: user.userId, 
 		sectionId: staffId,
 		sectionName: 'staffs', 

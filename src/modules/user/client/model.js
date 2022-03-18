@@ -88,7 +88,7 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 		clientStatus, clientSummary
 	)
 
-	setMonitoring({ 
+	if(updatedClient) setMonitoring({ 
 		userId: user.userId, 
 		sectionId: clientId,
 		sectionName: 'clients', 
