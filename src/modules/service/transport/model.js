@@ -69,7 +69,7 @@ const changeTransport = ({ transportId, file, branchId, transportModel, transpor
 const deleteTransport = async ({ transportId }) => {
 	for(let id of transportId) {
 		const transport = await fetch(TransportQuery.CHECK_TRANSPORT, id)
-		console.log(transport)
+
 		if(transport.registered) {
 			throw new Error("Transportni o'chirish mumkin emas. Unga haydovchi biriktirilgan!")
 		}
