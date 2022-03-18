@@ -210,15 +210,18 @@ const RESTORE_TRANSPORT = `
 `
 
 const BIND_ORDER = `
-	INSERT INTO order_bindings (
-		order_id,
-		product_id,
-		order_binding_type,
-		transport_id
-	) SELECT $1, $2, $3, $4 FROM transports t
-	LEFT JOIN branches b ON b.branch_id = t.branch_id AND b.branch_deleted_at IS NULL
-	WHERE t.transport_id = $4
-	RETURNING *
+	WITH order_binding AS (
+		INSERT INTO order_bindings (
+			order_id,
+			product_id,
+			order_binding_type,
+			transport_id
+		) SELECT $1, $2, $3, $4 FROM transports t
+		LEFT JOIN branches b ON b.branch_id = t.branch_id AND b.branch_deleted_at IS NULL
+		WHERE t.transport_id = $4
+		RETURNING *
+	) SELECT branch_id FROM transports t, order_binding ob 
+	WHERE t.transport_id = ob.transport_id
 `
 
 const UNBOUND_ORDER = `

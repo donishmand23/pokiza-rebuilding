@@ -130,8 +130,8 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 }
 
 const changeOrderStatus = async ({ orderId, status, staffId }) => {
-	if(![1, 2, 3, 7].includes(+status)) {
-		throw new Error("Buyurtmani holatini faqat 'Moderator', 'Kutilmoqda', 'Biriktirilgan', 'Yuklangan' holatlariga o'tkazish mumkin!")
+	if(![1, 2].includes(+status)) {
+		throw new Error("Buyurtmani faqat 'Moderator', 'Kutilmoqda' holatlariga o'tkazish mumkin!")
 	}
 
 	const statuses = await orderStatuses({ orderId })
@@ -150,7 +150,7 @@ const changeOrderStatus = async ({ orderId, status, staffId }) => {
 
 	const updatedStatus = await fetch(OrderQuery.CHANGE_ORDER_STATUS, orderId, status, staffId)
 
-	await changeStatus({ productId, staffId })
+	await changeStatus({ orderId, staffId })
 
 	return updatedStatus
 }	

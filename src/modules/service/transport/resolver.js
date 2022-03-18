@@ -18,10 +18,10 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		changeTransport: async (_, args) => {
+		changeTransport: async (_, args, user) => {
 			try {
 				await upload(args)
-				const updatedTransport = await transportModel.changeTransport(args)
+				const updatedTransport = await transportModel.changeTransport(args, user)
 				if(updatedTransport) {
 					return {
 						status: 200,
@@ -32,9 +32,9 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		deleteTransport: async (_, args) => {
+		deleteTransport: async (_, args, user) => {
 			try {
-				const deletedTransports = await transportModel.deleteTransport(args)
+				const deletedTransports = await transportModel.deleteTransport(args, user)
 				if(deletedTransports.length) {
 					return {
 						status: 200,
@@ -45,9 +45,9 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		restoreTransport: async (_, args) => {
+		restoreTransport: async (_, args, user) => {
 			try {
-				const restoredTransports = await transportModel.restoreTransport(args)
+				const restoredTransports = await transportModel.restoreTransport(args, user)
 				if(restoredTransports.length) {
 					return {
 						status: 200,

@@ -100,40 +100,50 @@ const restoreTransport = async ({ transportId }) => {
 	return restoredTransports
 }
 
-const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { staffId }) => {
-	for(let id of orderId) {
-		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
-		const orderStatus = orderStatuses.at(-1)
-
-		if(
-			!(orderStatus.status_code == 6 && type == 1) ||
-			!(orderStatus.status_code == 2 && type == 2) 
-		) {
-			throw new Error("Buyurtmani mashinaga biriktirish mumkin emas!")
-		}
-	}
-
-	for(let id of productId) {
-		const productStatuses = await fetchAll(ProductQuery.PRODUCT_STATUSES, id)
-		const productStatus = productStatuses.at(-1)
-
-		if(
-			!(productStatus.status_code == 7 && type == 1)
-		) {
-			throw new Error("Buyumni mashinaga biriktirish mumkin emas!")
-		}
-	}
-
+const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { staffId, userId }) => {
 	const boundOrders = []
 
 	for(let id of orderId) {
+		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
+
+		if(!orderStatuses.length) {
+			throw new Error("Bunday buyurtma(lar) mavjud emas!")
+		}
+
+		const orderStatus = orderStatuses.at(-1)?.status_code
+
+		if([
+			(orderStatus == 6 && type == 1),
+			(orderStatus == 2 && type == 2) 
+		].every(cond => cond == false)) {
+			throw new Error("Buyurtmani mashinaga biriktirish mumkin emas!")
+		}
+
 		const bound = await fetch(TransportQuery.BIND_ORDER, id, null, type, transportId)
-		bound && await fetch(OrderQuery.CHANGE_ORDER_STATUS, id, 7, staffId)
+		bound && await fetch(
+			OrderQuery.CHANGE_ORDER_STATUS, id, 
+			orderStatus == 6 ? 7 : orderStatus == 2 ? 3 : 3, 
+			staffId
+		)
 		bound && await changeStatus({ orderId: id, staffId })
 		bound && boundOrders.push(bound)
 	}
 
 	for(let id of productId) {
+		const productStatuses = await fetchAll(ProductQuery.PRODUCT_STATUSES, id)
+
+		if(!productStatuses.length) {
+			throw new Error("Bunday buyum(lar) mavjud emas!")
+		}
+
+		const productStatus = productStatuses.at(-1)?.status_code
+
+		if(
+			!(productStatus == 7 && type == 1)
+		) {
+			throw new Error("Buyumni mashinaga biriktirish mumkin emas!")
+		}
+
 		const bound = await fetch(TransportQuery.BIND_ORDER, null, id, type, transportId)
 		bound && await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 8, staffId)
 		bound && await changeStatus({ productId: id, staffId })
