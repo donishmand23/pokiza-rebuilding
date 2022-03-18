@@ -59,7 +59,6 @@ enum MonitoringSectionFields {
 	bringTime
 	deliveryTime
 	plan
-	transport
 	file
 	branch
 	color

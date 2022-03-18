@@ -157,13 +157,32 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 	const unboundOrders = []
 
 	for(let id of orderId) {
+		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
+
+		if(!orderStatuses.length) {
+			throw new Error("Bunday buyurtma(lar) mavjud emas!")
+		}
+
+		const orderStatus = orderStatuses.at(-1)?.status_code
+
 		const bound = await fetch(TransportQuery.UNBOUND_ORDER, id, null)
-		bound && await fetch(OrderQuery.CHANGE_ORDER_STATUS, id, 6, staffId)
+		bound && await fetch(
+			OrderQuery.CHANGE_ORDER_STATUS, id, 
+			orderStatus == 7 ? 6 : orderStatus == 3 ? 2 : 2,
+			staffId
+		)
 		bound && await changeStatus({ orderId: id, staffId })
 		bound && unboundOrders.push(bound)
 	}
 
 	for(let id of productId) {
+		const productStatuses = await fetchAll(ProductQuery.PRODUCT_STATUSES, id)
+
+		if(!productStatuses.length) {
+			throw new Error("Bunday buyum(lar) mavjud emas!")
+		}
+
+		const productStatus = productStatuses.at(-1)?.status_code
 		const bound = await fetch(TransportQuery.UNBOUND_ORDER, null, id)
 		bound && await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 7, staffId)
 		bound && await changeStatus({ productId: id, staffId })
