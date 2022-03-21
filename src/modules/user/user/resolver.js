@@ -6,7 +6,6 @@ export default {
 		user: async (_, { userId }) => {
 			try {
 				const user = await userModel.user({ userId })
-				console.log(user)
 				return user
 			} catch(error) {
 				throw error
