@@ -31,12 +31,6 @@ export default function ({ req }) {
             'productStatusInfo',
 
             // later will be moved to staffs only section
-            'transports',
-            'addTransport',
-            'deletedTransports',
-            'changeTransport',
-            'deleteTransport',
-            'restoreTransport',
             'deletedProducts',
             'deletedOrders',
             'staffs',
@@ -136,6 +130,12 @@ export default function ({ req }) {
             'changeStaff',
             'deleteStaff',
             'restoreStaff',
+            'transports',
+            'addTransport',
+            'deletedTransports',
+            'changeTransport',
+            'deleteTransport',
+            'restoreTransport',
         ].includes(fieldName)
     ) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')

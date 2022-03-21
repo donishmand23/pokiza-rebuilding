@@ -1,3 +1,4 @@
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
 import TransportQuery from '#sql/transport'
@@ -59,14 +60,24 @@ const addTransport = ({ file, branchId, transportModel, transportColor, transpor
 	)
 }
 
-const changeTransport = ({ transportId, file, branchId, transportModel, transportColor, transportNumber, transportSummary }) => {
-	return fetch(
+const changeTransport = async ({ transportId, file, branchId, transportModel, transportColor, transportNumber, transportSummary }, { userId }) => {
+	const updatedTransport = await fetch(
 		TransportQuery.CHANGE_TRANSPORT, transportId, 
 		branchId, transportModel, transportColor, transportNumber, transportSummary, file
 	)
+
+	if(updatedTransport) setMonitoring({ 
+		userId, 
+		sectionId: transportId,
+		sectionName: 'transports', 
+		operationType: 'changed',
+		branchId: updatedTransport.old_branch_id,
+	}, updatedTransport)
+
+	return updatedTransport
 }
 
-const deleteTransport = async ({ transportId }) => {
+const deleteTransport = async ({ transportId }, { userId }) => {
 	for(let id of transportId) {
 		const transport = await fetch(TransportQuery.CHECK_TRANSPORT, id)
 
@@ -84,17 +95,31 @@ const deleteTransport = async ({ transportId }) => {
 	for(let id of transportId) {
 		const deleted = await fetch(TransportQuery.DELETE_TRANSPORT, id)
 		deleted && deletedTransports.push(deleted)
+		deleted && setMonitoring({ 
+			userId, 
+			sectionId: id,
+			sectionName: 'transports', 
+			operationType: 'deleted',
+			branchId: deleted.branch_id,
+		}, deleted)
 	}
 
 	return deletedTransports
 }
 
-const restoreTransport = async ({ transportId }) => {
+const restoreTransport = async ({ transportId }, { userId }) => {
 	const restoredTransports = []
 
 	for(let id of transportId) {
 		const restored = await fetch(TransportQuery.RESTORE_TRANSPORT, id)
 		restored && restoredTransports.push(restored)
+		restored && setMonitoring({ 
+			userId, 
+			sectionId: id,
+			sectionName: 'transports', 
+			operationType: 'restored',
+			branchId: restored.branch_id,
+		}, restored)
 	}
 
 	return restoredTransports

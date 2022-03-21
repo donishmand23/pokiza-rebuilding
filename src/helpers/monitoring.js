@@ -189,6 +189,30 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 		})
 	}
 
+	if(data.new_name && (data.new_name != data.old_name)) {
+		innerSetMonitor({ 
+			sectionField: 'name', 
+			oldValue: `value: ${data.old_name}`, 
+			newValue: `value: ${data.new_name}`
+		})
+	}
+
+	if(data.new_color && (data.new_color != data.old_color)) {
+		innerSetMonitor({ 
+			sectionField: 'color', 
+			oldValue: `value: ${data.old_color}`, 
+			newValue: `value: ${data.new_color}`
+		})
+	}
+
+	if(data.new_number && (data.new_number != data.old_number)) {
+		innerSetMonitor({ 
+			sectionField: 'number', 
+			oldValue: `value: ${data.old_number}`, 
+			newValue: `value: ${data.new_number}`
+		})
+	}
+
 	if(['deleted', 'restored'].includes(operationType)) {
 		innerSetMonitor({})
 	}

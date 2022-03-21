@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 4000
 
 const PG = {
 	connectionString: 'postgres://vxphabyi:EC4FczOUUW-HJpFqwY3X7DRu2bTAbN7d@john.db.elephantsql.com/vxphabyi'
+	password: '2303',
 }
 
 

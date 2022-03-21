@@ -163,9 +163,23 @@ const CHANGE_TRANSPORT = `
 		transport_img = (
 			CASE WHEN LENGTH($7) > 0 THEN $7 ELSE t.transport_img END
 		)
-	WHERE t.transport_deleted_at IS NULL AND t.transport_id = $1
-	RETURNING *,
-	to_char(transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+	FROM transports ot
+	WHERE t.transport_deleted_at IS NULL AND t.transport_id = $1 AND
+	ot.transport_id = $1
+	RETURNING t.*,
+	t.branch_id as new_branch_id,
+	t.transport_model as new_name,
+	t.transport_color as new_color,
+	t.transport_number as new_number,
+	t.transport_summary as new_summary,
+	t.transport_img as new_file,
+	ot.branch_id as old_branch_id,
+	ot.transport_model as old_name,
+	ot.transport_color as old_color,
+	ot.transport_number as old_number,
+	ot.transport_summary as old_summary,
+	ot.transport_img as old_file,
+	to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 `
 
 const CHECK_TRANSPORT = `
