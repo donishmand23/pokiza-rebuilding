@@ -165,10 +165,35 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 		})
 	}
 
+	if(data.new_service_id && (data.new_service_id != data.old_service_id)) {
+		innerSetMonitor({ 
+			sectionField: 'service', 
+			oldValue: `serviceId: ${data.old_service_id}`, 
+			newValue: `serviceId: ${data.new_service_id}`
+		})
+	}
+
+	if(data.new_product_size_details && (JSON.stringify(data.new_product_size_details) != JSON.stringify(data.old_product_size_details))) {
+		innerSetMonitor({ 
+			sectionField: 'service', 
+			oldValue: `sizeDetails: ${JSON.stringify(data.old_product_size_details)}`, 
+			newValue: `sizeDetails: ${JSON.stringify(data.new_product_size_details)}`
+		})
+	}
+
+	if(data.new_size && (data.new_size != data.old_size)) {
+		innerSetMonitor({ 
+			sectionField: 'size', 
+			oldValue: `value: ${data.old_size}`, 
+			newValue: `value: ${data.new_size}`
+		})
+	}
+
 	if(['deleted', 'restored'].includes(operationType)) {
 		innerSetMonitor({})
 	}
 }
+
 
 export {
 	setMonitoring

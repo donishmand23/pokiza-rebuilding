@@ -322,25 +322,47 @@ const CHANGE_PRODUCT = `
 		product_summary = (
 			CASE WHEN LENGTH($6) > 0 THEN $6 ELSE p.product_summary END
 		)
+	FROM (
+		SELECT p.*, o.branch_id FROM products p
+		NATURAL JOIN orders o
+		WHERE p.product_id = $1
+	) op
 	WHERE p.product_deleted_at IS NULL AND p.product_id = $1
 	RETURNING p.*,
-		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at	
+	p.service_id as new_service_id,
+	p.product_img as new_file,
+	p.product_size_details as new_product_size_details,
+	p.product_size as new_size,
+	p.product_summary as new_summary,
+	op.service_id as old_service_id,
+	op.product_img as old_file,
+	op.product_size as old_size,
+	op.product_size_details as old_product_size_details,
+	op.product_summary as old_summary,
+	op.branch_id,
+	to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at	
 `
 
 const DELETE_PRODUCT = `
-	UPDATE products SET
+	UPDATE products p SET
 		product_deleted_at = current_timestamp
-	WHERE product_deleted_at IS NULL AND product_id = $1
-	RETURNING *,
-		to_char(product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	FROM orders o
+	WHERE p.product_deleted_at IS NULL AND p.product_id = $1 AND
+	o.order_id = p.order_id
+	RETURNING p.*,
+	o.branch_id,
+	to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
 `
 
 const RESTORE_PRODUCT = `
-	UPDATE products SET
+	UPDATE products p SET
 		product_deleted_at = NULL
-	WHERE product_deleted_at IS NOT NULL AND product_id = $1
-	RETURNING *,
-		to_char(product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	FROM orders o
+	WHERE product_deleted_at IS NOT NULL AND product_id = $1 AND
+	o.order_id = p.order_id
+	RETURNING p.*,
+	o.branch_id,
+	to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
 `
 
 const PRODUCT_PHOTO = `

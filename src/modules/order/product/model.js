@@ -1,10 +1,11 @@
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
 import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
-import OrderQuery from '#sql/order'
 import ServiceQuery from '#sql/service'
+import OrderQuery from '#sql/order'
 
 
 const products = ({
@@ -102,8 +103,8 @@ const addProduct = async ({ orderId, serviceId, file, productSizeDetails, produc
 	return fetch(ProductQuery.ADD_PRODUCT, orderId, serviceId, file, productSizeDetails, productSize, productSummary, staffId)
 }
 
-const changeProduct = async ({ productId, serviceId, file, productSizeDetails, productSummary }) => {
-	if(productSizeDetails && (typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails))) {
+const changeProduct = async ({ productId, serviceId, file, productSizeDetails, productSummary }, { userId }) => {
+	if(serviceId && (!productSizeDetails || typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails))) {
 		throw new Error("productSizeDetails should be a valid javaScript object type")
 	}
 
@@ -122,7 +123,17 @@ const changeProduct = async ({ productId, serviceId, file, productSizeDetails, p
 
 	const productSize = productSizeDetails ? Object.values(productSizeDetails).reduce((acc, el) => acc * el) : undefined
 
-	return fetch(ProductQuery.CHANGE_PRODUCT, productId, serviceId, file, productSizeDetails, productSize, productSummary)
+	const updatedProduct = await fetch(ProductQuery.CHANGE_PRODUCT, productId, serviceId, file, productSizeDetails, productSize, productSummary)
+
+	if(updatedProduct) setMonitoring({ 
+		userId, 
+		sectionId: productId,
+		sectionName: 'products', 
+		operationType: 'changed',
+		branchId: updatedProduct.branch_id,
+	}, updatedProduct)
+
+	return updatedProduct
 }
 
 const changeProductStatus = async ({ productId, status, staffId }) => {
@@ -144,7 +155,7 @@ const changeProductStatus = async ({ productId, status, staffId }) => {
 	return updatedStatus
 }
 
-const deleteProduct = async ({ productId }) => {
+const deleteProduct = async ({ productId }, { userId }) => {
 	productId.map(async id => {
 		const statuses = await productStatuses({ productId: id })
 		if(+statuses[statuses.length - 1].status_code > 6) {
@@ -155,16 +166,36 @@ const deleteProduct = async ({ productId }) => {
 	const deletedProducts = []
 	for(let id of productId) {
 		const deletedProduct = await fetch(ProductQuery.DELETE_PRODUCT, id)
-		if(deletedProduct) deletedProducts.push(deletedProduct)
+		if(deletedProduct) {
+			deletedProducts.push(deletedProduct)
+
+			setMonitoring({ 
+				userId, 
+				sectionId: id,
+				sectionName: 'products', 
+				operationType: 'deleted',
+				branchId: deletedProduct.branch_id,
+			}, deletedProduct)
+		} 
 	}
 	return deletedProducts
 }
 
-const restoreProduct = async ({ productId }) => {
+const restoreProduct = async ({ productId }, { userId }) => {
 	const restoredProducts = []
 	for(let id of productId) {
 		const restoredProduct = await fetch(ProductQuery.RESTORE_PRODUCT, id)
-		if(restoredProduct) restoredProducts.push(restoredProduct)
+		if(restoredProduct) {
+			restoredProducts.push(restoredProduct)
+
+			setMonitoring({ 
+				userId, 
+				sectionId: id,
+				sectionName: 'products', 
+				operationType: 'restored',
+				branchId: restoredProduct.branch_id,
+			}, restoredProduct)
+		}
 	}
 	return restoredProducts
 }

@@ -18,10 +18,10 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		changeProduct: async (_, args) => {
+		changeProduct: async (_, args, user) => {
 			try {
 				await upload(args)
-				const updatedProduct = await productModel.changeProduct(args)
+				const updatedProduct = await productModel.changeProduct(args, user)
 				if(updatedProduct) {
 					return {
 						status: 200,
@@ -45,9 +45,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		deleteProduct: async (_, args) => {
+		deleteProduct: async (_, args, user) => {
 			try {
-				const deletedProducts = await productModel.deleteProduct(args)
+				const deletedProducts = await productModel.deleteProduct(args, user)
 				if(deletedProducts.length) {
 					return {
 						status: 200,
@@ -58,9 +58,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		restoreProduct: async (_, args) => {
+		restoreProduct: async (_, args, user) => {
 			try {
-				const restoredProducts = await productModel.restoreProduct(args)
+				const restoredProducts = await productModel.restoreProduct(args, user)
 				if(restoredProducts.length) {
 					return {
 						status: 200,
