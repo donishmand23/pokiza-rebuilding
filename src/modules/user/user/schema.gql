@@ -1,4 +1,14 @@
+type Query {
+	user: UserInfo!
+}
+
 type UserInfo {
+	staff: Boolean!
+	client: Boolean!
+	user: UserType
+}
+
+type User {
 	userId: ID!
 	mainContact: Contact
 	secondContact: Contact
@@ -12,13 +22,13 @@ type UserInfo {
 	joinedAt: DateTime!
 }
 
-input UserInfoFilter {
+input UserFilter {
 	age: Range
 	gender: Gender
 	branchId: [ID!]
 }
 
-input UserInfoInput {
+input UserInput {
 	firstName: String
 	lastName: String
 	mainContact: Contact

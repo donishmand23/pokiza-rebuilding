@@ -2,7 +2,28 @@ import userModel from './model.js'
 import { mError } from '#helpers/error'
 
 export default {
+	Query: {
+		user: async (_, { userId }) => {
+			try {
+				const user = await userModel.user({ userId })
+				console.log(user)
+				return user
+			} catch(error) {
+				throw error
+			}
+		},
+	},
+
 	UserInfo: {
+		client: global => !!global.client,
+		staff:  global => !!global.staff,
+		user:   global => {
+			const { client, staff } = global
+			return client || staff
+		},
+	},
+
+	User: {
 		userId:        global => global.user_id,
 		mainContact:   global => global.user_main_contact,
 		secondContact: global => global.user_second_contact,
