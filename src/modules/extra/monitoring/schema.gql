@@ -57,7 +57,7 @@ enum MonitoringSectionFields {
 	name
 	price
 	bringTime
-	deliveryTime
+	deliveryHours
 	plan
 	file
 	branch

@@ -90,15 +90,27 @@ const CHANGE_SERVICE = `
 		to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
 	) UPDATE services s SET
 		service_deleted_at = current_timestamp
-	FROM new_service ns
+	FROM new_service ns, old_service os
 	WHERE ns.service_id IS NOT NULL AND s.service_id = $1
-	RETURNING ns.*
+	RETURNING ns.*,
+	ns.branch_id as new_branch_id,
+	ns.service_name as new_name,
+	ns.service_unit as new_unit,
+	ns.service_unit_keys as new_unit_keys,
+	ns.service_price_special as new_price_special,
+	ns.service_price_simple as new_price_simple,
+	os.branch_id as old_branch_id,
+	os.service_name as old_name,
+	os.service_unit as old_unit,
+	os.service_unit_keys as old_unit_keys,
+	os.service_price_special as old_price_special,
+	os.service_price_simple as old_price_simple
 `
 
 const DISABLE_SERVICE = `
 	UPDATE services SET
 		service_active = $2
-	WHERE service_id = ANY($1::INT[])
+	WHERE service_id = ANY($1::INT[]) AND service_active <> $2
 	RETURNING *,
 	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
 `
@@ -130,9 +142,16 @@ const CHANGE_DELIVERY_HOUR = `
 				WHEN $3 > 0 THEN $3 ELSE dh.delivery_hour_simple 
 			END
 		)
+	FROM (
+		SELECT * FROM delivery_hours WHERE delivery_hour_id = $1
+	) oh
 	WHERE dh.delivery_hour_id = $1
-	RETURNING *,
-	to_char(delivery_hour_created_at, 'YYYY-MM-DD HH24:MI:SS') delivery_hour_created_at
+	RETURNING dh.*,
+	dh.delivery_hour_special as new_hour_special,
+	dh.delivery_hour_simple as new_hour_simple,
+	oh.delivery_hour_special as old_hour_special,
+	oh.delivery_hour_simple as old_hour_simple,
+	to_char(dh.delivery_hour_created_at, 'YYYY-MM-DD HH24:MI:SS') delivery_hour_created_at
 `
 
 

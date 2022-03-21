@@ -3,9 +3,9 @@ import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
-		addService: async (_, arg) => {
+		addService: async (_, arg, user) => {
 			try {
-				const newService = await serviceModel.addService(arg)
+				const newService = await serviceModel.addService(arg, user)
 				if(newService) {
 					return {
 						status: 200,
@@ -20,9 +20,9 @@ export default {
 			}
 		},
 
-		changeService: async (_, arg) => {
+		changeService: async (_, arg, user) => {
 			try {
-				const updatedService = await serviceModel.changeService(arg)
+				const updatedService = await serviceModel.changeService(arg, user)
 				if(updatedService) {
 					return {
 						status: 200,
@@ -31,15 +31,16 @@ export default {
 					}
 				} else throw new Error("Bunday xizmat turi mavjud emas yoki xizmatda hech qanday yangi o'zgarish yo'q!")
 			} catch (error) {
+				console.log(error)
 				if(error.message.includes("duplicate key value")) {
 					return mError("Bu filialda bunday xizmat turi allaqachon bor!")
 				} else return mError(error)
 			}
 		},
 
-		disableService: async (_, arg) => {
+		disableService: async (_, arg, user) => {
 			try {
-				const disabledServices = await serviceModel.disableService(arg)
+				const disabledServices = await serviceModel.disableService(arg, user)
 				if(disabledServices.length) {
 					return {
 						status: 200,
@@ -50,9 +51,9 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		enableService: async (_, arg) => {
+		enableService: async (_, arg, user) => {
 			try {
-				const enabledServices = await serviceModel.enableService(arg)
+				const enabledServices = await serviceModel.enableService(arg, user)
 				if(enabledServices.length) {
 					return {
 						status: 200,
@@ -63,9 +64,9 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		changeDeliveryHour: async (_, arg) => {
+		changeDeliveryHour: async (_, arg, user) => {
 			try {
-				const updatedDeliveryHour = await serviceModel.changeDeliveryHour(arg)
+				const updatedDeliveryHour = await serviceModel.changeDeliveryHour(arg, user)
 				if(updatedDeliveryHour) {
 					return {
 						status: 200,

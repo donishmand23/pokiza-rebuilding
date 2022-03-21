@@ -38,13 +38,6 @@ export default function ({ req }) {
             'addStaff',
             'addClient',
             'deletedClients',
-            'disabledServices',
-            'deliveryHours',
-            'addService',
-            'changeService',
-            'disableService',
-            'enableService',
-            'changeDeliveryHour',
             'addSocialSet',
             'changeSocialSet',
             'disabledAddresses', 
@@ -136,6 +129,13 @@ export default function ({ req }) {
             'changeTransport',
             'deleteTransport',
             'restoreTransport',
+            'disabledServices',
+            'deliveryHours',
+            'addService',
+            'changeService',
+            'disableService',
+            'enableService',
+            'changeDeliveryHour',
         ].includes(fieldName)
     ) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')

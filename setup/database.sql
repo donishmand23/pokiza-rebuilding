@@ -171,8 +171,7 @@ create table services (
 	service_created_at timestamptz default current_timestamp,
 	service_deleted_at timestamptz default null,
 	service_active boolean default true,
-	unique(service_name, branch_id, service_deleted_at),
-	unique(service_name, branch_id, service_active)
+	unique(service_name, service_unit, service_unit_keys, branch_id, service_active, service_price_special, service_price_simple)
 );
 
 -- 15. delivery hours (storing delivery hours for special and simple orders)
@@ -309,7 +308,7 @@ create table monitoring (
 	user_id bigint not null references users(user_id),
 	branch_id bigint not null references branches(branch_id),
 	operation_type character varying(25) not null check (operation_type in ('deleted', 'restored', 'changed', 'added')),
-	section_name character varying(25) check (section_name in ('clients', 'staffs', 'orders', 'products', 'transports', 'settings')),
+	section_name character varying(25) check (section_name in ('clients', 'staffs', 'orders', 'products', 'transports', 'settings', 'services')),
 	section_field character varying(100),
 	section_id bigint not null,
 	old_value character varying(250),

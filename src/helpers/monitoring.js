@@ -213,6 +213,60 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 		})
 	}
 
+	if(data.new_unit && (data.new_unit != data.old_unit)) {
+		innerSetMonitor({ 
+			sectionField: 'unit', 
+			oldValue: `value: ${data.old_unit}`, 
+			newValue: `value: ${data.new_unit}`
+		})
+	}
+
+	if(data.new_unit_keys && (JSON.stringify(data.new_unit_keys) != JSON.stringify(data.old_unit_keys))) {
+		innerSetMonitor({ 
+			sectionField: 'unitKeys', 
+			oldValue: `value: ${JSON.stringify(data.old_unit_keys)}`, 
+			newValue: `value: ${JSON.stringify(data.new_unit_keys)}`
+		})
+	}
+
+	if(data.new_price_special && (data.new_price_special != data.old_price_special)) {
+		innerSetMonitor({ 
+			sectionField: 'price', 
+			oldValue: `special: ${data.old_price_special}`, 
+			newValue: `special: ${data.new_price_special}`
+		})
+	}
+
+	if(data.new_price_simple && (data.new_price_simple != data.old_price_simple)) {
+		innerSetMonitor({ 
+			sectionField: 'price', 
+			oldValue: `simple: ${data.old_price_simple}`, 
+			newValue: `simple: ${data.new_price_simple}`
+		})
+	}
+
+	if(data.new_hour_special && (data.new_hour_special != data.old_hour_special)) {
+		innerSetMonitor({ 
+			sectionField: 'deliveryHours', 
+			oldValue: `special: ${data.old_hour_special}`, 
+			newValue: `special: ${data.new_hour_special}`
+		})
+	}
+
+	if(data.new_hour_simple && (data.new_hour_simple != data.old_hour_simple)) {
+		innerSetMonitor({ 
+			sectionField: 'deliveryHours', 
+			oldValue: `simple: ${data.old_hour_simple}`, 
+			newValue: `simple: ${data.new_hour_simple}`
+		})
+	}
+
+	if(operationType == 'added' && sectionName == 'services') {
+		innerSetMonitor({ 
+			newValue: `serviceId: ${data.service_id}`
+		})
+	}
+
 	if(['deleted', 'restored'].includes(operationType)) {
 		innerSetMonitor({})
 	}
