@@ -8,13 +8,12 @@ const PORT = process.env.PORT || 4000
 // 	host: 'localhost',
 // 	user: 'postgres',
 // 	password: '2303',
-// 	port: 5432,	
+// 	port: 5432,
 // 	database: 'pokiza'
 // }
 
 const PG = {
 	connectionString: 'postgres://vxphabyi:EC4FczOUUW-HJpFqwY3X7DRu2bTAbN7d@john.db.elephantsql.com/vxphabyi'
-	password: '2303',
 }
 
 
