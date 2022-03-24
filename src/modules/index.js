@@ -14,6 +14,7 @@ import NotificationModule from './extra/notificaton/index.js'
 import SMSModule from './extra/sms/index.js'
 import MonitoringModule from './extra/monitoring/index.js'
 import TokenModule from './extra/token/index.js'
+import PermissionModule from './extra/permission/index.js'
 
 // user modules
 import UserModule from './user/user/index.js'
@@ -46,6 +47,7 @@ export default {
   		SMSModule.typeDefs,
   		MonitoringModule.typeDefs,
   		TokenModule.typeDefs,
+  		PermissionModule.typeDefs,
   		// user
   		UserModule.typeDefs,
   		ClientModule.typeDefs,
@@ -74,6 +76,7 @@ export default {
   		SMSModule.resolvers,
   		MonitoringModule.resolvers,
   		TokenModule.resolvers,
+  		PermissionModule.resolvers,
   		// user
   		UserModule.resolvers,
   		ClientModule.resolvers,

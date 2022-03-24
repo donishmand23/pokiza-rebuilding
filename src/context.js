@@ -136,6 +136,14 @@ export default function ({ req }) {
             'disableService',
             'enableService',
             'changeDeliveryHour',
+            'permissionsList',
+            'permissionGroups',
+            'permissionsUser',
+            'addPermission',
+            'deletePermission',
+            'addPermissionGroup',
+            'deletePermissionGroup',
+            'editPermissionGroup',
         ].includes(fieldName)
     ) {
         if(!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')

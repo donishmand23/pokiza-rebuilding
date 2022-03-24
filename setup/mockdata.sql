@@ -354,3 +354,148 @@ insert into transport_registration (staff_id, transport_id, unregistered_at) val
 insert into order_bindings (transport_id, order_id, order_binding_type) values
 (1, 1, 2),
 (1, 2, 2);
+
+-- permissions
+insert into permissions (permission_action, permission_model) values
+(1100, 'see branch'),         
+(1101, 'see disabled branch'),
+(1102, 'change branch'),        
+(1103, 'add branch'),        
+(1104, 'delete branch'),
+(1105, 'restore branch'),
+
+(1200, 'see address'),         
+(1201, 'see disabled address'),
+(1202, 'add address'),
+(1203, 'change address'),      
+(1204, 'delete address'),     
+(1205, 'restore address'),     
+          
+(1300, 'see client'),           
+(1301, 'see disabled client'),  
+(1302, 'add client'),
+(1303, 'change client'),        
+(1304, 'delete client'),
+(1305, 'restore client'),
+     
+(1400, 'see staff'),           
+(1401, 'see disabled staff'),  
+(1402, 'add staff'),       
+(1403, 'change staff'),       
+(1404, 'delete staff'),
+(1405, 'restore staff'),
+
+(1500, 'see order'),           
+(1501, 'see disabled order'),  
+(1502, 'add order'),         
+(1503, 'change order'),         
+(1504, 'delete order'), 
+(1505, 'restore order'),   
+
+(1600, 'see product'),             
+(1601, 'see disabled product'),    
+(1602, 'add product'),           
+(1603, 'change product'),           
+(1604, 'delete product'),   
+(1605, 'restore product'), 
+
+(1700, 'see service'),           
+(1701, 'see disabled service'),  
+(1702, 'add service'),         
+(1703, 'change service'), 
+(1704, 'delete service'), 
+(1705, 'restore service'),
+
+(1800, 'see transport'), 
+(1801, 'see disabled transport'), 
+(1802, 'add transport'), 
+(1803, 'change transport'), 
+(1804, 'delete transport'), 
+(1805, 'restore transport'),
+(1806, 'bind order to transport'),                    
+(1807, 'unbind order from transport'),
+(1808, 'register to transport'),
+(1809, 'unregister from transport'),
+
+(1901, 'see permission list/group'),
+(1902, 'add permission group'),
+(1903, 'change permission group'),
+(1904, 'delete permission group'),
+(1905, 'see user permission'),
+(1906, 'add user permission'),
+(1907, 'delete user permission'),
+
+(2101, 'change order status 1'),     
+(2102, 'change order status 2'),     
+(2103, 'change order status 3'),     
+(2104, 'change order status 4'),     
+(2105, 'change order status 5'),     
+(2106, 'change order status 6'),     
+(2107, 'change order status 7'),     
+(2108, 'change order status 8'),     
+(2109, 'change order status 9'),     
+(2110, 'change order status 10'),
+
+(2201, 'change product status 1'),  
+(2202, 'change product status 2'),  
+(2203, 'change product status 3'),  
+(2204, 'change product status 4'),  
+(2205, 'change product status 5'),  
+(2206, 'change product status 6'),  
+(2207, 'change product status 7'),  
+(2208, 'change product status 8'),  
+(2209, 'change product status 9'),  
+(2210, 'change product status 10'),    
+
+(2301, 'send notification/sms to client'), 
+(2302, 'send notification/sms to staff'),
+(2303, 'delete notification'),
+(2304, 'add social-set'),
+(2305, 'change social-set'),
+(2306, 'see deliveryHours'),
+(2307, 'change deliveryHours'),
+(2308, 'see monitoring'),
+(2309, 'global search');
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1300);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1500);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1100);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1200);
+
+insert into permission_groups (group_name) values ('moderator');
+insert into permission_groups (group_name) values ('haydovchi');
+
+insert into permission_group_sets (group_id, permission_action) values (1, 1500);
+insert into permission_group_sets (group_id, permission_action) values (1, 1501);
+insert into permission_group_sets (group_id, permission_action) values (1, 1502);
+insert into permission_group_sets (group_id, permission_action) values (1, 1503);
+insert into permission_group_sets (group_id, permission_action) values (1, 1806);
+insert into permission_group_sets (group_id, permission_action) values (1, 1807);
+insert into permission_group_sets (group_id, permission_action) values (1, 2101);
+insert into permission_group_sets (group_id, permission_action) values (1, 2102);
+
+insert into permission_group_sets (group_id, permission_action) values (2, 1800);
+insert into permission_group_sets (group_id, permission_action) values (2, 1803);
+insert into permission_group_sets (group_id, permission_action) values (2, 1804);
+insert into permission_group_sets (group_id, permission_action) values (2, 1805);
+insert into permission_group_sets (group_id, permission_action) values (2, 1806);
+insert into permission_group_sets (group_id, permission_action) values (2, 1807);
+insert into permission_group_sets (group_id, permission_action) values (2, 1808);
+insert into permission_group_sets (group_id, permission_action) values (2, 1809);
+
+
+
+
+
+
+
+
+
+
+
+
+

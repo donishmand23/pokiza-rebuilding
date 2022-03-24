@@ -215,6 +215,7 @@ export default {
 
 	AllTypes: {
 		__resolveType (obj, context, info) {
+			console.log(obj)
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'
 			} else if(obj.state_id && obj.state_name && obj.state_created_at) {
@@ -243,6 +244,10 @@ export default {
 				return 'Product'
 			} else if(obj.transport_id && obj.transport_created_at) {
 				return 'Transport'
+			} else if(obj.permission_action && obj.permission_model) {
+				return 'Permission'
+			} else if(obj.group_id && obj.group_name) {
+				return 'PermissionGroup'
 			} else return null
 		}
 	},

@@ -51,5 +51,5 @@ const schema = makeExecutableSchema({
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
     console.log(`🚀 Server ready at http://127.0.0.1:${PORT}${server.graphqlPath}`)
-    console.log(`🚀 Server ready at http://172.28.64.1:${PORT}${server.graphqlPath}`)
+    console.log(`🚀 Server ready at http://192.168.0.111:${PORT}${server.graphqlPath}`)
 })()

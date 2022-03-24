@@ -317,42 +317,42 @@ create table monitoring (
 );
 
 
--- -- PERMISSIONS MODULE
--- -- 23. permissions ( general permission actions )
--- drop table if exists permissions cascade;
--- create table permissions (
--- 	permission_action int not null primary key unique,
--- 	permission_model character varying(128) not null
--- );
+-- PERMISSIONS MODULE
+-- 23. permissions ( general permission actions )
+drop table if exists permissions cascade;
+create table permissions (
+	permission_action int not null primary key unique,
+	permission_model character varying(128) not null
+);
 
--- -- 24. permission sets ( permissions that each user has )
--- drop table if exists permission_sets cascade;
--- create table permission_sets (
--- 	permission_set_id bigserial not null primary key,
--- 	user_id bigint references users(user_id),
--- 	permission_action int references permissions(permission_action),
--- 	branch_id bigint not null references branches(branch_id),
--- 	permission_set_created_at timestamptz default current_timestamp,
--- 	unique (user_id, permission_action, branch_id)
--- );
+-- 24. permission sets ( permissions that each user has )
+drop table if exists permission_sets cascade;
+create table permission_sets (
+	permission_set_id bigserial not null primary key,
+	staff_id bigint references staffs(staff_id),
+	permission_action int references permissions(permission_action),
+	branch_id bigint not null references branches(branch_id),
+	permission_set_created_at timestamptz default current_timestamp,
+	unique (staff_id, permission_action, branch_id)
+);
 
--- -- 25. permission groups ( groups for grouping a set of permissions )
--- drop table if exists permission_groups cascade;
--- create table permission_groups (
--- 	group_id bigserial not null primary key,
--- 	group_name character varying(128) not null,
--- 	group_created_at timestamptz default current_timestamp,
--- 	group_deleted_at timestamptz default null
--- );
+-- 25. permission groups ( groups for grouping a set of permissions )
+drop table if exists permission_groups cascade;
+create table permission_groups (
+	group_id bigserial not null primary key,
+	group_name character varying(128) not null,
+	group_created_at timestamptz default current_timestamp,
+	group_deleted_at timestamptz default null
+);
 
--- -- 26. permission group sets ( for grouping a set of permissions )
--- drop table if exists permission_group_sets cascade;
--- create table permission_group_sets (
--- 	group_set_id bigserial not null primary key,
--- 	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
--- 	permission_action int not null references permissions(permission_action),
--- 	unique (group_id, permission_action)
--- );
+-- 26. permission group sets ( for grouping a set of permissions )
+drop table if exists permission_group_sets cascade;
+create table permission_group_sets (
+	group_set_id bigserial not null primary key,
+	group_id bigint not null references permission_groups(group_id) ON DELETE CASCADE,
+	permission_action int not null references permissions(permission_action),
+	unique (group_id, permission_action)
+);
 
 -- -- 22. load order ( info about orders to which car they are loaded )
 -- drop table if exists load_order cascade;
