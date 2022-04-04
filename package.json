@@ -32,6 +32,7 @@
         "#utils/*": "./src/utils/*.js"
     },
     "devDependencies": {
+        "@architect/sandbox": "^5.2.0",
         "nodemon": "^2.0.15"
     }
 }
