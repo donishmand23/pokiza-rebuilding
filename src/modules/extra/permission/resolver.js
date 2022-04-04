@@ -17,6 +17,9 @@ export default {
 				if(error.message.includes('unique constraint')) {
 					return mError(new Error("Ushbu ruxsatnoma(lar) allqachon qo'shilgan!")) 
 				}
+				if (error.message.includes('foreign key constraint')) {
+					return mError(new Error("Bunday ruxsatnomalar mavjud emas!")) 
+				}
 				return mError(error) 
 			}
 		},

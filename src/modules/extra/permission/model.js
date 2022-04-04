@@ -25,22 +25,23 @@ const deletePermissionGroup = ({ groupId }) => {
 	return fetch(PermissionQuery.DELETE_PERMISSION_GROUP, groupId)
 }
 
-const addPermission = async ({ staffId, permissionKeys, branchId }) => {
-	const data = await Promise.all(
-		permissionKeys.map(async key => {
-			return await fetch(PermissionQuery.ADD_PERMISSION, staffId, key, branchId)
-		})
-	)
-
-	return data.filter(el => el)
-}
-
 const deletePermission = async ({ staffId, permissionKeys, branchId }) => {
 	const data = await Promise.all(
 		permissionKeys.map(async key => {
 			return await fetch(PermissionQuery.DELETE_PERMISSION, staffId, key, branchId)
 		})
 	)
+	return data.filter(el => el)
+}
+
+const addPermission = async ({ staffId, permissionKeys, branchId }) => {
+	await deletePermission({ staffId, permissionKeys, branchId })
+	const data = await Promise.all(
+		permissionKeys.map(async key => {
+			return await fetch(PermissionQuery.ADD_PERMISSION, staffId, key, branchId)
+		})
+	)
+
 	return data.filter(el => el)
 }
 
@@ -51,6 +52,7 @@ const addPermissionGroup = async ({ groupName, permissionKeys }) => {
 			return await fetch(PermissionQuery.ADD_PERMISSION_GROUP_ACTIONS, newGroup.group_id, key)
 		})
 	)
+	
 	return newGroup
 }
 
@@ -60,7 +62,7 @@ const editPermissionGroup = async ({ groupId, groupName, permissionKeys = [] }) 
 	permissionKeys.map(async key => {
 		await fetch(PermissionQuery.ADD_PERMISSION_GROUP_ACTIONS, groupId, key)
 	})
-	console.log(group)
+
 	return group
 }
 
