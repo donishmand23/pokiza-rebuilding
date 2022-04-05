@@ -63,9 +63,9 @@ export default {
 			} catch(error) { return mError(error) }
 		},
 
-		editPermissionGroup: async (_, args, user) => {
+		changePermissionGroup: async (_, args, user) => {
 			try {
-				const editedPermissionGroup = await permissionModel.editPermissionGroup(args, user)
+				const editedPermissionGroup = await permissionModel.changePermissionGroup(args, user)
 				if(editedPermissionGroup) {
 					return {
 						status: 200,

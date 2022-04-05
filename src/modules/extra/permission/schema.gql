@@ -26,7 +26,7 @@ type Mutation {
 		groupId: ID!
 	): MutationResponse!
 
-	editPermissionGroup(
+	changePermissionGroup(
 		groupId: ID! 
 		groupName: String 
 		permissionKeys: [Int!]

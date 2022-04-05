@@ -56,7 +56,7 @@ const addPermissionGroup = async ({ groupName, permissionKeys }) => {
 	return newGroup
 }
 
-const editPermissionGroup = async ({ groupId, groupName, permissionKeys = [] }) => {
+const changePermissionGroup = async ({ groupId, groupName, permissionKeys = [] }) => {
 	const group = await fetch(PermissionQuery.EDIT_PERMISSION_GROUP, groupId, groupName)
 	permissionKeys.length && await fetch(PermissionQuery.DELETE_PERMISSION_GROUP_ACTIONS, groupId)
 	permissionKeys.map(async key => {
@@ -69,7 +69,7 @@ const editPermissionGroup = async ({ groupId, groupName, permissionKeys = [] }) 
 
 export default {
 	deletePermissionGroup,
-	editPermissionGroup,
+	changePermissionGroup,
 	permissionsByBranch,
 	permissionsByGroup,
 	addPermissionGroup,
