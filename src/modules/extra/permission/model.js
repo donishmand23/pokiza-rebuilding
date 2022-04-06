@@ -35,7 +35,7 @@ const deletePermission = async ({ staffId, permissionKeys, branchId }) => {
 }
 
 const addPermission = async ({ staffId, permissionKeys, branchId }) => {
-	await deletePermission({ staffId, permissionKeys, branchId })
+	await fetchAll(PermissionQuery.DELETE_ALL_PERMISSIONS, staffId, branchId)
 	const data = await Promise.all(
 		permissionKeys.map(async key => {
 			return await fetch(PermissionQuery.ADD_PERMISSION, staffId, key, branchId)
