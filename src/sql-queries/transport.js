@@ -120,6 +120,35 @@ const TRANSPORT = `
 	END
 `
 
+const SEARCH_TRANSPORTS = `
+	SELECT 
+		t.transport_id,
+		t.transport_model,
+		t.transport_color,
+		t.transport_number,
+		t.transport_summary,
+		t.branch_id,
+		t.transport_broken,
+		t.transport_img,
+		count(*) OVER() as full_count,
+		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+	FROM transports t
+	WHERE t.transport_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN t.branch_id = ANY($2::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN LENGTH($1) >= 3 THEN (
+			t.transport_model ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			t.transport_color ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			t.transport_number ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			t.transport_summary ILIKE CONCAT('%', $1::VARCHAR, '%')
+		) WHEN LENGTH($1) > 0 THEN t.transport_id::VARCHAR = $1::VARCHAR
+		ELSE TRUE
+	END
+`
+
 const DRIVERS = `
 	SELECT
 		staff_id,
@@ -256,6 +285,7 @@ const TRANSPORT_PHOTO = `
 
 
 export default {
+	SEARCH_TRANSPORTS,
 	RESTORE_TRANSPORT,
 	DELETE_TRANSPORT,
 	CHANGE_TRANSPORT,

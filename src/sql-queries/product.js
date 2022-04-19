@@ -250,6 +250,56 @@ const PRODUCT = `
 	END
 `
 
+const SEARCH_PRODUCTS = `
+	SELECT 
+		p.product_id,
+		p.product_size,
+		p.product_size_details,
+		p.product_summary,
+		p.service_id,
+		p.order_id,
+		p.product_img,
+		o.order_special,
+		pp.product_price,
+		count(*) OVER() as full_count,
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	FROM products p
+	LEFT JOIN orders o ON o.order_id = p.order_id AND o.order_deleted_at IS NULL
+	LEFT JOIN clients c ON c.client_id = o.client_id
+	LEFT JOIN users u ON u.user_id = c.user_id
+	LEFT JOIN (
+		SELECT
+			p.product_id,
+			s.service_name,
+			CASE
+				WHEN o.order_special = TRUE THEN s.service_price_special * p.product_size
+				WHEN o.order_special = FALSE THEN s.service_price_simple * p.product_size
+			ELSE NULL
+			END AS product_price
+		FROM products p
+		NATURAL JOIN orders o
+		NATURAL JOIN services s
+		WHERE p.product_deleted_at IS NULL
+	) pp ON pp.product_id = p.product_id
+	WHERE p.product_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN o.branch_id = ANY($2::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN LENGTH($1) >= 3 THEN (
+			o.order_summary ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			c.client_summary ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			p.product_summary ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			u.user_first_name ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			u.user_last_name ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+	 		u.user_main_contact ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+	 		u.user_second_contact ILIKE CONCAT('%', $1::VARCHAR, '%')
+		) WHEN LENGTH($1) > 0 THEN p.product_id::VARCHAR = $1::VARCHAR
+		ELSE TRUE
+	END
+`
+
 const ADD_PRODUCT = `
 	WITH
 	new_product AS (
@@ -446,6 +496,7 @@ export default {
 	ORDER_AND_PRODUCT_STATUS_INFO,
 	CHANGE_PRODUCT_STATUS,
 	PRODUCT_STATUSES,
+	SEARCH_PRODUCTS,
 	RESTORE_PRODUCT,
 	DELETE_PRODUCT,
 	CHANGE_PRODUCT,

@@ -2,4 +2,4 @@ type Query {
 	searchGlobal(key: String!): [GlobalSearch!]!
 }
 
-union GlobalSearch = Staff | Client
+union GlobalSearch = Staff | Client | Order | Product | Transport

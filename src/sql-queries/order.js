@@ -210,6 +210,67 @@ const ORDER = `
 	END
 `
 
+const SEARCH_ORDERS = `
+	SELECT 
+		o.order_id,
+		o.order_special,
+		o.order_summary,
+		o.client_id,
+		o.branch_id,
+		o.address_id,
+		tm.bring_time_remaining,
+		tm.delivery_time_remaining,
+		count(*) OVER() as full_count,
+		COALESCE( SUM(op.product_price) ,0) order_price,
+		to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
+		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
+		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
+		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
+		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	FROM orders o
+	NATURAL JOIN clients c
+	INNER JOIN users u ON u.user_id = c.user_id
+	LEFT JOIN (
+		SELECT
+			order_id,
+			EXTRACT( EPOCH FROM (order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
+			EXTRACT( EPOCH FROM (order_delivery_time::TIMESTAMPTZ - NOW()) ) AS delivery_time_remaining
+		FROM orders
+	) tm ON tm.order_id = o.order_id
+	LEFT JOIN (
+		SELECT
+			p.order_id,
+			p.product_id,
+			s.service_name,
+			CASE
+				WHEN o.order_special = TRUE THEN s.service_price_special * p.product_size
+				WHEN o.order_special = FALSE THEN s.service_price_simple * p.product_size
+				ELSE 0
+			END product_price
+		FROM products p
+		NATURAL JOIN orders o
+		LEFT JOIN services s ON s.service_id = p.service_id
+		WHERE p.product_deleted_at IS NULL
+	) op ON op.order_id = o.order_id
+	WHERE o.order_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN o.branch_id = ANY($2::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN LENGTH($1) >= 3 THEN (
+			o.order_summary ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			c.client_summary ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			u.user_first_name ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+			u.user_last_name ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+	 		u.user_main_contact ILIKE CONCAT('%', $1::VARCHAR, '%') OR
+	 		u.user_second_contact ILIKE CONCAT('%', $1::VARCHAR, '%')
+		) WHEN LENGTH($1) > 0 THEN o.order_id::VARCHAR = $1::VARCHAR
+		ELSE TRUE
+	END
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining
+`
+
 const ADD_ORDER = `
 	WITH 
 	address AS (
@@ -467,6 +528,7 @@ const CHANGE_ORDER_STATUS = `
 export default {
 	CHANGE_ORDER_STATUS,
 	ORDER_STATUSES,
+	SEARCH_ORDERS,
 	RESTORE_ORDER,
 	DELETE_ORDER,
 	CHANGE_ORDER,
