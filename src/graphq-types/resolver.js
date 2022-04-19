@@ -215,7 +215,6 @@ export default {
 
 	AllTypes: {
 		__resolveType (obj, context, info) {
-			console.log(obj)
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'
 			} else if(obj.state_id && obj.state_name && obj.state_created_at) {
