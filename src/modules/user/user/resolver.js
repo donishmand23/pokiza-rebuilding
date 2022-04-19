@@ -1,5 +1,4 @@
 import userModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Query: {
