@@ -112,7 +112,7 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 
 	await checkAddress(address)
 
-	const updatedOrder = await  fetch(
+	const updatedOrder = await fetch(
 		OrderQuery.CHANGE_ORDER, orderId, clientId, Boolean(Object.keys(address).length),
 		stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target,
 		bringTime, special, summary
