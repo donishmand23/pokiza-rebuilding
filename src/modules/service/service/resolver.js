@@ -31,7 +31,6 @@ export default {
 					}
 				} else throw new Error("Bunday xizmat turi mavjud emas yoki xizmatda hech qanday yangi o'zgarish yo'q!")
 			} catch (error) {
-				console.log(error)
 				if(error.message.includes("duplicate key value")) {
 					return mError("Bu filialda bunday xizmat turi allaqachon bor!")
 				} else return mError(error)
