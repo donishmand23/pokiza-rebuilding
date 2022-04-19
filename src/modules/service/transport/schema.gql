@@ -58,6 +58,9 @@ type Mutation {
 		orderId: [ID!]
 		productId: [ID!]
 	): MutationResponses!
+
+	#registerTransport(): MutationResponse!
+	#unregisterTransport(): MutationResponse!
 }
 
 type Transport {
