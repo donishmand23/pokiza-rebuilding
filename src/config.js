@@ -4,17 +4,17 @@
 const PORT = process.env.PORT || 4000
 
 
-// const PG = {
-// 	host: 'localhost',
-// 	user: 'postgres',
-// 	password: '2303',
-// 	port: 5432,
-// 	database: 'pokiza'
-// }
+//const PG = {
+//	host: 'localhost',
+//	user: 'postgres',
+//	password: '2303',
+//	port: 5432,
+//	database: 'pokiza'
+//}
 
-const PG = {
-	connectionString: 'postgres://vxphabyi:EC4FczOUUW-HJpFqwY3X7DRu2bTAbN7d@john.db.elephantsql.com/vxphabyi'
-}
+ const PG = {
+	 connectionString: 'postgres://olycltna:uMLD4jl-lcoo_Gio2DLW3LbchXUUB62n@kesavan.db.elephantsql.com/olycltna'
+ }
 
 
 const JWT = {
