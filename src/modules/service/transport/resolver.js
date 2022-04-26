@@ -88,6 +88,20 @@ export default {
 				} else throw new Error("Buyurtma va buyumlar allaqachon mashinadan chiqarilgan!")
 			} catch (error) { return mError(error) }
 		},
+
+		//registerTransport: async (_, args, user) => {
+		//	try {
+		//		const registeredTransport = await transportModel.registerTransport(args, user)
+		//		console.log(registeredTransport)
+		//		if (registeredTransport) {
+		//			return {
+		//				status: 200,
+		//				message: "Transport haydovchiga biriktirildi!",
+		//				data: registeredTransport
+		//			}
+		//		} else throw new Error("Bunday transport yoki haydovchi mavjud emas!")
+		//	} catch (error) { return mError(error) }
+		//},
 	},
 
 	Query: {
@@ -111,18 +125,20 @@ export default {
 	},
 	
 	Transport: {
-		count:              global => global.full_count, 
-		transportId:        global => global.transport_id,
-		transportModel:     global => global.transport_model, 
-		transportColor:     global => global.transport_color, 
-		transportNumber:    global => global.transport_number, 
-		transportBroken:    global => global.transport_broken, 
-		transportSummary:   global => global.transport_summary,		
-		transportCreatedAt: global => global.transport_created_at, 
-		transportImg:       global => '/data/uploads/' + (global.transport_img || 'avto.jpg'),
-		branch:             global => transportModel.branch({ branchId: global.branch_id }),
-		driversList:        global => transportModel.drivers({ transportId: global.transport_id }),
-		driver:       async global => {
+		count:                global => global.full_count, 
+		transportId:          global => global.transport_id,
+		transportModel:       global => global.transport_model, 
+		transportColor:       global => global.transport_color, 
+		transportNumber:      global => global.transport_number, 
+		transportBroken:      global => global.transport_broken, 
+		transportSummary:     global => global.transport_summary,		
+		transportCreatedAt:   global => global.transport_created_at, 
+		transportRegistered:  global => global.transport_registered,
+		transportOrderLoaded: global => global.transport_order_loaded,
+		transportImg:         global => '/data/uploads/' + (global.transport_img || 'avto.jpg'),
+		branch:               global => transportModel.branch({ branchId: global.branch_id }),
+		driversList:          global => transportModel.drivers({ transportId: global.transport_id }),
+		driver:       async   global => {
 			const drivers = await transportModel.drivers({ transportId: global.transport_id })
 			return drivers.at(-1)
 		},

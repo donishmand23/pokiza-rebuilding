@@ -59,7 +59,7 @@ type Mutation {
 		productId: [ID!]
 	): MutationResponses!
 
-	#registerTransport(): MutationResponse!
+	#registerTransport(staffId: ID! transportId: ID!): MutationResponse!
 	#unregisterTransport(): MutationResponse!
 }
 
@@ -72,6 +72,8 @@ type Transport {
 	transportSummary: String
 	transportBroken: Boolean!
 	transportCreatedAt: DateTime!
+	transportRegistered: Boolean!
+	transportOrderLoaded: Boolean!
 	driversList: [Driver!]
 	driver: Driver
 	branch: Branch!

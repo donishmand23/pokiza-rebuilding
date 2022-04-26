@@ -8,13 +8,19 @@ const TRANSPORTS = `
 		t.branch_id,
 		t.transport_broken,
 		t.transport_img,
+		CASE
+			WHEN tr.unregistered_at IS NOT NULL THEN FALSE
+			WHEN tr.registration_id IS NULL THEN FALSE
+			WHEN tr.unregistered_at IS NULL THEN TRUE
+		END as transport_registered,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
-	LEFT JOIN (
-		SELECT staff_id, transport_id
-		FROM transport_registration
-		ORDER BY registration_id DESC
+	LEFT JOIN LATERAL (
+		SELECT *
+		FROM transport_registration tr
+		WHERE tr.transport_id = t.transport_id
+		ORDER BY tr.registration_id DESC
 		LIMIT 1
 	) tr ON tr.transport_id = t.transport_id
 	WHERE
@@ -80,13 +86,19 @@ const TRANSPORT = `
 		t.branch_id,
 		t.transport_broken,
 		t.transport_img,
+		CASE
+			WHEN tr.unregistered_at IS NOT NULL THEN FALSE
+			WHEN tr.registration_id IS NULL THEN FALSE
+			WHEN tr.unregistered_at IS NULL THEN TRUE
+		END as transport_registered,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
-	LEFT JOIN (
-		SELECT staff_id, transport_id
-		FROM transport_registration
-		ORDER BY registration_id DESC
+	LEFT JOIN LATERAL (
+		SELECT *
+		FROM transport_registration tr
+		WHERE tr.transport_id = t.transport_id
+		ORDER BY tr.registration_id DESC
 		LIMIT 1
 	) tr ON tr.transport_id = t.transport_id
 	WHERE
@@ -157,6 +169,29 @@ const DRIVERS = `
 	FROM transport_registration
 	WHERE transport_id = $1
 	ORDER BY registration_id ASC
+`
+
+const REGISTER_TRANSPORT = `
+	WITH check_transport AS (
+		SELECT tr.*
+		FROM transport_registration tr
+		WHERE tr.transport_id = $1
+		ORDER BY tr.registration_id DESC
+		LIMIT 1
+	),
+	check_staff AS (
+		SELECT tr.*
+		FROM transport_registration tr
+		WHERE tr.staff_id = $2
+		ORDER BY tr.registration_id DESC
+		LIMIT 1
+	)
+	INSERT INTO transport_registration (
+		transport_id,
+		staff_id
+	) SELECT $1, $2 FROM check_transport cht, check_staff chs
+	WHERE cht.unregistered_at
+	RETURNING *
 `
 
 const ADD_TRANSPORT = `
@@ -285,6 +320,7 @@ const TRANSPORT_PHOTO = `
 
 
 export default {
+	REGISTER_TRANSPORT,
 	SEARCH_TRANSPORTS,
 	RESTORE_TRANSPORT,
 	DELETE_TRANSPORT,
