@@ -13,6 +13,14 @@ const TRANSPORTS = `
 			WHEN tr.registration_id IS NULL THEN FALSE
 			WHEN tr.unregistered_at IS NULL THEN TRUE
 		END as transport_registered,
+		CASE
+			WHEN EXISTS (
+				SELECT * FROM order_bindings 
+				WHERE transport_id = t.transport_id AND
+				finished = FALSE
+			) THEN TRUE
+			ELSE FALSE
+		END AS transport_order_loaded,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
@@ -91,6 +99,14 @@ const TRANSPORT = `
 			WHEN tr.registration_id IS NULL THEN FALSE
 			WHEN tr.unregistered_at IS NULL THEN TRUE
 		END as transport_registered,
+		CASE
+			WHEN EXISTS (
+				SELECT * FROM order_bindings 
+				WHERE transport_id = t.transport_id AND
+				finished = FALSE
+			) THEN TRUE
+			ELSE FALSE
+		END AS transport_order_loaded,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
