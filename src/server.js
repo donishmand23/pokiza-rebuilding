@@ -4,7 +4,8 @@ import { ApolloServer } from 'apollo-server-express'
 import { graphqlUploadExpress } from 'graphql-upload'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginDrainHttpServer
+    ApolloServerPluginDrainHttpServer,
+    ApolloServerPluginInlineTrace
 } from 'apollo-server-core'
 import context from './context.js'
 import express from 'express'
@@ -37,6 +38,7 @@ const schema = makeExecutableSchema({
         context: context,
         plugins: [
             //ApolloServerPluginLandingPageGraphQLPlayground(),
+            ApolloServerPluginInlineTrace(),
             ApolloServerPluginDrainHttpServer({ httpServer })
         ],
     })
