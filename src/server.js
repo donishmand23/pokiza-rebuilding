@@ -33,7 +33,7 @@ const schema = makeExecutableSchema({
     const server = new ApolloServer({
         schema,
         introspection: true,
-        playground: true,
+        //playground: true,
         context: context,
         plugins: [
             //ApolloServerPluginLandingPageGraphQLPlayground(),
