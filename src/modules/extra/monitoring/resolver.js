@@ -21,14 +21,14 @@ export default {
 
 				monitoring = monitoring.map(el => {
 					if(el.section_name == 'products' && el.section_field == 'status') {
-						el.old_value = 'value: ' + process.PRODUCT_STATUSES[el.old_value]?.name
-						el.new_value = 'value: ' + process.PRODUCT_STATUSES[el.new_value]?.name
+						el.old_value = 'value: ' + process.PRODUCT_STATUSES[el.old_value]?.code
+						el.new_value = 'value: ' + process.PRODUCT_STATUSES[el.new_value]?.code
 						return el
 					}
 
 					if(el.section_name == 'orders' && el.section_field == 'status') {
-						el.old_value = 'value: ' + process.ORDER_STATUSES[el.old_value]?.name
-						el.new_value = 'value: ' + process.ORDER_STATUSES[el.new_value]?.name
+						el.old_value = 'value: ' + process.ORDER_STATUSES[el.old_value]?.code
+						el.new_value = 'value: ' + process.ORDER_STATUSES[el.new_value]?.code
 						return el
 					}
 
