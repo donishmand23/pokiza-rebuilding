@@ -38,7 +38,7 @@ const schema = makeExecutableSchema({
         context: context,
         plugins: [
             ApolloServerPluginInlineTrace(),
-            ApolloServerPluginLandingPageGraphQLPlayground(),
+            //ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerPluginDrainHttpServer({ httpServer })
         ],
     })
