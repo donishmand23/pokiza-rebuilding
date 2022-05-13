@@ -21,12 +21,12 @@ const PRODUCT_STATUSES = `
 		LIMIT 1
 	) ops ON ops.product_status_code IS NOT NULL
 	WHERE
-	CASE
-		WHEN $1 > 0 THEN s.user_id = $1
+	CASE 
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN s.user_id = ANY($1::INT[])
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $2 > 0 THEN o.branch_id = $2
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN o.branch_id = ANY($2::INT[])
 		ELSE TRUE
 	END AND
 	CASE

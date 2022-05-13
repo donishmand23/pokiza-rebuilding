@@ -1,7 +1,7 @@
 type Query {
 	monitoring(
-		userId: ID
-		branchId: ID
+		userId: [ID]
+		branchId: [ID]
 		search: String
 		dateFilter: RangeDate = {}
 		pagination: Pagination = {} 
