@@ -217,8 +217,13 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 	return unboundOrders
 }	
 
+const registerTransport = ({ transportId, staffId }) => {
+	return fetch(TransportQuery.REGISTER_TRANSPORT, transportId, staffId)
+}
+
 
 export default {
+	registerTransport,
 	restoreTransport,
 	deleteTransport,
 	changeTransport,

@@ -21,6 +21,7 @@ type Monitoring {
 	sectionId: ID!
 	sectionField: MonitoringSectionFields
 	createdAt: DateTime!
+	count: Int
 }
 
 type MonitoringSection {
