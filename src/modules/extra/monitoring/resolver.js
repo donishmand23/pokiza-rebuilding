@@ -18,8 +18,11 @@ export default {
 				const { page, limit } = args.pagination
 
 				let monitoring = await monitoringModel.monitoring(args)
+				let count = monitoring.length
 
 				monitoring = monitoring.map(el => {
+					el.count = count
+					
 					if(el.section_name == 'products' && el.section_field == 'status') {
 						el.old_value = 'value: ' + process.PRODUCT_STATUSES[el.old_value]?.code
 						el.new_value = 'value: ' + process.PRODUCT_STATUSES[el.new_value]?.code
