@@ -217,8 +217,15 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 	return unboundOrders
 }	
 
-const registerTransport = ({ transportId, staffId }) => {
-	return fetch(TransportQuery.REGISTER_TRANSPORT, transportId, staffId)
+const registerTransport = async ({ transportId, staffId }) => {
+	const transportEmpty = await fetch(TransportQuery.REGISTRATION_CHECK_TRANSPORT, transportId)
+	const staffEmpty = await fetch(TransportQuery.REGISTRATION_CHECK_STAFF, staffId)
+	if (
+		((!transportEmpty) || (transportEmpty && transportEmpty.unregistered_at)) &&
+		((!staffEmpty) || (staffEmpty && staffEmpty.unregistered_at))
+	) {
+		return fetch(TransportQuery.REGISTER_TRANSPORT, transportId, staffId)
+	} else if (transportEmpty && staffEmpty) throw new Error("Haydovchi yoki transport band!")
 }
 
 

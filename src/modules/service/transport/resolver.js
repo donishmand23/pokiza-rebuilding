@@ -89,19 +89,18 @@ export default {
 			} catch (error) { return mError(error) }
 		},
 
-		//registerTransport: async (_, args, user) => {
-		//	try {
-		//		const registeredTransport = await transportModel.registerTransport(args, user)
-		//		console.log(registeredTransport)
-		//		if (registeredTransport) {
-		//			return {
-		//				status: 200,
-		//				message: "Transport haydovchiga biriktirildi!",
-		//				data: registeredTransport
-		//			}
-		//		} else throw new Error("Bunday transport yoki haydovchi mavjud emas!")
-		//	} catch (error) { return mError(error) }
-		//},
+		registerTransport: async (_, args, user) => {
+			try {
+				const registeredTransport = await transportModel.registerTransport(args, user)
+				if (registeredTransport) {
+					return {
+						status: 200,
+						message: "Transport haydovchiga biriktirildi!",
+						data: registeredTransport
+					}
+				} else throw new Error("Bunday transport yoki haydovchi mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
 	},
 
 	Query: {

@@ -187,26 +187,23 @@ const DRIVERS = `
 	ORDER BY registration_id ASC
 `
 
+const REGISTRATION_CHECK_STAFF = `
+	SELECT *
+	FROM transport_registration
+	WHERE staff_id = $1
+`
+
+const REGISTRATION_CHECK_TRANSPORT = `
+	SELECT *
+	FROM transport_registration
+	WHERE transport_id = $1
+`
+
 const REGISTER_TRANSPORT = `
-	WITH check_transport AS (
-		SELECT tr.*
-		FROM transport_registration tr
-		WHERE tr.transport_id = $1
-		ORDER BY tr.registration_id DESC
-		LIMIT 1
-	),
-	check_staff AS (
-		SELECT tr.*
-		FROM transport_registration tr
-		WHERE tr.staff_id = $2
-		ORDER BY tr.registration_id DESC
-		LIMIT 1
-	)
 	INSERT INTO transport_registration (
 		transport_id,
 		staff_id
-	) SELECT $1, $2 FROM check_transport cht, check_staff chs
-	WHERE cht.unregistered_at
+	) VALUES ($1, $2)
 	RETURNING *
 `
 
@@ -336,6 +333,8 @@ const TRANSPORT_PHOTO = `
 
 
 export default {
+	REGISTRATION_CHECK_TRANSPORT,
+	REGISTRATION_CHECK_STAFF,
 	REGISTER_TRANSPORT,
 	SEARCH_TRANSPORTS,
 	RESTORE_TRANSPORT,

@@ -59,7 +59,7 @@ type Mutation {
 		productId: [ID!]
 	): MutationResponses!
 
-	#registerTransport(staffId: ID! transportId: ID!): MutationResponse!
+	registerTransport(staffId: ID! transportId: ID!): MutationResponse!
 	#unregisterTransport(): MutationResponse!
 }
 
