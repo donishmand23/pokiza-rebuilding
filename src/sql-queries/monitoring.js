@@ -84,7 +84,7 @@ const ORDER_STATUSES = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $2 > 0 THEN o.branch_id = $2
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN o.branch_id = ANY($2::INT[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -134,7 +134,7 @@ const MONITORING = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $2 > 0 THEN m.branch_id = $2
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN m.branch_id = ANY($2::INT[])
 		ELSE TRUE
 	END AND
 	CASE
