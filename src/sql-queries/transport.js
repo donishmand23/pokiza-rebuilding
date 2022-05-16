@@ -191,12 +191,14 @@ const REGISTRATION_CHECK_STAFF = `
 	SELECT *
 	FROM transport_registration
 	WHERE staff_id = $1
+	ORDER BY registration_id DESC
 `
 
 const REGISTRATION_CHECK_TRANSPORT = `
 	SELECT *
 	FROM transport_registration
 	WHERE transport_id = $1
+	ORDER BY registration_id DESC
 `
 
 const REGISTER_TRANSPORT = `
