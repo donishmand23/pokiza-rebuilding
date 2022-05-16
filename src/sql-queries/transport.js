@@ -209,6 +209,13 @@ const REGISTER_TRANSPORT = `
 	RETURNING *
 `
 
+const UNREGISTER_TRANSPORT = `
+	UPDATE transport_registration SET
+		unregistered_at = current_timestamp
+	WHERE transport_id = $1 AND unregistered_at IS NULL
+	RETURNING *
+`
+
 const ADD_TRANSPORT = `
 	INSERT INTO transports (
 		branch_id,
@@ -337,6 +344,7 @@ const TRANSPORT_PHOTO = `
 export default {
 	REGISTRATION_CHECK_TRANSPORT,
 	REGISTRATION_CHECK_STAFF,
+	UNREGISTER_TRANSPORT,
 	REGISTER_TRANSPORT,
 	SEARCH_TRANSPORTS,
 	RESTORE_TRANSPORT,

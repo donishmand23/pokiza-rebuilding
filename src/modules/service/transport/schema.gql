@@ -60,7 +60,7 @@ type Mutation {
 	): MutationResponses!
 
 	registerTransport(staffId: ID! transportId: ID!): MutationResponse!
-	#unregisterTransport(): MutationResponse!
+	unregisterTransport(transportId: ID!): MutationResponse!
 }
 
 type Transport {

@@ -95,10 +95,24 @@ export default {
 				if (registeredTransport) {
 					return {
 						status: 200,
-						message: "Transport haydovchiga biriktirildi!",
-						data: registeredTransport
+						message: "Transport haydovchiga registratsiya qilindi!",
+						data: null
 					}
 				} else throw new Error("Bunday transport yoki haydovchi mavjud emas!")
+			} catch (error) { return mError(error) }
+		},
+
+		unregisterTransport: async (_, args, user) => {
+			try {
+				const unregisteredTransport = await transportModel.unregisterTransport(args, user)
+				console.log(unregisteredTransport)
+				if (unregisteredTransport) {
+					return {
+						status: 200,
+						message: "Transport registratsiyadan chiqarildi!",
+						data: null
+					}
+				} else throw new Error("Bunday transport mavjud emas yoki u allaqachon bo'sh!")
 			} catch (error) { return mError(error) }
 		},
 	},

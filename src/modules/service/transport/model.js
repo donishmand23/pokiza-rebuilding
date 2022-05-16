@@ -228,8 +228,13 @@ const registerTransport = async ({ transportId, staffId }) => {
 	} else if (transportEmpty && staffEmpty) throw new Error("Haydovchi yoki transport band!")
 }
 
+const unregisterTransport = async ({ transportId }) => {
+	return fetch(TransportQuery.UNREGISTER_TRANSPORT, transportId)
+}
+
 
 export default {
+	unregisterTransport,
 	registerTransport,
 	restoreTransport,
 	deleteTransport,
