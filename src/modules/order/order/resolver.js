@@ -70,18 +70,18 @@ export default {
 	},
 
 	Query: {
-		orders: async (_, args, { clientId }) => {
+		orders: async (_, args, user) => {
 			try {
-				const orders = await orderModel.orders({ isDeleted: false, ...args }, { clientId })
+				const orders = await orderModel.orders({ isDeleted: false, ...args }, user)
 				return orders
 			} catch(error) {
 				throw error
 			}
 		},
 
-		deletedOrders: async (_, args, { clientId }) => {
+		deletedOrders: async (_, args, user) => {
 			try {
-				const orders = await orderModel.orders({ isDeleted: true, ...args }, { clientId })
+				const orders = await orderModel.orders({ isDeleted: true, ...args }, user)
 				return orders
 			} catch(error) {
 				throw error

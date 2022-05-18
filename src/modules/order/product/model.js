@@ -43,9 +43,11 @@ const products = ({
 
 	productPrice = (productPrice?.from && productPrice?.to) ? [productPrice.from, productPrice.to] : []
 
-	if(user?.clientId) {
+	if(user.clientId) {
 		clientId = [user.clientId]
 	}
+
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 
 	const { page, limit } = pagination
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter

@@ -72,18 +72,18 @@ export default {
 		},
 	},
 	Query: {
-		products: async (_, args, { clientId }) => {
+		products: async (_, args, user) => {
 			try {
-				const products = await productModel.products({ isDeleted: false, ...args }, { clientId })
+				const products = await productModel.products({ isDeleted: false, ...args }, user)
 				return products
 			} catch(error) {
 				throw error
 			}
 		},
 
-		deletedProducts: async (_, args) => {
+		deletedProducts: async (_, args, user) => {
 			try {
-				const products = await productModel.products({ isDeleted: true, ...args })
+				const products = await productModel.products({ isDeleted: true, ...args }, user)
 				return products
 			} catch(error) {
 				throw error

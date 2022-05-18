@@ -39,6 +39,8 @@ const orders = ({
 		clientId = [user.clientId]
 	}
 
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
 	const { page, limit } = pagination
 	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
 	const { bringTime, broughtTime, deliveryTime, deliveredTime, orderCreatedAt } = dateFilter
