@@ -66,7 +66,7 @@ export default async function ({ req }) {
     // registred staffs (private)
     if(PRIVATE_STAFF_ONLY_QUERIES.includes(fieldName)) {
         if (!registered || !staffId) throw new Error('Siz uchun ruxsat yo\'q')
-        checkPermission(body, payload)
+        await checkPermission(body, payload)
         return payload
     }
 }
