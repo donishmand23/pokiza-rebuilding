@@ -6,17 +6,19 @@ import StaffQuery from '#sql/staff'
 import UserQuery from '#sql/user'
 
 
-const staffs = ({ isDeleted, sort, search, staffId, pagination, addressFilter, userInfoFilter }) => {
-	const { page, limit } = pagination
-	const { age, gender, branchId } = userInfoFilter
-	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
-	const sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
+const staffs = ({ isDeleted, sort, search, staffId, pagination, addressFilter, userInfoFilter }, user) => {
+	let { page, limit } = pagination
+	let { age, gender, branchId } = userInfoFilter
+	let { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
+	let sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
 
-	const sortObject = Object.keys(sort).map( key => {
+	let sortObject = Object.keys(sort).map( key => {
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
 		}
-	} ).filter( elem => elem !== undefined )[0]
+	}).filter(elem => elem !== undefined)[0]
+	
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 
 	return fetchAll(
 		StaffQuery.STAFFS,

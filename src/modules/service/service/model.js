@@ -3,7 +3,8 @@ import { fetch, fetchAll } from '#utils/postgres'
 import ServiceQuery from '#sql/service'
 import BranchQuery from '#sql/branch'
 
-const services = ({ isDeleted, serviceId, branchId }) => {
+const services = ({ isDeleted, serviceId, branchId }, user) => {
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 	return fetchAll(ServiceQuery.SERVICES, isDeleted, serviceId, branchId)
 }
 

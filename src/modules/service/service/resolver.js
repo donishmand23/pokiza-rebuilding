@@ -78,18 +78,18 @@ export default {
 	},
 
 	Query: {
-		services: async (_, args) => {
+		services: async (_, args, user) => {
 			try {
-				const services = await serviceModel.services({ isDeleted: false, ...args })
+				const services = await serviceModel.services({ isDeleted: false, ...args }, user)
 				return services
 			} catch(error) {
 				throw error
 			}
 		},
 
-		disabledServices: async (_, args) => {
+		disabledServices: async (_, args, user) => {
 			try {
-				const disabledServices = await serviceModel.services({ isDeleted: true, ...args })
+				const disabledServices = await serviceModel.services({ isDeleted: true, ...args }, user)
 				return disabledServices
 			} catch(error) {
 				throw error

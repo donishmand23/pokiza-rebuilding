@@ -86,18 +86,18 @@ export default {
 	},
 
 	Query: {
-		staffs: async (_, args) => {
+		staffs: async (_, args, user) => {
 			try {
-				const staffs = await staffModel.staffs({ isDeleted: false, ...args })
+				const staffs = await staffModel.staffs({ isDeleted: false, ...args }, user)
 				return staffs
 			} catch(error) {
 				throw error
 			}
 		},
 
-		deletedStaffs: async (_, args) => {
+		deletedStaffs: async (_, args, user) => {
 			try {
-				const deletedStaffs = await staffModel.staffs({ isDeleted: true, ...args })
+				const deletedStaffs = await staffModel.staffs({ isDeleted: true, ...args }, user)
 				return deletedStaffs
 			} catch(error) {
 				throw error

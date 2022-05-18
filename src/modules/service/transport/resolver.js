@@ -118,18 +118,18 @@ export default {
 	},
 
 	Query: {
-		transports: async (_, args) => {
+		transports: async (_, args, user) => {
 			try {
-				const transports = await transportModel.transports({ isDeleted: false, ...args })
+				const transports = await transportModel.transports({ isDeleted: false, ...args }, user)
 				return transports
 			} catch(error) {
 				throw error
 			}
 		},
 
-		deletedTransports: async (_, args) => {
+		deletedTransports: async (_, args, user) => {
 			try {
-				const transports = await transportModel.transports({ isDeleted: true, ...args })
+				const transports = await transportModel.transports({ isDeleted: true, ...args }, user)
 				return transports
 			} catch(error) {
 				throw error

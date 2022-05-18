@@ -19,7 +19,7 @@ const transports = ({
 	staffId,
 	search, 
 	sort,
-}) => {
+}, user) => {
 	const { page, limit } = pagination
 
 	const sortNameValues = { transportId: 1 }
@@ -29,7 +29,9 @@ const transports = ({
 		}
 	} ).filter( elem => elem !== undefined )[0]
 	
-	available = typeof(available) == 'boolean' ? !available : available
+	available = typeof (available) == 'boolean' ? !available : available
+	
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 
 	return fetchAll(
 		TransportQuery.TRANSPORTS,
