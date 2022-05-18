@@ -48,7 +48,9 @@ const BRANCHES_BY_USER = `
 		ps.staff_id
 	FROM branches b
 	INNER JOIN permission_sets ps ON ps.branch_id = b.branch_id
-	WHERE ps.staff_id = $1 AND b.branch_id = ANY($2::INT[])
+	LEFT JOIN staffs s ON s.staff_id = ps.staff_id
+	LEFT JOIN users u ON u.user_id = s.user_id
+	WHERE ps.staff_id = $1 AND u.branch_id = ANY($2::INT[])
 	ORDER BY ps.branch_id
 `
 
