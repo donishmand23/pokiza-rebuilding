@@ -445,7 +445,8 @@ insert into permissions (permission_action, permission_model) values
 (2301, 'send notification/sms to staff'),
 (2302, 'delete notification'),
 (2303, 'change deliveryHours'),
-(2304, 'see monitoring');
+(2304, 'see monitoring'),
+(2305, 'search global');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);

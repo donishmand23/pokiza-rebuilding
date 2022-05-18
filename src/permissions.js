@@ -1,5 +1,7 @@
 export default {
     // staff and client permissions
+    'searchGlobal': [2305],
+    'services': [1700],
     'clients': [1300],
     'changeClient': [1303],
     'deleteClient': [1304],
@@ -47,7 +49,6 @@ export default {
     'registerTransport': [1808],
     'unregisterTransport': [1809],
 
-    'services': [1700],
     'disabledServices': [1701],
     'addService': [1702],
     'changeService': [1703],
@@ -57,9 +58,9 @@ export default {
     'changeDeliveryHour': [2303],
     'monitoring': [2304],
 
-    'permissionsUser': [1901],
-    'addPermission': [1902],
-    'deletePermission': [1903],
+    'permissionsUser': [1900],
+    'addPermission': [1901],
+    'deletePermission': [1902],
 
     'addBranch': [1101],
     'changeBranch': [1102],
