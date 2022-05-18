@@ -31,7 +31,7 @@ const clients = ({
 	if(user.clientId) {
 		clientId = user.clientId
 	}
-
+	
 	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 
 	return fetchAll(

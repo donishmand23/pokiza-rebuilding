@@ -142,9 +142,9 @@ export default {
 			}
 		},
 
-		deletedClients: async (_, args) => {
+		deletedClients: async (_, args, { allowedBranches }) => {
 			try {
-				const deletedClients = await clientModel.clients({ isDeleted: true, ...args })
+				const deletedClients = await clientModel.clients({ isDeleted: true, ...args }, { allowedBranches })
 				return deletedClients
 			} catch(error) {
 				throw error
