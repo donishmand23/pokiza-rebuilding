@@ -13,11 +13,11 @@ const sections = {
 
 export default {
 	Query: {
-		monitoring: async (_, args) => {
+		monitoring: async (_, args, user) => {
 			try {
 				const { page, limit } = args.pagination
 
-				let monitoring = await monitoringModel.monitoring(args)
+				let monitoring = await monitoringModel.monitoring(args, user)
 				let count = monitoring.length
 
 				monitoring = monitoring.map(el => {

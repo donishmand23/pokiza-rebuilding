@@ -9,9 +9,12 @@ const monitoring = async ({
 	operationType, 
 	dateFilter = {},
 	sectionFilter = {} 
-}) => {
+}, user) => {
 	dateFilter = (dateFilter.from && dateFilter.to) ? [dateFilter.from, dateFilter.to] : []
 	const { sectionName, sectionField, sectionId } = sectionFilter
+
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
 	let data = []
 
 	const productStatuses = await fetchAll(
