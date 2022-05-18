@@ -5,8 +5,8 @@ const permissionsList = () => {
 	return fetchAll(PermissionQuery.PERMISSIONS)
 }
 
-const permissionsUser = ({ staffId }) => {
-	return fetchAll(PermissionQuery.BRANCHES_BY_USER, staffId)
+const permissionsUser = ({ staffId }, user) => {
+	return fetchAll(PermissionQuery.BRANCHES_BY_USER, staffId, user.allowedBranches)
 }
 
 const permissionGroups = ({ groupId }) => {
