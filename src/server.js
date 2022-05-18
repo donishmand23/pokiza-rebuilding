@@ -1,17 +1,18 @@
 console.clear()
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { ApolloServer } from 'apollo-server-express'
 import { graphqlUploadExpress } from 'graphql-upload'
+import { ApolloServer } from 'apollo-server-express'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
     ApolloServerPluginDrainHttpServer,
     ApolloServerPluginInlineTrace
 } from 'apollo-server-core'
 import context from './context.js'
-import express from 'express'
-import http from 'http'
-import path from 'path'
 import { PORT } from '#config'
+import express from 'express'
+import path from 'path'
+import http from 'http'
+import './helpers/arrayMethods.js'
 
 
 // loading modules
