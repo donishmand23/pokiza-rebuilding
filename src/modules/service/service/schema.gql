@@ -2,7 +2,7 @@ type Query {
 	services(serviceId: ID branchId: [ID!]): [Service!]!
 	disabledServices(serviceId: ID branchId: [ID!]): [Service!]!
 
-	deliveryHours(branchId: ID): [DeliveryHour!]!
+	deliveryHours(branchId: [ID!]): [DeliveryHour!]!
 }
 
 type Mutation {

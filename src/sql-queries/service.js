@@ -125,7 +125,7 @@ const DELIVERY_HOURS = `
 	FROM delivery_hours
 	WHERE
 	CASE
-		WHEN $1 > 0 THEN branch_id = $1
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN branch_id = ANY($1::INT[])
 		ELSE TRUE
 	END
 `
