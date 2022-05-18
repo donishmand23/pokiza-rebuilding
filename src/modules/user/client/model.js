@@ -17,12 +17,12 @@ const clients = ({
 	addressFilter,
 	userInfoFilter, 
 }, user) => {
-	const { page, limit } = pagination
-	const { age, gender, branchId } = userInfoFilter
-	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
-	const sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
+	let { page, limit } = pagination
+	let { age, gender, branchId } = userInfoFilter
+	let { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
+	let sortNameValues = { firstName: 1, lastName: 2, age: 3, userId: 4, userCreatedAt: 5 }
 
-	const sortObject = Object.keys(sort).map( key => {
+	let sortObject = Object.keys(sort).map( key => {
 		if(sort[key]) {
 			return { sortKey: sortNameValues[key], value: sort[key] }
 		}
@@ -31,6 +31,8 @@ const clients = ({
 	if(user.clientId) {
 		clientId = user.clientId
 	}
+
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 
 	return fetchAll(
 		ClientQuery.CLIENTS,

@@ -133,9 +133,9 @@ export default {
 	},
 
 	Query: {
-		clients: async (_, args, { clientId }) => {
+		clients: async (_, args, { clientId, allowedBranches }) => {
 			try {
-				const clients = await clientModel.clients({ isDeleted: false, ...args }, { clientId })
+				const clients = await clientModel.clients({ isDeleted: false, ...args }, { clientId, allowedBranches })
 				return clients
 			} catch(error) {
 				throw error
