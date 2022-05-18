@@ -47,6 +47,7 @@ export default {
     'registerTransport': [1808],
     'unregisterTransport': [1809],
 
+    'services': [1700],
     'disabledServices': [1701],
     'addService': [1702],
     'changeService': [1703],

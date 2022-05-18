@@ -128,10 +128,17 @@ const ADD_USER = `
 	RETURNING user_id, FALSE as is_registered
 `
 
+const USER_BRANCH = `
+	SELECT
+		branch_id
+	FROM users
+	WHERE user_id = $1 AND user_deleted_contact IS NULL
+`
 
 export default {
 	CHECK_USER_CONTACT,
 	USER_CONTACTS,
+	USER_BRANCH,
 	ADD_USER,
 	USERS,
 	USER,

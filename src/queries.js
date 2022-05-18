@@ -19,10 +19,10 @@ export const PUBLIC_QUERIES = [
 export const PUBLIC_CLIENT_AND_STAFF_QUERIES = [
     'notifications',
     'searchGlobal',
-    'services',
 ]
 
 export const PRIVATE_CLIENT_AND_STAFF_QUERIES = [
+    'services',
     'clients',
     'changeClient',
     'restoreClient',
