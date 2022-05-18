@@ -356,20 +356,18 @@ insert into order_bindings (transport_id, order_id, order_binding_type) values
 (1, 2, 2);
 
 -- permissions
-insert into permissions (permission_action, permission_model) values
-(1100, 'see branch'),         
-(1101, 'see disabled branch'),
+insert into permissions (permission_action, permission_model) values     
+(1100, 'see disabled branch'),
+(1101, 'add branch'),        
 (1102, 'change branch'),        
-(1103, 'add branch'),        
-(1104, 'delete branch'),
-(1105, 'restore branch'),
-
-(1200, 'see address'),         
-(1201, 'see disabled address'),
-(1202, 'add address'),
-(1203, 'change address'),      
-(1204, 'delete address'),     
-(1205, 'restore address'),     
+(1103, 'delete branch'),
+(1104, 'restore branch'),
+      
+(1200, 'see disabled address'),
+(1201, 'add address'),
+(1202, 'change address'),      
+(1203, 'delete address'),     
+(1204, 'restore address'),     
           
 (1300, 'see client'),           
 (1301, 'see disabled client'),  
@@ -414,16 +412,12 @@ insert into permissions (permission_action, permission_model) values
 (1805, 'restore transport'),
 (1806, 'bind order to transport'),                    
 (1807, 'unbind order from transport'),
-(1808, 'register to transport'),
-(1809, 'unregister from transport'),
+(1808, 'register transport'),
+(1809, 'unregister transport'),
 
-(1901, 'see permission list/group'),
-(1902, 'add permission group'),
-(1903, 'change permission group'),
-(1904, 'delete permission group'),
-(1905, 'see user permission'),
-(1906, 'add user permission'),
-(1907, 'delete user permission'),
+(1900, 'see permissions of a user'),
+(1901, 'add permissions to a user'),
+(1902, 'delete permissions of a user'),
 
 (2101, 'change order status 1'),     
 (2102, 'change order status 2'),     
@@ -447,15 +441,11 @@ insert into permissions (permission_action, permission_model) values
 (2209, 'change product status 9'),  
 (2210, 'change product status 10'),    
 
-(2301, 'send notification/sms to client'), 
-(2302, 'send notification/sms to staff'),
-(2303, 'delete notification'),
-(2304, 'add social-set'),
-(2305, 'change social-set'),
-(2306, 'see deliveryHours'),
-(2307, 'change deliveryHours'),
-(2308, 'see monitoring'),
-(2309, 'global search');
+(2300, 'send notification/sms to client'), 
+(2301, 'send notification/sms to staff'),
+(2302, 'delete notification'),
+(2303, 'change deliveryHours'),
+(2304, 'see monitoring');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);

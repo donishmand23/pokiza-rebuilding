@@ -120,6 +120,18 @@ const DELETE_PERMISSION_GROUP_ACTIONS = `
 	DELETE FROM permission_group_sets WHERE group_id = $1
 `
 
+const PERMISSION_SETS = `
+	SELECT
+		staff_id,
+		branch_id,
+		permission_set_id,
+		permission_action,
+		permission_set_created_at
+	FROM permission_sets
+	WHERE staff_id = $1 AND permission_action = ANY($2::INT[])
+`
+
+
 export default {
 	DELETE_PERMISSION_GROUP_ACTIONS,
 	ADD_PERMISSION_GROUP_ACTIONS,
@@ -132,6 +144,7 @@ export default {
 	DELETE_PERMISSION,
 	PERMISSION_GROUPS,
 	BRANCHES_BY_USER,
+	PERMISSION_SETS,
 	ADD_PERMISSION,
 	PERMISSIONS,
 }
