@@ -31,8 +31,8 @@ type MonitoringSection {
 
 input SectionFilter {
 	sectionId: ID
-	sectionName: MonitoringSectionNames
-	sectionField: MonitoringSectionFields
+	sectionName: [MonitoringSectionNames!]
+	sectionField: [MonitoringSectionFields!]
 }
 
 enum MonitoringOperationTypes {

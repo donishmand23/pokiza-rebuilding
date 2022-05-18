@@ -34,11 +34,11 @@ const PRODUCT_STATUSES = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($4) > 0 THEN $4 = 'products'
+		WHEN ARRAY_LENGTH($4::VARCHAR[], 1) > 0 THEN 'products' = ANY($4::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($5) > 0 THEN $5 = 'status'
+		WHEN ARRAY_LENGTH($5::VARCHAR[], 1) > 0 THEN 'status' = ANY($5::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -80,7 +80,7 @@ const ORDER_STATUSES = `
 	) oos ON oos.order_status_code IS NOT NULL
 	WHERE
 	CASE
-		WHEN $1 > 0 THEN s.user_id = ANY($1::INT[])
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN s.user_id = ANY($1::INT[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -92,11 +92,11 @@ const ORDER_STATUSES = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($4) > 0 THEN $4 = 'orders'
+		WHEN ARRAY_LENGTH($4::VARCHAR[], 1) > 0 THEN 'orders' = ANY($4::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($5) > 0 THEN $5 = 'status'
+		WHEN ARRAY_LENGTH($5::VARCHAR[], 1) > 0 THEN 'status' = ANY($5::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -130,7 +130,7 @@ const MONITORING = `
 	FROM monitoring m
 	WHERE
 	CASE
-		WHEN $1 > 0 THEN m.user_id = ANY($1::INT[])
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN m.user_id = ANY($1::INT[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -142,11 +142,11 @@ const MONITORING = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($4) > 0 THEN m.section_name = $4
+		WHEN ARRAY_LENGTH($4::VARCHAR[], 1) > 0 THEN m.section_name = ANY($4::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN LENGTH($5) > 0 THEN m.section_field = $5
+		WHEN ARRAY_LENGTH($5::VARCHAR[], 1) > 0 THEN m.section_field = ANY($5::VARCHAR[])
 		ELSE TRUE
 	END AND
 	CASE
