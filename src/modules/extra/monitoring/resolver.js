@@ -94,8 +94,8 @@ export default {
 		sectionField:  global => global.section_field,
 		createdAt:     global => global.created_at,
 		branch:        global => monitoringModel.branch({ branchId: global.branch_id }),
-		user:    async global =>  {
-			const { client, staff } = await monitoringModel.user({ userId: global.notification_to })
+		user: async global => {
+			const { client, staff } = await monitoringModel.user({ userId: global.user_id })
 			return client || staff
 		},
 	}
