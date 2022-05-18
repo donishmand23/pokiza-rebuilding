@@ -6,32 +6,34 @@ import ProductQuery from '#sql/product'
 import TransportQuery from '#sql/transport'
 
 
-const searchStaffs = ({ key }) => {
-	return fetchAll(StaffQuery.SEARCH_STAFFS, key, [])
+const searchStaffs = ({ key, branchId }) => {
+	return fetchAll(StaffQuery.SEARCH_STAFFS, key, branchId)
 }
 
-const searchClients = ({ key }) => {
-	return fetchAll(ClientQuery.SEARCH_CLIENTS, key, [])
+const searchClients = ({ key, branchId }) => {
+	return fetchAll(ClientQuery.SEARCH_CLIENTS, key, branchId)
 }
 
-const searchOrders = ({ key }) => {
-	return fetchAll(OrderQuery.SEARCH_ORDERS, key, [])
+const searchOrders = ({ key, branchId }) => {
+	return fetchAll(OrderQuery.SEARCH_ORDERS, key, branchId)
 }
 
-const searchProducts = ({ key }) => {
-	return fetchAll(ProductQuery.SEARCH_PRODUCTS, key, [])
+const searchProducts = ({ key, branchId }) => {
+	return fetchAll(ProductQuery.SEARCH_PRODUCTS, key, branchId)
 }
 
-const searchTransports = ({ key }) => {
-	return fetchAll(TransportQuery.SEARCH_TRANSPORTS, key, [])
+const searchTransports = ({ key, branchId }) => {
+	return fetchAll(TransportQuery.SEARCH_TRANSPORTS, key, branchId)
 }
 
-const searchGlobal = async ({ key }) => {
-	const staffs = await searchStaffs({ key })
-	const clients = await searchClients({ key })
-	const orders = await searchOrders({ key })
-	const products = await searchProducts({ key })
-	const transports = await searchTransports({ key })
+const searchGlobal = async ({ key }, user) => {
+	const branchId = Array.prototype.equalize([], user.allowedBranches)
+
+	const staffs = await searchStaffs({ key, branchId })
+	const clients = await searchClients({ key, branchId })
+	const orders = await searchOrders({ key, branchId })
+	const products = await searchProducts({ key, branchId })
+	const transports = await searchTransports({ key, branchId })
 
 	return [...staffs, ...clients, ...orders, ...products, ...transports ]
 }
