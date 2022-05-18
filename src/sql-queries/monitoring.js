@@ -80,7 +80,7 @@ const ORDER_STATUSES = `
 	) oos ON oos.order_status_code IS NOT NULL
 	WHERE
 	CASE
-		WHEN $1 > 0 THEN s.user_id = $1
+		WHEN $1 > 0 THEN s.user_id = ANY($1::INT[])
 		ELSE TRUE
 	END AND
 	CASE
@@ -130,7 +130,7 @@ const MONITORING = `
 	FROM monitoring m
 	WHERE
 	CASE
-		WHEN $1 > 0 THEN m.user_id = $1
+		WHEN $1 > 0 THEN m.user_id = ANY($1::INT[])
 		ELSE TRUE
 	END AND
 	CASE

@@ -5,7 +5,6 @@ import UserQuery from '#sql/user'
 
 const monitoring = async ({ 
 	userId, 
-	search, 
 	branchId, 
 	operationType, 
 	dateFilter = {},
