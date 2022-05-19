@@ -103,6 +103,10 @@ const DISABLED_REGIONS = `
 	CASE 
 		WHEN $2 > 0 THEN region_id = $2
 		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN branch_id = ANY($3::INT[])
+		ELSE TRUE
 	END
 `
 

@@ -105,19 +105,24 @@ const ENABLE_NEIGHBORHOOD = `
 
 const DISABLED_NEIGHBORHOODS = `
 	SELECT 
-		neighborhood_id,
-		neighborhood_name,
-		neighborhood_distance,
-		to_char(neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
-		region_id
-	FROM neighborhoods
-	WHERE neighborhood_deleted_at IS NOT NULL AND
+		n.neighborhood_id,
+		n.neighborhood_name,
+		n.neighborhood_distance,
+		to_char(n.neighborhood_created_at, 'YYYY-MM-DD HH24:MI:SS') neighborhood_created_at,
+		n.region_id
+	FROM neighborhoods n
+	LEFT JOIN regions r ON r.region_id = n.region_id
+	WHERE n.neighborhood_deleted_at IS NOT NULL AND
 	CASE
-		WHEN $1 > 0 THEN region_id = $1
+		WHEN $1 > 0 THEN n.region_id = $1
 		ELSE TRUE
 	END AND
 	CASE 
-		WHEN $2 > 0 THEN neighborhood_id = $2
+		WHEN $2 > 0 THEN n.neighborhood_id = $2
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN r.branch_id = ANY($3::INT[])
 		ELSE TRUE
 	END
 `

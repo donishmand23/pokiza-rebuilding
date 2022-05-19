@@ -43,37 +43,39 @@ const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) =>
 	} )
 }
 
-const addresses = ({ addressField, addressFilter }) => {
+const addresses = ({ addressField, addressFilter }, user) => {
+	const branchId = Array.prototype.equalize([], user.allowedBranches)
 	switch(addressField) {
 		case 'branch': {
-			const { branch = {} } = addressFilter
-			const { branchId } = state
+			let { branch = {} } = addressFilter
+			let { branchId } = state
+			branchId = Array.prototype.equalize([branchId], user.allowedBranches)
 			return fetchAll(BranchQuery.DISABLED_BRANCHES, branchId)
 		}
 		case 'state': {
 			const { state = {} } = addressFilter
 			const { stateId } = state
-			return fetchAll(StateQuery.DISABLED_STATES, stateId)
+			return fetchAll(StateQuery.DISABLED_STATES, stateId, branchId)
 		}
 		case 'region': {
 			const { region = {} } = addressFilter
 			const { stateId, regionId } = region
-			return fetchAll(RegionQuery.DISABLED_REGIONS, stateId, regionId)
+			return fetchAll(RegionQuery.DISABLED_REGIONS, stateId, regionId, branchId)
 		}
 		case 'neighborhood': {
 			const { neighborhood = {} } = addressFilter
 			const { regionId, neighborhoodId } = neighborhood
-			return fetchAll(NeighborhoodQuery.DISABLED_NEIGHBORHOODS, regionId, neighborhoodId)
+			return fetchAll(NeighborhoodQuery.DISABLED_NEIGHBORHOODS, regionId, neighborhoodId, branchId)
 		}
 		case 'street': {
 			const { street = {} } = addressFilter
 			const { regionId, neighborhoodId, streetId } = street
-			return fetchAll(StreetQuery.DISABLED_STREETS, regionId, neighborhoodId, streetId)
+			return fetchAll(StreetQuery.DISABLED_STREETS, regionId, neighborhoodId, streetId, branchId)
 		}
 		case 'area': {
 			const { area = {} } = addressFilter
 			const { regionId, neighborhoodId, streetId, areaId } = area
-			return fetchAll(AreaQuery.DISABLED_AREAS, regionId, neighborhoodId, streetId, areaId)
+			return fetchAll(AreaQuery.DISABLED_AREAS, regionId, neighborhoodId, streetId, areaId, branchId)
 		}
 	}
 }

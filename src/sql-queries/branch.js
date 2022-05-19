@@ -54,8 +54,8 @@ const DISABLED_BRANCHES = `
 		to_char(branch_created_at, 'YYYY-MM-DD HH24:MI:SS') branch_created_at
 	FROM branches
 	WHERE branch_deleted_at IS NOT NULL AND
-	CASE 
-		WHEN $1 > 0 THEN branch_id = $1
+	CASE
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN branch_id = ANY($1::INT[])
 		ELSE TRUE
 	END
 `

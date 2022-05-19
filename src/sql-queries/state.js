@@ -49,14 +49,19 @@ const ENABLE_STATE = `
 
 const DISABLED_STATES = `
 	SELECT 
-		state_id,
-		state_name,
-		to_char(state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
-	FROM states
-	WHERE state_deleted_at IS NOT NULL AND
+		s.state_id,
+		s.state_name,
+		to_char(s.state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
+	FROM states s
+	LEFT JOIN regions r ON r.state_id = s.state_id
+	WHERE s.state_deleted_at IS NOT NULL AND
 	CASE 
-		WHEN $1 > 0 THEN state_id = $1
+		WHEN $1 > 0 THEN s.state_id = $1
 		ELSE true
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN r.branch_id = ANY($2::INT[])
+		ELSE TRUE
 	END
 `
 

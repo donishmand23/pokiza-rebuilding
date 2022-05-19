@@ -115,7 +115,8 @@ const DISABLED_AREAS = `
 	INNER JOIN streets s ON s.street_id = sa.street_id
 	INNER JOIN neighborhood_streets ns ON ns.street_id = s.street_id
 	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
-	WHERE area_deleted_at IS NOT NULL AND
+	LEFT JOIN regions r ON r.region_id = n.region_id
+	WHERE a.area_deleted_at IS NOT NULL AND
 	CASE 
 		WHEN $1 > 0 THEN n.region_id = $1
 		ELSE TRUE
@@ -130,6 +131,10 @@ const DISABLED_AREAS = `
 	END AND
 	CASE 
 		WHEN $4 > 0 THEN a.area_id = $4
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($5::INT[], 1) > 0 THEN r.branch_id = ANY($5::INT[])
 		ELSE TRUE
 	END
 `

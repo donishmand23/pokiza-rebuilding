@@ -36,9 +36,9 @@ export default {
 	},
 
 	Query: {
-		disabledAddresses: async (_, args) => {
+		disabledAddresses: async (_, args, user) => {
 			try {
-				const addresses = await addressModel.addresses(args)
+				const addresses = await addressModel.addresses(args, user)
 				return addresses
 			} catch(error) {
 				throw error
