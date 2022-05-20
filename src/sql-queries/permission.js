@@ -133,8 +133,28 @@ const PERMISSION_SETS = `
 	WHERE staff_id = $1 AND permission_action = ANY($2::INT[])
 `
 
+const BRANCHES_BY_REGIONS = `
+	SELECT
+		branch_id
+	FROM regions
+	WHERE region_deleted_at IS NULL AND
+	region_id = ANY($1::INT[])
+`
+
+const BRANCHES_BY_STAFFS = `
+	SELECT
+		u.branch_id
+	FROM staffs s
+	NATURAL JOIN users u
+	WHERE s.staff_deleted_at IS NULL AND
+	s.staff_id = ANY($1::INT[])
+`
+
 
 export default {
+	BRANCHES_BY_REGIONS,
+	BRANCHES_BY_STAFFS,
+
 	DELETE_PERMISSION_GROUP_ACTIONS,
 	ADD_PERMISSION_GROUP_ACTIONS,
 	DELETE_PERMISSION_GROUP,
