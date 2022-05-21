@@ -150,9 +150,19 @@ const BRANCHES_BY_STAFFS = `
 	s.staff_id = ANY($1::INT[])
 `
 
+const BRANCHES_BY_CLIENTS = `
+	SELECT
+		u.branch_id
+	FROM clients c
+	NATURAL JOIN users u
+	WHERE c.client_deleted_at IS NULL AND
+	c.client_id = ANY($1::INT[])
+`
+
 
 export default {
 	BRANCHES_BY_REGIONS,
+	BRANCHES_BY_CLIENTS,
 	BRANCHES_BY_STAFFS,
 
 	DELETE_PERMISSION_GROUP_ACTIONS,

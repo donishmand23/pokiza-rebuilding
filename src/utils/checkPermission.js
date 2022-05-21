@@ -33,11 +33,16 @@ export default async ({ operation, variables, fieldName }, payload) => {
     if (operation === 'mutation' && Object.keys(variables).length) {
         console.log('variables:', variables)
 
-        // staff only queries
-        if (query === 'addStaff') {
-            if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
-            let allowedBranches = staffPermissions.map(per => +per.branch_id)
+        // if client sends a mutatation request return it
+        if(payload.clientId) return
 
+        // staff only queries
+        // check staff has permissions
+        if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
+        const allowedBranches = staffPermissions.map(per => +per.branch_id)
+        
+        // staff module
+        if (query === 'addStaff') {
             const branchId = variables.branchId               // ID
             const regionId = variables.userAddress.regionId   // ID
 
@@ -56,9 +61,6 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         if (query === 'changeStaff') {
-            if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
-            let allowedBranches = staffPermissions.map(per => +per.branch_id)
-
             const staffId = variables?.staffId                  // ID
             const branchId = variables?.branchId                // ID
             const regionId = variables?.userAddress?.regionId   // ID
@@ -73,7 +75,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (staffId && !staffBranchId) {
                 throw new Error("Bunday xodim mavjud emas!")
             }
-
+            
             if (
                 staffBranchId && !allowedBranches.includes(+staffBranchId) ||
                 branchId && !allowedBranches.includes(+branchId) ||
@@ -84,15 +86,64 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         if (query === 'deleteStaff' || query === 'restoreStaff') {
-            if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
-            let allowedBranches = staffPermissions.map(per => +per.branch_id)
-
             const staffId = variables.staffId                  // [ID!]
 
             const staffBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_STAFFS, staffId)).map(el => +el.branch_id)
 
             if (
                 !staffBranchIds.every(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        // client module
+        if (query === 'addClient') {
+            const regionId = variables.userAddress.regionId   // ID
+
+            const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
+
+            if (!regionBranchId) {
+                throw new Error("Bunday tuman mavjud emas!")
+            }
+            
+            if (
+                !allowedBranches.includes(+regionBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        if (query === 'changeClient') {
+            const clientId = variables?.clientId                  // ID
+            const regionId = variables?.userAddress?.regionId     // ID
+
+            const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
+            const clientBranchId = (await fetch(PermissionQuery.BRANCHES_BY_CLIENTS, [clientId]))?.branch_id
+
+            if (regionId && !regionBranchId) {
+                throw new Error("Bunday tuman mavjud emas!")
+            }
+
+            if (clientId && !clientBranchId) {
+                throw new Error("Bunday xodim mavjud emas!")
+            }
+
+            if (
+                clientBranchId && !allowedBranches.includes(+clientBranchId) ||
+                regionId && !allowedBranches.includes(+regionBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        if (query === 'deleteClient' || query === 'restoreClient') {
+            const clientId = variables.clientId                  // [ID!]
+
+            const clientBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_CLIENTS, clientId)).map(el => +el.branch_id)
+
+            if (
+                !clientBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
                 throw new Error("Siz uchun ruxsatnoma berilmagan!")
             }
