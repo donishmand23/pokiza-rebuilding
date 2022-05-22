@@ -184,10 +184,18 @@ const BRANCHES_BY_PRODUCTS = `
 	p.product_id = ANY($1::INT[])
 `
 
+const BRANCHES_BY_SERVICES = `
+	SELECT
+		s.branch_id
+	FROM services s
+	WHERE s.service_id = ANY($1::INT[])
+`
+
 
 export default {
 	BRANCHES_BY_TRANSPORTS,
 	BRANCHES_BY_PRODUCTS,
+	BRANCHES_BY_SERVICES,
 	BRANCHES_BY_REGIONS,
 	BRANCHES_BY_CLIENTS,
 	BRANCHES_BY_STAFFS,

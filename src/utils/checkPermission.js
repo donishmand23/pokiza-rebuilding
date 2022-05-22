@@ -40,6 +40,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         // check staff has permissions
         if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
+
+        // permissions that are not relevant to branches
+        if (['changeDeliveryHour'].includes(query)) return
         
         // staff module
         if (query === 'addStaff') {
@@ -60,7 +63,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'changeStaff') {
+        else if (query === 'changeStaff') {
             const staffId = variables?.staffId                  // ID
             const branchId = variables?.branchId                // ID
             const regionId = variables?.userAddress?.regionId   // ID
@@ -85,7 +88,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'deleteStaff' || query === 'restoreStaff') {
+        else if (query === 'deleteStaff' || query === 'restoreStaff') {
             const staffId = variables.staffId                  // [ID!]
 
             const staffBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_STAFFS, staffId)).map(el => +el.branch_id)
@@ -98,7 +101,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         // client module
-        if (query === 'addClient') {
+        else if (query === 'addClient') {
             const regionId = variables.userAddress.regionId   // ID
 
             const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
@@ -114,7 +117,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'changeClient') {
+        else if (query === 'changeClient') {
             const clientId = variables?.clientId                  // ID
             const regionId = variables?.userAddress?.regionId     // ID
 
@@ -137,7 +140,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'deleteClient' || query === 'restoreClient') {
+        else if (query === 'deleteClient' || query === 'restoreClient') {
             const clientId = variables.clientId                  // [ID!]
 
             const clientBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_CLIENTS, clientId)).map(el => +el.branch_id)
@@ -150,7 +153,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         // transport module
-        if (query === 'addTransport') {
+        else if (query === 'addTransport') {
             const branchId = variables.branchId               // ID
 
             if (
@@ -160,7 +163,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'changeTransport') {
+        else if (query === 'changeTransport') {
             const transportId = variables.transportId               // ID
             const branchId = variables.branchId                     // ID
 
@@ -178,7 +181,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'bindOrder') {
+        else if (query === 'bindOrder') {
             const transportId = variables.transportId               // ID
             const productId = variables.productId                   // [ID!]
             const orderId = variables.orderId                       // [ID!]
@@ -200,7 +203,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'unbindOrder') {
+        else if (query === 'unbindOrder') {
             const productId = variables.productId                   // [ID!]
             const orderId = variables.orderId                       // [ID!]
 
@@ -215,7 +218,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'registerTransport') {
+        else if (query === 'registerTransport') {
             const staffId = variables.staffId                               // ID!
             const transportId = variables.transportId                       // ID!
 
@@ -238,7 +241,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'unregisterTransport') {
+        else if (query === 'unregisterTransport') {
             const transportId = variables.transportId                       // ID!
 
             const transportBranchId = (await fetch(PermissionQuery.BRANCHES_BY_TRANSPORTS, [transportId]))?.branch_id
@@ -254,13 +257,54 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-        if (query === 'deleteTransport' || query === 'restoreTransport') {
+        else if (query === 'deleteTransport' || query === 'restoreTransport') {
             const transportId = variables.transportId                  // [ID!]
 
             const transportBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_TRANSPORTS, transportId)).map(el => +el.branch_id)
 
             if (
                 !transportBranchIds.every(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        // service module
+        else if (query === 'addService') {
+            const branchId = variables.branchId               // ID
+
+            if (
+                !allowedBranches.includes(+branchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'changeService') {
+            const serviceId = variables.serviceId               // ID
+            const branchId = variables.branchId                 // ID
+
+            const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
+
+            if (serviceId && !serviceBranchId) {
+                throw new Error("Bunday xizmat mavjud emas!")
+            }
+
+            if (
+                serviceBranchId && !allowedBranches.includes(+serviceBranchId) ||
+                branchId && !allowedBranches.includes(+branchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'disableService' || query === 'enableService') {
+            const serviceId = variables.serviceId                  // [ID!]
+
+            const serviceBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_SERVICES, serviceId)).map(el => +el.branch_id)
+
+            if (
+                !serviceBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
                 throw new Error("Siz uchun ruxsatnoma berilmagan!")
             }
