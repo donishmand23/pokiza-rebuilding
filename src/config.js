@@ -19,7 +19,7 @@ const PG = {
 
 const JWT = {
 	secretKey: '1OVH6tdmpNTjRRIqCc7rdxs01PwHzfr3',
-	expiresIn: 60 * 60 * 24
+	expiresIn: 60 * 60 * 24 * 24 * 24
 }
 
 export {

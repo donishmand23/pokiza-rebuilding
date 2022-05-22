@@ -159,11 +159,39 @@ const BRANCHES_BY_CLIENTS = `
 	c.client_id = ANY($1::INT[])
 `
 
+const BRANCHES_BY_TRANSPORTS = `
+	SELECT
+		t.branch_id
+	FROM transports t
+	WHERE t.transport_deleted_at IS NULL AND
+	t.transport_id = ANY($1::INT[])
+`
+
+const BRANCHES_BY_ORDERS = `
+	SELECT
+		o.branch_id
+	FROM orders o
+	WHERE o.order_deleted_at IS NULL AND
+	o.order_id = ANY($1::INT[])
+`
+
+const BRANCHES_BY_PRODUCTS = `
+	SELECT
+		o.branch_id
+	FROM products p
+	NATURAL JOIN orders o
+	WHERE p.product_deleted_at IS NULL AND
+	p.product_id = ANY($1::INT[])
+`
+
 
 export default {
+	BRANCHES_BY_TRANSPORTS,
+	BRANCHES_BY_PRODUCTS,
 	BRANCHES_BY_REGIONS,
 	BRANCHES_BY_CLIENTS,
 	BRANCHES_BY_STAFFS,
+	BRANCHES_BY_ORDERS,
 
 	DELETE_PERMISSION_GROUP_ACTIONS,
 	ADD_PERMISSION_GROUP_ACTIONS,
