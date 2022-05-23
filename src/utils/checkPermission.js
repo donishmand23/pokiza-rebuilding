@@ -30,6 +30,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
         return
     }
 
+
     if (operation === 'mutation' && Object.keys(variables).length) {
         console.log('variables:', variables)
 
@@ -40,7 +41,6 @@ export default async ({ operation, variables, fieldName }, payload) => {
         // check staff has permissions
         if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
-
         // permissions that are not relevant to branches
         if (['changeDeliveryHour'].includes(query)) return
         
@@ -480,6 +480,22 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 throw new Error("Siz uchun ruxsatnoma berilmagan!")
             }
         }
+
+        // permissions module
+        else if (query === 'addPermission' || query === 'deletePermission') {
+            const staffId = variables.staffId                  // ID!
+            const branchId = variables.branchId                // ID!
+
+            const staffBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [staffId]))?.branch_id
+            console.log(allowedBranches)
+            if (
+                !allowedBranches.includes(+staffBranchId) ||
+                !allowedBranches.includes(+branchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
     }   
 
 }
