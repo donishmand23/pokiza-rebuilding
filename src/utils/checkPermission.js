@@ -38,6 +38,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
 
         // staff only queries
         // check staff has permissions
+        console.log(queryPermissions)
         if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
 
@@ -309,6 +310,99 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 throw new Error("Siz uchun ruxsatnoma berilmagan!")
             }
         }
+
+        // products module
+        else if (query === 'addProduct') {
+            const orderId = variables.orderId               // ID!
+            const serviceId = variables.serviceId           // ID!
+
+            const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [orderId]))?.branch_id
+            const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
+
+            if (!orderBranchId) {
+                throw new Error("Bunday buyum mavjud emas!")
+            }
+
+            if (!serviceBranchId) {
+                throw new Error("Bunday xizmat mavjud emas!")
+            }
+
+            if (
+                !allowedBranches.includes(+orderBranchId) ||
+                !allowedBranches.includes(+serviceBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'changeProduct') {
+            const productId = variables.productId           // ID!
+            const serviceId = variables.serviceId           // ID
+
+            const productBranchId = (await fetch(PermissionQuery.BRANCHES_BY_PRODUCTS, [productId]))?.branch_id
+            const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
+
+            if (!productBranchId) {
+                throw new Error("Bunday buyum mavjud emas!")
+            }
+
+            if (serviceId && !serviceBranchId) {
+                throw new Error("Bunday xizmat mavjud emas!")
+            }
+
+            if (
+                productId && !allowedBranches.includes(+productBranchId) ||
+                serviceId && !allowedBranches.includes(+serviceBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+            
+        else if (query === 'changeProductStatus') {
+            const productStatusPermissions = {
+                1: 2201,
+                2: 2202,
+                3: 2203,
+                4: 2204,
+                5: 2205,
+                6: 2206,
+                7: 2207,
+                8: 2208,
+                9: 2209,
+                10: 2210,
+            }
+
+            const productId = variables.productId               // ID!
+            const status = variables.status                     // Status!
+
+            const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, [productStatusPermissions[status]])
+            const allowedBranches = staffPermissions.map(per => +per.branch_id)
+
+            const productBranchId = (await fetch(PermissionQuery.BRANCHES_BY_PRODUCTS, [productId]))?.branch_id
+
+            if (!productBranchId) {
+                throw new Error("Bunday buyum mavjud emas!")
+            }
+            if (
+                !allowedBranches.includes(+productBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'deleteProduct' || query === 'restoreProduct') {
+            const productId = variables.productId                  // [ID!]
+
+            const productBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_PRODUCTS, productId)).map(el => +el.branch_id)
+
+            if (
+                !productBranchIds.every(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        // orders module
     }   
 
 }
