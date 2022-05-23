@@ -453,9 +453,15 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1300);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1400);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1901);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1902);
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1200);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1901);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1902);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');
