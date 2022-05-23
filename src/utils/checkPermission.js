@@ -38,7 +38,6 @@ export default async ({ operation, variables, fieldName }, payload) => {
 
         // staff only queries
         // check staff has permissions
-        console.log(queryPermissions)
         if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
 
@@ -403,6 +402,84 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         // orders module
+        else if (query === 'addOrder') {
+            const clientId = variables.clientId                       // ID
+            const regionId = variables.address.regionId               // ID!
+
+            const clientBranchId = (await fetch(PermissionQuery.BRANCHES_BY_CLIENTS, [clientId]))?.branch_id
+            const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
+
+            if (
+                clientId && !allowedBranches.includes(+clientBranchId) ||
+                regionId && !allowedBranches.includes(+regionBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'changeOrder') {
+            const orderId = variables.orderId                // ID!
+            const regionId = variables.address?.regionId     // ID
+
+            const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [orderId]))?.branch_id
+            const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
+
+            if (!orderBranchId) {
+                throw new Error("Bunday buyurtma mavjud emas!")
+            }
+
+            if (
+                orderId && !allowedBranches.includes(+orderBranchId) ||
+                regionId && !allowedBranches.includes(+regionBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'changeOrderStatus') {
+            const orderStatusPermissions = {
+                1: 2101,
+                2: 2102,
+                3: 2103,
+                4: 2104,
+                5: 2105,
+                6: 2106,
+                7: 2107,
+                8: 2108,
+                9: 2109,
+                10: 2110,
+            }
+
+            const orderId = variables.orderId               // ID!
+            const status = variables.status                 // Status!
+
+            const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, [orderStatusPermissions[status]])
+            const allowedBranches = staffPermissions.map(per => +per.branch_id)
+
+            const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [orderId]))?.branch_id
+
+            if (!orderBranchId) {
+                throw new Error("Bunday buyurtma mavjud emas!")
+            }
+
+            if (
+                !allowedBranches.includes(+orderBranchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'deleteOrder' || query === 'restoreOrder') {
+            const orderId = variables.orderId                  // [ID!]
+
+            const orderBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_ORDERS, orderId)).map(el => +el.branch_id)
+
+            if (
+                !orderBranchIds.every(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
     }   
 
 }
