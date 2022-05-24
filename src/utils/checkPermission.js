@@ -487,10 +487,34 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const branchId = variables.branchId                // ID!
 
             const staffBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [staffId]))?.branch_id
-            console.log(allowedBranches)
+
             if (
                 !allowedBranches.includes(+staffBranchId) ||
                 !allowedBranches.includes(+branchId)
+            ) {
+                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        // notifications and sms
+        else if (query === 'sendNotifications' || query === 'sendSMS') {
+            const recepientPermissions = {
+                'staff': [2301],
+                'client': [2300],
+                'both': [2300, 2301]
+            }
+            const user = variables.user                  // UserSelection!
+            const userId = variables.userId              // [ID!]
+            const branchId = variables.branchId          // [ID!]
+
+            const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, [recepientPermissions[user]])
+            const allowedBranches = staffPermissions.map(per => +per.branch_id)
+
+            const userBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_USERS, userId)).map(el => +el.branch_id)
+
+            if (
+                !branchId.every(branchId => allowedBranches.includes(+branchId)) ||
+                !userBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
                 throw new Error("Siz uchun ruxsatnoma berilmagan!")
             }

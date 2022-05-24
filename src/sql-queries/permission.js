@@ -191,6 +191,13 @@ const BRANCHES_BY_SERVICES = `
 	WHERE s.service_id = ANY($1::INT[])
 `
 
+const BRANCHES_BY_USERS = `
+	SELECT
+		u.branch_id
+	FROM users u
+	WHERE u.user_id = ANY($1::INT[])
+`
+
 
 export default {
 	BRANCHES_BY_TRANSPORTS,
@@ -200,6 +207,7 @@ export default {
 	BRANCHES_BY_CLIENTS,
 	BRANCHES_BY_STAFFS,
 	BRANCHES_BY_ORDERS,
+	BRANCHES_BY_USERS,
 
 	DELETE_PERMISSION_GROUP_ACTIONS,
 	ADD_PERMISSION_GROUP_ACTIONS,
