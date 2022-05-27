@@ -1,6 +1,6 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import transportModel from './model.js'
 import upload from '#helpers/upload'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -14,8 +14,10 @@ export default {
 						message: "Yangi transport qo'shildi!",
 						data: newTransport
 					}
-				} else throw new Error("Transport qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Transport qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeTransport: async (_, args, user) => {
@@ -28,8 +30,10 @@ export default {
 						message: "Transport ma'lumotlari yangilandi!",
 						data: updatedTransport
 					}
-				} else throw new Error("Bunday transport mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday transport mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		deleteTransport: async (_, args, user) => {
@@ -41,8 +45,10 @@ export default {
 						message: "Transportlar o'chirildi. Ularni qayta tiklash mumkin.",
 						data: deletedTransports
 					}
-				} else throw new Error("Bunday transportlar mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday transportlar mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		restoreTransport: async (_, args, user) => {
@@ -54,8 +60,10 @@ export default {
 						message: "Transportlar qayta tiklandi!",
 						data: restoredTransports
 					}
-				} else throw new Error("Bunday transportlar mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadrequestError("Bunday transportlar mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		bindOrder: async (_, args, context) => {
@@ -67,12 +75,12 @@ export default {
 						message: "Buyurtma va buyumlar mashinaga biriktirildi!",
 						data: []
 					}
-				} else throw new Error("Xatolik yuz berdi!")
+				} else throw new InternalServerError("Xatolik yuz berdi!")
 			} catch (error) {
 				if(error.message.includes('order_bindings_product_id_key')) {
-					return mError("Buyurtma yoki buyum allaqachon mashinaga biriktirilgan!")
+					throw new BadRequestError("Buyurtma yoki buyum allaqachon mashinaga biriktirilgan!")
 				}
-				return mError(error)
+				throw error
 			}
 		},
 
@@ -85,8 +93,10 @@ export default {
 						message: "Buyurtma va buyumlar mashinadan chiqarildi!",
 						data: []
 					}
-				} else throw new Error("Buyurtma va buyumlar allaqachon mashinadan chiqarilgan!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Buyurtma va buyumlar allaqachon mashinadan chiqarilgan!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		registerTransport: async (_, args, user) => {
@@ -98,8 +108,10 @@ export default {
 						message: "Transport haydovchiga registratsiya qilindi!",
 						data: null
 					}
-				} else throw new Error("Bunday transport yoki haydovchi mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday transport yoki haydovchi mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		unregisterTransport: async (_, args, user) => {
@@ -112,8 +124,10 @@ export default {
 						message: "Transport registratsiyadan chiqarildi!",
 						data: null
 					}
-				} else throw new Error("Bunday transport mavjud emas yoki u allaqachon bo'sh!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday transport mavjud emas yoki u allaqachon bo'sh!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

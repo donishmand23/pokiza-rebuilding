@@ -1,3 +1,4 @@
+import { BadRequestError, InternalServerError, AuthorizationError, BadUserInputError, ForbiddenError } from '#errors'
 import serviceModel from './model.js'
 import { mError } from '#helpers/error'
 
@@ -12,11 +13,12 @@ export default {
 						message: "Yangi xizmat turi qo'shildi!",
 						data: newService
 					}
-				} else throw new Error("Yangi xizmat turini qo'shishda muammolik yuz berdi!")
+				} else throw new InternalServerError("Yangi xizmat turini qo'shishda muammolik yuz berdi!")
 			} catch (error) { 
 				if(error.message.includes("duplicate key value")) {
-					return mError("Bu filialda bunday xizmat turi allaqachon bor!")
-				} else return mError(error)
+					throw new BadRequestError("Bu filialda bunday xizmat turi allaqachon bor!")
+				}
+				throw error
 			}
 		},
 
@@ -29,11 +31,12 @@ export default {
 						message: "Xizmat turi yangilandi!",
 						data: updatedService
 					}
-				} else throw new Error("Bunday xizmat turi mavjud emas yoki xizmatda hech qanday yangi o'zgarish yo'q!")
+				} else throw new BadRequestError("Bunday xizmat turi mavjud emas yoki xizmatda hech qanday yangi o'zgarish yo'q!")
 			} catch (error) {
 				if(error.message.includes("duplicate key value")) {
-					return mError("Bu filialda bunday xizmat turi allaqachon bor!")
-				} else return mError(error)
+					throw new BadRequestError("Bu filialda bunday xizmat turi allaqachon bor!")
+				}
+				throw error
 			}
 		},
 
@@ -46,8 +49,10 @@ export default {
 						message: "Xizmat tur(lar)i o'chirildi. U(lar)ni qayta tiklash mumkin!",
 						data: disabledServices
 					}
-				} else throw new Error("Bunday xizmat turi(lar)i mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday xizmat turi(lar)i mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		enableService: async (_, arg, user) => {
@@ -59,8 +64,10 @@ export default {
 						message: "Xizmat tur(lar)i yoqildi!",
 						data: enabledServices
 					}
-				} else throw new Error("Bunday xizmat tur(lar)i mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday xizmat tur(lar)i mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeDeliveryHour: async (_, arg, user) => {
@@ -72,8 +79,10 @@ export default {
 						message: "Taxminiy yetkazib berish vaqti yangilandi!",
 						data: updatedDeliveryHour
 					}
-				} else throw new Error("Bunday ID mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday ID mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

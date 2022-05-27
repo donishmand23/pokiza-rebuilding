@@ -1,3 +1,4 @@
+import { BadRequestError, ForbiddenError } from '#errors'
 import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
@@ -84,11 +85,11 @@ const deleteTransport = async ({ transportId }, { userId }) => {
 		const transport = await fetch(TransportQuery.CHECK_TRANSPORT, id)
 
 		if(transport.registered) {
-			throw new Error("Transportni o'chirish mumkin emas. Unga haydovchi biriktirilgan!")
+			throw new BadRequestError("Transportni o'chirish mumkin emas. Unga haydovchi biriktirilgan!")
 		}
 
 		if(transport.bound) {
-			throw new Error("Transportni o'chirish mumkin emas. Unga buyurtma yoki buyumlar biriktirilgan!")
+			throw new BadRequestError("Transportni o'chirish mumkin emas. Unga buyurtma yoki buyumlar biriktirilgan!")
 		}
 	}
 
@@ -134,7 +135,7 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
 
 		if(!orderStatuses.length) {
-			throw new Error("Bunday buyurtma(lar) mavjud emas!")
+			throw new BadRequestError("Bunday buyurtma(lar) mavjud emas!")
 		}
 
 		const orderStatus = orderStatuses.at(-1)?.status_code
@@ -143,7 +144,7 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 			(orderStatus == 6 && type == 1),
 			(orderStatus == 2 && type == 2) 
 		].every(cond => cond == false)) {
-			throw new Error("Buyurtmani mashinaga biriktirish mumkin emas!")
+			throw new ForbiddenError("Buyurtmani mashinaga biriktirish mumkin emas!")
 		}
 
 		const bound = await fetch(TransportQuery.BIND_ORDER, id, null, type, transportId)
@@ -160,7 +161,7 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 		const productStatuses = await fetchAll(ProductQuery.PRODUCT_STATUSES, id)
 
 		if(!productStatuses.length) {
-			throw new Error("Bunday buyum(lar) mavjud emas!")
+			throw new BadRequestError("Bunday buyum(lar) mavjud emas!")
 		}
 
 		const productStatus = productStatuses.at(-1)?.status_code
@@ -168,7 +169,7 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 		if(
 			!(productStatus == 7 && type == 1)
 		) {
-			throw new Error("Buyumni mashinaga biriktirish mumkin emas!")
+			throw new ForbiddenError("Buyumni mashinaga biriktirish mumkin emas!")
 		}
 
 		const bound = await fetch(TransportQuery.BIND_ORDER, null, id, type, transportId)
@@ -187,7 +188,7 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
 
 		if(!orderStatuses.length) {
-			throw new Error("Bunday buyurtma(lar) mavjud emas!")
+			throw new BadRequestError("Bunday buyurtma(lar) mavjud emas!")
 		}
 
 		const orderStatus = orderStatuses.at(-1)?.status_code
@@ -206,7 +207,7 @@ const unbindOrder = async ({ productId = [], orderId = [] }, { staffId }) => {
 		const productStatuses = await fetchAll(ProductQuery.PRODUCT_STATUSES, id)
 
 		if(!productStatuses.length) {
-			throw new Error("Bunday buyum(lar) mavjud emas!")
+			throw new BadRequestError("Bunday buyum(lar) mavjud emas!")
 		}
 
 		const productStatus = productStatuses.at(-1)?.status_code
@@ -227,7 +228,7 @@ const registerTransport = async ({ transportId, staffId }) => {
 		((!staffEmpty) || (staffEmpty && staffEmpty.unregistered_at))
 	) {
 		return fetch(TransportQuery.REGISTER_TRANSPORT, transportId, staffId)
-	} else if (transportEmpty && staffEmpty) throw new Error("Haydovchi yoki transport band!")
+	} else if (transportEmpty && staffEmpty) throw new ForbiddenError("Haydovchi yoki transport band!")
 }
 
 const unregisterTransport = async ({ transportId }) => {
