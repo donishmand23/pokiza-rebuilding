@@ -1,7 +1,8 @@
+import { ForbiddenError, BadRequestError } from '#errors'
 import { fetch, fetchAll } from '#utils/postgres'
+import permissions from '../permissions.js'
 import PermissionQuery from '#sql/permission'
 import UserQuery from '#sql/user'
-import permissions from '../permissions.js'
 
 /*
     queryName
@@ -39,7 +40,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
 
         // staff only queries
         // check staff has permissions
-        if (!staffPermissions.length) throw new Error("Siz uchun ruxsatnoma berilmagan!")
+        if (!staffPermissions.length) throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
         // permissions that are not relevant to branches
         if (['changeDeliveryHour'].includes(query)) return
@@ -52,14 +53,14 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
 
             if (!regionBranchId) {
-                throw new Error("Bunday tuman mavjud emas!")
+                throw new BadRequestError("Bunday tuman mavjud emas!")
             }
 
             if (
                 !allowedBranches.includes(+branchId) ||
                 !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -72,11 +73,11 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const staffBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [staffId]))?.branch_id
 
             if (regionId && !regionBranchId) {
-                throw new Error("Bunday tuman mavjud emas!")
+                throw new BadRequestError("Bunday tuman mavjud emas!")
             }
 
             if (staffId && !staffBranchId) {
-                throw new Error("Bunday xodim mavjud emas!")
+                throw new BadRequestError("Bunday xodim mavjud emas!")
             }
             
             if (
@@ -84,7 +85,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 branchId && !allowedBranches.includes(+branchId) ||
                 regionId && !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -96,7 +97,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !staffBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -107,13 +108,13 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
 
             if (!regionBranchId) {
-                throw new Error("Bunday tuman mavjud emas!")
+                throw new BadRequestError("Bunday tuman mavjud emas!")
             }
             
             if (
                 !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -125,18 +126,18 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const clientBranchId = (await fetch(PermissionQuery.BRANCHES_BY_CLIENTS, [clientId]))?.branch_id
 
             if (regionId && !regionBranchId) {
-                throw new Error("Bunday tuman mavjud emas!")
+                throw new BadRequestError("Bunday tuman mavjud emas!")
             }
 
             if (clientId && !clientBranchId) {
-                throw new Error("Bunday xodim mavjud emas!")
+                throw new BadRequestError("Bunday xodim mavjud emas!")
             }
 
             if (
                 clientBranchId && !allowedBranches.includes(+clientBranchId) ||
                 regionId && !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -148,7 +149,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !clientBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -159,7 +160,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !allowedBranches.includes(+branchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -170,14 +171,14 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const transportBranchId = (await fetch(PermissionQuery.BRANCHES_BY_TRANSPORTS, [transportId]))?.branch_id
 
             if (transportId && !transportBranchId) {
-                throw new Error("Bunday transport mavjud emas!")
+                throw new BadRequestError("Bunday transport mavjud emas!")
             }
 
             if (
                 transportBranchId && !allowedBranches.includes(+transportBranchId) ||
                 branchId && !allowedBranches.includes(+branchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -191,7 +192,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const productBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_PRODUCTS, productId)).map(el => +el.branch_id)
 
             if (transportId && !transportBranchId) {
-                throw new Error("Bunday transport mavjud emas!")
+                throw new BadRequestError("Bunday transport mavjud emas!")
             }
 
             if (
@@ -199,7 +200,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 !orderBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
                 !productBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -214,7 +215,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 !orderBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
                 !productBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -226,18 +227,18 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const staffBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [staffId]))?.branch_id
 
             if (!transportBranchId) {
-                throw new Error("Bunday transport mavjud emas!")
+                throw new BadRequestError("Bunday transport mavjud emas!")
             }
 
             if (!staffBranchId) {
-                throw new Error("Bunday xodim mavjud emas!")
+                throw new BadRequestError("Bunday xodim mavjud emas!")
             }
 
             if (
                 transportBranchId && !allowedBranches.includes(+transportBranchId) ||
                 staffBranchId && !allowedBranches.includes(+staffBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -247,13 +248,13 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const transportBranchId = (await fetch(PermissionQuery.BRANCHES_BY_TRANSPORTS, [transportId]))?.branch_id
 
             if (!transportBranchId) {
-                throw new Error("Bunday transport mavjud emas!")
+                throw new BadRequestError("Bunday transport mavjud emas!")
             }
 
             if (
                 transportBranchId && !allowedBranches.includes(+transportBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -265,7 +266,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !transportBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -276,7 +277,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !allowedBranches.includes(+branchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -287,14 +288,14 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
 
             if (serviceId && !serviceBranchId) {
-                throw new Error("Bunday xizmat mavjud emas!")
+                throw new BadRequestError("Bunday xizmat mavjud emas!")
             }
 
             if (
                 serviceBranchId && !allowedBranches.includes(+serviceBranchId) ||
                 branchId && !allowedBranches.includes(+branchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -306,7 +307,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !serviceBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -319,18 +320,18 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
 
             if (!orderBranchId) {
-                throw new Error("Bunday buyum mavjud emas!")
+                throw new BadRequestError("Bunday buyum mavjud emas!")
             }
 
             if (!serviceBranchId) {
-                throw new Error("Bunday xizmat mavjud emas!")
+                throw new BadRequestError("Bunday xizmat mavjud emas!")
             }
 
             if (
                 !allowedBranches.includes(+orderBranchId) ||
                 !allowedBranches.includes(+serviceBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -342,18 +343,18 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const serviceBranchId = (await fetch(PermissionQuery.BRANCHES_BY_SERVICES, [serviceId]))?.branch_id
 
             if (!productBranchId) {
-                throw new Error("Bunday buyum mavjud emas!")
+                throw new BadRequestError("Bunday buyum mavjud emas!")
             }
 
             if (serviceId && !serviceBranchId) {
-                throw new Error("Bunday xizmat mavjud emas!")
+                throw new BadRequestError("Bunday xizmat mavjud emas!")
             }
 
             if (
                 productId && !allowedBranches.includes(+productBranchId) ||
                 serviceId && !allowedBranches.includes(+serviceBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
             
@@ -380,12 +381,12 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const productBranchId = (await fetch(PermissionQuery.BRANCHES_BY_PRODUCTS, [productId]))?.branch_id
 
             if (!productBranchId) {
-                throw new Error("Bunday buyum mavjud emas!")
+                throw new BadRequestError("Bunday buyum mavjud emas!")
             }
             if (
                 !allowedBranches.includes(+productBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -397,7 +398,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !productBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -413,7 +414,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 clientId && !allowedBranches.includes(+clientBranchId) ||
                 regionId && !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -425,14 +426,14 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const regionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_REGIONS, [regionId]))?.branch_id
 
             if (!orderBranchId) {
-                throw new Error("Bunday buyurtma mavjud emas!")
+                throw new BadRequestError("Bunday buyurtma mavjud emas!")
             }
 
             if (
                 orderId && !allowedBranches.includes(+orderBranchId) ||
                 regionId && !allowedBranches.includes(+regionBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -459,13 +460,13 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [orderId]))?.branch_id
 
             if (!orderBranchId) {
-                throw new Error("Bunday buyurtma mavjud emas!")
+                throw new BadRequestError("Bunday buyurtma mavjud emas!")
             }
 
             if (
                 !allowedBranches.includes(+orderBranchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -477,7 +478,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (
                 !orderBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -492,7 +493,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 !allowedBranches.includes(+staffBranchId) ||
                 !allowedBranches.includes(+branchId)
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 
@@ -516,7 +517,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 !branchId.every(branchId => allowedBranches.includes(+branchId)) ||
                 !userBranchIds.every(branchId => allowedBranches.includes(+branchId))
             ) {
-                throw new Error("Siz uchun ruxsatnoma berilmagan!")
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
 

@@ -27,6 +27,7 @@
     "imports": {
         "#modules/*": "./src/modules/*",
         "#config": "./src/config.js",
+        "#errors": "./src/utils/errors.js",
         "#sql/*": "./src/sql-queries/*.js",
         "#helpers/*": "./src/helpers/*.js",
         "#utils/*": "./src/utils/*.js"
