@@ -1,3 +1,4 @@
+import { InternalServerError } from '#errors'
 import ServiceQuery from '#sql/additional-service'
 import { FormData } from 'formdata-node'
 import { fetch } from '#utils/postgres'
@@ -36,7 +37,7 @@ const sendPassword = async (contact, code) => {
 
 	} catch(error) {
 		await refreshSmsToken()
-		throw error
+		throw new InternalServerError(error.message || error.detail || error)
 	}
 }
 
@@ -75,12 +76,12 @@ async function sendSMS (contacts, text) {
 				message: "SMS yuborildi!"
 			}
 		} else {
-			throw response.message
+			throw new InternalServerError(response.message)
 		}
 
 	} catch(error) {
 		await refreshSmsToken()
-		throw error
+		throw new InternalServerError(error.message || error.detail || error)
 	}
 }
 
@@ -102,10 +103,9 @@ async function refreshSmsToken () {
 		)
 
 	} catch (error) {
-		throw error
+		throw new InternalServerError(error.message || error.detail || error)
 	}
 }
-
 
 export {
 	sendPassword,

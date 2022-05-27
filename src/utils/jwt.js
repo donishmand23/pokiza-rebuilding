@@ -1,3 +1,4 @@
+import { InternalServerError, AuthorizationError } from '#errors'
 import crypto from 'crypto'
 import { JWT } from '../config.js'
 
@@ -20,7 +21,7 @@ const sign = (payload, deadLine) => {
 
     	return token
 	} catch(error) {
-		throw error
+		throw new InternalServerError(error.message || error.detail || error)
 	}
 }
 
@@ -34,7 +35,7 @@ const verify = (token) => {
 
     	const currentTime = Date.now() / 1000 | 0
     	if(payload.exp < currentTime) {
-    		throw new Error("Token has expired!")
+    		throw new AuthorizationError("Token has expired!")
     	}
 
     	return payload
@@ -42,7 +43,7 @@ const verify = (token) => {
 		if(error.message.includes('Token')) {
 			throw error
 		}
-		throw new Error("Invaild Token!")
+		throw new AuthorizationError("Invaild Token!")
 	}
 }
 
