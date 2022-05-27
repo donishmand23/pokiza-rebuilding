@@ -1,6 +1,6 @@
+import { BadRequestError } from '#errors'
 import notificationModel from './model.js'
 import upload from '#helpers/upload'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -14,8 +14,10 @@ export default {
 						message: "Xabarnomalar yuborildi!",
 						data: null
 					}
-				} else throw new Error("Xatolik yuz berdi!" + (!sentNotifications.length ? " Foydalanuvchi(lar) filterga mos kelmadi!" : ""))
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Xatolik yuz berdi!" + (!sentNotifications.length ? " Foydalanuvchi(lar) filterga mos kelmadi!" : ""))
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		deleteNotifications: async (_, args, { userId }) => {
@@ -27,8 +29,10 @@ export default {
 						message: "Xabarnomalar o'chirildi! Ularni qayta tiklab bo'lmaydi",
 						data: null
 					}
-				} else throw new Error("Bunday xabarnomalar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday xabarnomalar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		}
 	},
 

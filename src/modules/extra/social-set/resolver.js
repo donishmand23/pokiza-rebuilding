@@ -1,3 +1,4 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import socialSetModel from './model.js'
 import { mError } from '#helpers/error'
 
@@ -12,8 +13,10 @@ export default {
 						message: "Yangi ijtimoy tarmoq qo'shildi!",
 						data: newSocialSet
 					}
-				} else throw new Error("Ijtimoiy tarmoqni qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Ijtimoiy tarmoqni qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeSocialSet: async (_,arg) => {
@@ -25,8 +28,10 @@ export default {
 						message: "Ijtimoy tarmoq yangilandi!",
 						data: updatedSocialSet
 					}
-				} else throw new Error("Bunday ijtimoy tarmoq mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday ijtimoy tarmoq mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

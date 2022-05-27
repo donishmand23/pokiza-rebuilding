@@ -1,9 +1,9 @@
+import { AuthorizationError } from '#errors'
 import { JWT } from '../../../config.js'
 import crypto from 'crypto'
 
 const defaultAlgorithm = 'aes256'
 const defaultSecretKey = JWT.secretKey
-const expiresIn = JWT.expiresIn
 
 export default {
 	Query: {
@@ -30,7 +30,7 @@ export default {
     			}
 				
 			} catch(error) {
-				throw 'Invalid Token!'
+				throw AuthorizationError('Invalid token!')
 			}
 		}
 	},

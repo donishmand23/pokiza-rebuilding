@@ -1,5 +1,5 @@
+import { BadRequestError } from '#errors'
 import smsModel from './model.js'
-import { mError } from '#helpers/error'
 import { sendSMS } from '#utils/sms'
 
 export default {
@@ -14,8 +14,10 @@ export default {
 						message: "SMS yuborildi!",
 						data: null
 					}
-				} else throw new Error("Bunday foydalanuvchilar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday foydalanuvchilar mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		}
 	},
 }

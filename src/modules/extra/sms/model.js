@@ -1,4 +1,4 @@
-import { fetch, fetchAll } from '#utils/postgres'
+import { fetchAll } from '#utils/postgres'
 import UserQuery from '#sql/user'
 
 const userContacts = async ({ user, branchId, userId, staffId }) => {

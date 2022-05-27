@@ -1,5 +1,4 @@
 import monitoringModel from './model.js'
-import { mError } from '#helpers/error'
 
 const sections = {
 	clients: ['branch', 'status', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'birthDate', 'gender', 'summary'],

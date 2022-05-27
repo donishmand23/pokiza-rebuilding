@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import permissionModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,15 +12,15 @@ export default {
 						message: "Xodimga yangi ruxsatnoma(lar) biriktirildi!",
 						data: newPermission
 					}
-				} else throw "Xodimga ruxsatnoma(lar) biriktirishda muammolik yuz berdi!"
+				} else throw new InternalServerError("Xodimga ruxsatnoma(lar) biriktirishda muammolik yuz berdi!")
 			} catch(error) { 
 				if(error.message.includes('unique constraint')) {
-					return mError(new Error("Ushbu ruxsatnoma(lar) allqachon qo'shilgan!")) 
+					throw new BadRequestError("Ushbu ruxsatnoma(lar) allqachon qo'shilgan!")
 				}
 				if (error.message.includes('foreign key constraint')) {
-					return mError(new Error("Bunday ruxsatnomalar mavjud emas!")) 
+					throw new BadRequestError("Bunday ruxsatnomalar mavjud emas!")
 				}
-				return mError(error) 
+				throw error 
 			}
 		},
 
@@ -33,8 +33,10 @@ export default {
 						message: "Xodimdan rixsatnoma(lar) olib tashlandi!",
 						data: deletedPermissions
 					}
-				} else throw "Xodimdan ruxsatnoma(lar) allaqachon olib tashlangan!"
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Xodimdan ruxsatnoma(lar) allaqachon olib tashlangan!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		addPermissionGroup: async (_, args, user) => {
@@ -46,8 +48,10 @@ export default {
 						message: "Yangi ruxsatnomlar guruhi qo'shildi!",
 						data: newPermissionGroup
 					}
-				} else throw "Ruxsatnomalar guruhini qo'shishda muammolik yuz berdi!"
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Ruxsatnomalar guruhini qo'shishda muammolik yuz berdi!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		deletePermissionGroup: async (_, args, user) => {
@@ -59,8 +63,10 @@ export default {
 						message: "Ruxsatnomalar guruhi o'chirib tashlandi!",
 						data: deletedPermissionGroup
 					}
-				} else throw "Ruxsatnomalar guruhi allaqachon o'chirilgan!"
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Ruxsatnomalar guruhi allaqachon o'chirilgan!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changePermissionGroup: async (_, args, user) => {
@@ -72,8 +78,10 @@ export default {
 						message: "Ruxsatnomalar guruhi yangilandi!",
 						data: editedPermissionGroup
 					}
-				} else throw "Bunday ruxsatnomlar guruhi mavjud emas!"
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("RuxsatnomalarBunday ruxsatnomlar guruhi mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 	},
