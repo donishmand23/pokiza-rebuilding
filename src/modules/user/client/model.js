@@ -1,3 +1,4 @@
+import { BadRequestError, AuthorizationError, BadUserInputError } from '#errors'
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
@@ -73,7 +74,7 @@ const changeClient = async ({ clientId, clientStatus, clientSummary, userInfo, u
 	const { firstName, lastName, mainContact, secondContact, birthDate, gender } = userInfo
 
 	if(user.staffId && !clientId) {
-		throw new Error("clientId is required!")
+		throw new BadUserInputError("clientId is required!")
 	}
 
 	if(user.clientId) {
@@ -108,7 +109,7 @@ const deleteClient = async ({ clientId }, user) => {
 
 	const orders = await fetchAll(OrderQuery.ORDER, false, 0, clientId)
 	if(orders.length) {
-		throw new Error("Mijozning faol buyurtmalari borligi uchun uni o'chirib bo'lmaydi!")
+		throw new BadRequestError("Mijozning faol buyurtmalari borligi uchun uni o'chirib bo'lmaydi!")
 	}
 
 	const deletedClients = []
@@ -162,7 +163,7 @@ const enterClientPhone = async ({ mainContact, code }) => {
 
 const enterClientPassword = async ({ password, userId, code }) => {
 	const user = await fetch(ClientQuery.CHECK_CLIENT_PASSWORD, userId, password)
-	if(!user) throw new Error("Wrong password or username!")
+	if(!user) throw new AuthorizationError("Wrong password or username!")
 	await fetch(ClientQuery.CHANGE_CLIENT_PASSWORD, userId, '', code)
 	if(!user.client_id) return fetch(ClientQuery.ADD_CLIENT_PART, user.user_id)
 	return user

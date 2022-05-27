@@ -1,4 +1,4 @@
-import { fetch, fetchAll } from '#utils/postgres'
+import { fetch } from '#utils/postgres'
 import AddressQuery from '#sql/address'
 import BranchQuery from '#sql/branch'
 import UserQuery from '#sql/user'

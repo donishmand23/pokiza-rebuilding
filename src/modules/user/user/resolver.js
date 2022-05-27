@@ -1,3 +1,4 @@
+import { BadRequestError } from '#errors'
 import userModel from './model.js'
 
 export default {
@@ -7,7 +8,7 @@ export default {
 				const user = await userModel.user({ userId })
 				return user
 			} catch(error) {
-				throw error
+				throw new BadRequestError(error.message)
 			}
 		},
 	},

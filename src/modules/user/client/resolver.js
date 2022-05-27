@@ -1,7 +1,7 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import clientModel from './model.js'
 import codeGen from '#helpers/randomNumberGenerator'
 import { sendPassword } from '#utils/sms'
-import { mError } from '#helpers/error'
 import { sign } from '#utils/jwt'
 
 
@@ -16,8 +16,10 @@ export default {
 						message: "Yangi mijoz qo'shildi!'",
 						data: newClient
 					}
-				} else throw new Error("Mijoz qo'shishda muammolik yuz berdi!")
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Mijoz qo'shishda muammolik yuz berdi!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changeClient: async (_, args, { clientId, staffId, userId }) => {
@@ -29,8 +31,10 @@ export default {
 						message: "Mijoz ma'lumotlari yangilandi!'",
 						data: updatedClient
 					}
-				} else throw new Error("Mijoz ma'lumotlarini yangilashda muammolik yuz berdi!")
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Mijoz ma'lumotlarini yangilashda muammolik yuz berdi!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 
@@ -43,8 +47,10 @@ export default {
 						message: "Mijozlar o'chirildi! Agar ularning asosiy raqami band qilib olinmasa, ularni qayta tiklash mumkin.",
 						data: deletedClients
 					}
-				} else throw new Error("Bunday mijozlar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday mijozlar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		restoreClient: async (_, args, { clientId, userId }) => {
@@ -56,12 +62,12 @@ export default {
 						message: "Mijozlar qayta tiklandi!",
 						data: restoredClients
 					}
-				} else throw new Error("Bunday o'chirilgan mijozlar mavjud emas!")
+				} else throw new BadRequestError("Bunday o'chirilgan mijozlar mavjud emas!")
 			} catch(error) { 
 				if(error.message.includes("users_user_main_contact_key")) {
-					return mError("Mijozni tiklashni imkoni yo'q. Chunki telefon raqam allaqachon boshqa akkountdan ro'yxatdan o'tkazilgan.")
+					throw new BadRequestError("Mijozni tiklashni imkoni yo'q. Chunki telefon raqam allaqachon boshqa akkountdan ro'yxatdan o'tkazilgan.")
 				}
-				return mError(error)
+				throw error
 			}
 		},
 
@@ -81,12 +87,12 @@ export default {
 							agent 
 						}, 60 * 3),
 					}
-				} else throw new Error("Muammolik yuz berdi!")
+				} else throw new InternalServerError("Muammolik yuz berdi!")
 			} catch(error) {
 				if(error.message.includes("users_user_main_contact_key")) {
-					return mError("Bu telefon raqam xodim sifatida ro'yxatdan o'tkazilgan. Boshqa raqam kiriting!")
+					throw new BadRequestError("Bu telefon raqam xodim sifatida ro'yxatdan o'tkazilgan. Boshqa raqam kiriting!")
 				}
-				return mError(error)
+				throw error
 			}
 		},
 
@@ -107,8 +113,10 @@ export default {
 							agent 
 						}),
 					}
-				} else throw new Error("Muammolik yuz berdi!")
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Muammolik yuz berdi!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		fillClientData: async (_, args, { clientId, agent }) => {
@@ -127,8 +135,10 @@ export default {
 							agent
 						})
 					}
-				} else throw new Error("Ro'yxatdan o'tishda muammolik yuz berdi!")
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Ro'yxatdan o'tishda muammolik yuz berdi!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 	},
 

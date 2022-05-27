@@ -1,7 +1,7 @@
+import { BadRequestError, InternalServerError, AuthorizationError } from '#errors'
 import staffModel from './model.js'
 import upload from '#helpers/upload'
 import { sign } from '#utils/jwt'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -15,8 +15,10 @@ export default {
 						message: "Yangi xodim qo'shildi!'",
 						data: newStaff
 					}
-				} else throw new Error("Xodim qo'shishda muammolik yuz berdi!")  
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Xodim qo'shishda muammolik yuz berdi!")  
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeStaff: async (_, args, user) => {
@@ -29,8 +31,10 @@ export default {
 						message: "Xodim ma'lumotlari yangilandi!'",
 						data: updatedStaff
 					}
-				} else throw new Error("Bunday xodim mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday xodim mavjud emas!")
+			} catch(error) {
+				throw error
+			}
 		},
 
 		deleteStaff: async (_, args, user) => {
@@ -42,8 +46,10 @@ export default {
 						message: "Xodimlar o'chirildi! Agar ularning asosiy raqami band qilib olinmasa, uni qayta tiklash mumkin.",
 						data: deletedStaffs
 					}
-				} else throw new Error("Bunday xodimlar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday xodimlar mavjud emas!")
+			} catch(error) {
+				throw error
+			}
 		},
 
 		restoreStaff: async (_, args, user) => {
@@ -55,12 +61,12 @@ export default {
 						message: "Xodimlar qayta tiklandi!",
 						data: restoredStaffs
 					}
-				} else throw new Error("Bunday o'chirilgan xodimlar mavjud emas!")
+				} else throw new BadRequestError("Bunday o'chirilgan xodimlar mavjud emas!")
 			} catch(error) { 
 				if(error.message.includes("users_user_main_contact_key")) {
-					return mError("Xodimni tiklashni imkoni yo'q. Chunki telefon raqam allaqachon boshqa akkountdan ro'yxatdan o'tkazilgan.")
+					throw new BadRequestError("Xodimni tiklashni imkoni yo'q. Chunki telefon raqam allaqachon boshqa akkountdan ro'yxatdan o'tkazilgan.")
 				}
-				return mError(error)
+				throw error
 			}
 		},
 
@@ -80,8 +86,10 @@ export default {
 							agent 
 						})
 					}
-				} else throw new Error("Telefon raqam yoki parol xato!")
-			} catch(error) { return mError(error) }
+				} else throw new AuthorizationError("Telefon raqam yoki parol xato!")
+			} catch(error) {
+				throw error
+			}
 		},
 	},
 
