@@ -1,4 +1,4 @@
-import { BadRequestError, BadUserInputError } from '#errors'
+import { BadRequestError, BadUserInputError, AuthorizationError } from '#errors'
 import { fetch } from '#utils/postgres'
 import StateQuery from '#sql/state'
 import RegionQuery from '#sql/region'
@@ -11,7 +11,7 @@ import UserQuery from '#sql/user'
 async function checkContact (mainContact) {
 	const user = await fetch(UserQuery.CHECK_USER_CONTACT, mainContact)
 	if(user) {
-		throw new Error(`${mainContact} allaqachon ro'yxatdan o'tazilgan!`)
+		throw new AuthorizationError(`${mainContact} allaqachon ro'yxatdan o'tazilgan!`)
 	}
 }
 
