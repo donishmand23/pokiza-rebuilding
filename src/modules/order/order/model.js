@@ -1,3 +1,4 @@
+import { BadRequestError, BadUserInputError, ForbiddenError } from '#errors'
 import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
 import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
@@ -84,7 +85,7 @@ const addOrder = async ({ clientId, special, summary, bringTime, address }, user
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
 
 	if(user.staffId && !clientId) {
-		throw new Error("clientId is required!")
+		throw new BadUserInputError("clientId is required!")
 	}
 
 	if(user.clientId) {
@@ -109,7 +110,7 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 		![1, 2, 3, 4].includes(+statuses[statuses.length - 1].status_code) &&
 		(bringTime || special == false || special == true || address)
 	) {
-		throw new Error("Buyurtmaning ma'lumotlarini o'zgartirish mumkin emas!")
+		throw new ForbiddenError("Buyurtmaning ma'lumotlarini o'zgartirish mumkin emas!")
 	}
 
 	await checkAddress(address)
@@ -133,21 +134,21 @@ const changeOrder = async ({ orderId, bringTime, special, summary, address = {} 
 
 const changeOrderStatus = async ({ orderId, status, staffId }) => {
 	if(![1, 2].includes(+status)) {
-		throw new Error("Buyurtmani faqat 'Moderator', 'Kutilmoqda' holatlariga o'tkazish mumkin!")
+		throw new ForbiddenError("Buyurtmani faqat 'Moderator', 'Kutilmoqda' holatlariga o'tkazish mumkin!")
 	}
 
 	const statuses = await orderStatuses({ orderId })
 	const orderStatus = +statuses[statuses.length - 1].status_code
 	if(status < orderStatus) {
-		throw new Error("Buyurtma holatini orqaga qaytarish mumkin emas!")
+		throw new ForbiddenError("Buyurtma holatini orqaga qaytarish mumkin emas!")
 	}
 
 	if(status == orderStatus) {
-		throw new Error("Buyurtma holatini allaqachon yangilangan!")
+		throw new BadRequestError("Buyurtma holatini allaqachon yangilangan!")
 	}
 
 	if(orderStatus != 6 && status == 7) {
-		throw new Error("Tayyor bo'lmagan buyurtmani mashinaga biriktirish mumkin emas!")
+		throw new ForbiddenError("Tayyor bo'lmagan buyurtmani mashinaga biriktirish mumkin emas!")
 	}
 
 	const updatedStatus = await fetch(OrderQuery.CHANGE_ORDER_STATUS, orderId, status, staffId)
@@ -164,7 +165,7 @@ const deleteOrder = async ({ orderId }, { clientId, userId }) => {
 			(![1, 2, 3].includes(+statuses[statuses.length - 1].status_code) && clientId) ||
 			(![1, 2, 3, 4, 5].includes(+statuses[statuses.length - 1].status_code) && !clientId)
 		) {
-			throw new Error("Buyurtmani o'chirish mumkin emas!")
+			throw new ForbiddenError("Buyurtmani o'chirish mumkin emas!")
 		}
 	})
 

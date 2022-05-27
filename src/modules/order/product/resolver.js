@@ -1,6 +1,6 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import productModel from './model.js'
 import upload from '#helpers/upload'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -14,8 +14,10 @@ export default {
 						message: "Buyum qabul qilindi!",
 						data: newProduct
 					}
-				} else throw new Error("Buyumni qabul qilishda muammolik yuz berdi!")  
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Buyumni qabul qilishda muammolik yuz berdi!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changeProduct: async (_, args, user) => {
@@ -28,8 +30,10 @@ export default {
 						message: "Buyum ma'lumotlari yangilandi!",
 						data: updatedProduct
 					}
-				} else throw new Error("Buyum ma'lumotlarini yangilashda muammolik yuz berdi!")  
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Buyum ma'lumotlarini yangilashda muammolik yuz berdi!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changeProductStatus: async (_, args, { staffId }) => {
@@ -41,8 +45,10 @@ export default {
 						message: "Buyum holati o'zgardi!",
 						data: updatedProduct
 					}
-				} else throw new Error("Buyum holatini o'zgartirishda muammolik yuz berdi!")  
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Buyum holatini o'zgartirishda muammolik yuz berdi!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		deleteProduct: async (_, args, user) => {
@@ -54,8 +60,10 @@ export default {
 						message: "Buyumlar o'chirildi!",
 						data: deletedProducts
 					}
-				} else throw new Error("Bunday buyumlar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday buyumlar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		restoreProduct: async (_, args, user) => {
@@ -67,8 +75,10 @@ export default {
 						message: "Buyumlar qayta tiklandi!",
 						data: restoredProducts
 					}
-				} else throw new Error("Bunday buyumlar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday buyumlar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 	},
 	Query: {

@@ -1,4 +1,4 @@
-import { checkUserInfo, checkContact, checkAddress } from '#helpers/checkInput'
+import { BadRequestError, BadUserInputError, ForbiddenError } from '#errors'
 import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
@@ -81,23 +81,23 @@ const transport = ({ productId }) => {
 
 const addProduct = async ({ orderId, serviceId, file, productSizeDetails, productSummary }, { staffId }) => {
 	if(typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails)) {
-		throw new Error("productSizeDetails should be a valid javaScript object type")
+		throw new BadUserInputError("productSizeDetails should be a valid javaScript object type")
 	}
 
 	const productService = await service({ serviceId, isDeleted: false })
 	if(!productService) {
-		throw new Error("Bunday xizmat turi mavjud emas!")
+		throw new BadRequestError("Bunday xizmat turi mavjud emas!")
 	} else if(
 		!productService?.service_unit_keys?.map(key => {
 			return Object.keys(productSizeDetails).includes(key) && typeof(productSizeDetails[key]) === 'number'
 		}).every(el => el ===  true)
 	) {
-		throw new Error(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
+		throw new BadUserInputError(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
 	}
 
 	const productOrder = await order({ orderId })
 	if(productOrder && productOrder.branch_id != productService.branch_id) {
-		throw new Error("Bu xizmat buyurtma berilgan filialda ishlamaydi!")
+		throw new ForbiddenError("Bu xizmat buyurtma berilgan filialda ishlamaydi!")
 	}
 
 	const productSize = Object.values(productSizeDetails).reduce((acc, el) => acc * el)
@@ -107,19 +107,19 @@ const addProduct = async ({ orderId, serviceId, file, productSizeDetails, produc
 
 const changeProduct = async ({ productId, serviceId, file, productSizeDetails, productSummary }, { userId }) => {
 	if(serviceId && (!productSizeDetails || typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails))) {
-		throw new Error("productSizeDetails should be a valid javaScript object type")
+		throw new BadUserInputError("productSizeDetails should be a valid javaScript object type")
 	}
 
 	if(serviceId) {
 		const productService = await service({ serviceId, isDeleted: false })
 		if(!productService) {
-			throw new Error("Bunday xizmat turi mavjud emas!")
+			throw new BadRequestError("Bunday xizmat turi mavjud emas!")
 		} else if(
 			!productService.service_unit_keys?.map(key => {
 				return Object.keys(productSizeDetails).includes(key) && typeof(productSizeDetails[key]) === 'number'
 			}).every(el => el ===  true)
 		) {
-			throw new Error(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
+			throw new BadUserInputError(`The keys ${productService?.service_unit_keys} must be present inside productSizeDetails and they should be number!`)
 		}
 	}
 
@@ -140,14 +140,14 @@ const changeProduct = async ({ productId, serviceId, file, productSizeDetails, p
 
 const changeProductStatus = async ({ productId, status, staffId }) => {
 	if(status > 10) {
-		throw new Error("Buyumni bu holatga o'tkazish mumkin emas!")
+		throw new ForbiddenError("Buyumni bu holatga o'tkazish mumkin emas!")
 	}
 
 	const statuses = await productStatuses({ productId })
 	const productStatus = +statuses[statuses.length - 1].status_code
 
 	if(status == productStatus) {
-		throw new Error("Buyurtma holati allaqachon yangilangan!")
+		throw new BadRequestError("Buyurtma holati allaqachon yangilangan!")
 	}
 
 	const updatedStatus = await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, productId, status, staffId)
@@ -161,7 +161,7 @@ const deleteProduct = async ({ productId }, { userId }) => {
 	productId.map(async id => {
 		const statuses = await productStatuses({ productId: id })
 		if(+statuses[statuses.length - 1].status_code > 6) {
-			throw new Error("Buyumni o'chirish mumkin emas!")
+			throw new ForbiddenError("Buyumni o'chirish mumkin emas!")
 		}
 	})
 

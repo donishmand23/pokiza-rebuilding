@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError, ForbiddenError } from '#errors'
 import orderModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Buyurtma qabul qilindi!",
 						data: newOrder
 					}
-				} else throw new Error("Buyurtmani qabul qilishda muammolik yuz berdi!")  
-			} catch(error) { return mError(error) }
+				} else throw new InternalServerError("Buyurtmani qabul qilishda muammolik yuz berdi!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changeOrder: async (_, args, { clientId, userId }) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Buyurtma ma'lumotlari yangilandi!",
 						data: updatedOrder
 					}
-				} else throw new Error("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
-			} catch(error) { return mError(error) }
+				} else throw new ForbiddenError("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		changeOrderStatus: async (_, args, { staffId, userId }) => {
@@ -38,8 +42,10 @@ export default {
 						message: "Buyurtma holati yangilandi!",
 						data: updatedOrder
 					}
-				} else throw new Error("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
-			} catch(error) { return mError(error) }
+				} else throw new ForbiddenError("Bunday buyurtma yo'q yoki buyurtmani o'zgartirishga ruxsat yo'q!")  
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		deleteOrder: async (_, args, { clientId, userId }) => {
@@ -51,8 +57,10 @@ export default {
 						message: "Buyurtmalar o'chirildi!",
 						data: deletedOrders
 					}
-				} else throw new Error("Bunday buyurtmalar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday buyurtmalar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 
 		restoreOrder: async (_, args, { clientId, userId }) => {
@@ -64,8 +72,10 @@ export default {
 						message: "Buyurtmalar qayta tiklandi!",
 						data: restoredOrders
 					}
-				} else throw new Error("Bunday buyurtmalar mavjud emas!")
-			} catch(error) { return mError(error) }
+				} else throw new BadRequestError("Bunday buyurtmalar mavjud emas!")
+			} catch(error) { 
+				throw error
+			 }
 		},
 	},
 
