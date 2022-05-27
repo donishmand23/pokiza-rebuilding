@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import regionModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi tuman qo'shildi!",
 						data: newRegion
 					}
-				} else throw new Error("Tuman qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Tuman qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeRegion: async (_,arg) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Tuman yangilandi!",
 						data: updatedRegion
 					}
-				} else throw new Error("Bunday tuman mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday tuman mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

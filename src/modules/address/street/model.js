@@ -1,3 +1,4 @@
+import { BadRequestError } from '#errors'
 import { fetch, fetchAll } from '#utils/postgres'
 import RegionQuery from '#sql/region'
 import NeighborhoodQuery from '#sql/neighborhood'
@@ -30,7 +31,7 @@ const addStreet = async ({ neighborhoodId, streetName, streetDistance }) => {
 
 const changeStreet = async ({ streetId, neighborhoodId, streetName = '', streetDistance = 0 }) => {
 	let oldData = await fetch(StreetQuery.STREETS, 0, 0, streetId)
-	if(!oldData) throw "Bunday ko'cha mavjud emas!"
+	if(!oldData) throw new BadRequestError("Bunday ko'cha mavjud emas!")
 	if(neighborhoodId && neighborhoodId.length != 0) {
 		await fetch(StreetQuery.DELETE_NEIGHBORHOOD_STREETS, streetId)
 		for (let e of neighborhoodId) {

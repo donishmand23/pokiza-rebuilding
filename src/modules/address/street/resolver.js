@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import streetModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi ko'cha qo'shildi!",
 						data: newStreet
 					}
-				} else throw new Error("Ko'chani qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Ko'chani qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeStreet: async (_, args) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Ko'cha yangilandi!",
 						data: updatedStreet
 					}
-				} else throw new Error("Bunday ko'cha mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday ko'cha mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

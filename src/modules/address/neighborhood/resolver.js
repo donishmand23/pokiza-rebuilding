@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import neighborhoodModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi mahalla qo'shildi!",
 						data: newNeighborhood
 					}
-				} else throw new Error("Mahalla qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Mahalla qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeNeighborhood: async (_, args) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Mahalla yangilandi!",
 						data: updatedNeighborhood
 					}
-				} else throw new Error("Bunday mahalla mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday mahalla mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

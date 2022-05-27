@@ -1,5 +1,5 @@
+import { InternalServerError } from '#errors'
 import branchModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi filial qo'shildi!",
 						data: newBranch
 					}
-				} else throw new Error("Filial qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Filial qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeBranch: async(_, arg) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Filial yangilandi!",
 						data: updatedBranch
 					} 
-				} else throw new Error("Filialni yangilashda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Filialni yangilashda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 		
 	},

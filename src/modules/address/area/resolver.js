@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import areaModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi hudud qo'shildi!",
 						data: newArea
 					}
-				} else throw new Error("Hudud qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} else throw new InternalServerError("Hudud qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeArea: async (_, args) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Hudud yangilandi!",
 						data: updatedArea
 					}
-				} else throw new Error("Bunday hudu mavjud emas!")
-			} catch (error) { return mError(error) }
+				} else throw new BadRequestError("Bunday hudud mavjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 

@@ -1,5 +1,5 @@
+import { InternalServerError } from '#errors'
 import addressModel from './model.js'
-import { mError } from '#helpers/error'
 
 const uzNames = {
 	branch: "Filial",
@@ -20,7 +20,7 @@ export default {
 					message: `${uzNames[addressField]}lar o'chirildi! Siz uni qayta tiklashingiz mumkin.`,
 					data: disabledAddressData
 				}
-			} else throw new Error(`${uzNames[addressField]}ni o'chirishda muammolik yuz berdi!`)
+			} else throw new InternalServerError(`${uzNames[addressField]}ni o'chirishda muammolik yuz berdi!`)
 		},
 
 		enableAddress: async (_, { addressField, addressFieldId }) => {
@@ -31,7 +31,7 @@ export default {
 					message: `${uzNames[addressField]}lar yoqildi!`,
 					data: enabledAddressData
 				}
-			} else throw new Error(`${uzNames[addressField]}ni yoqishda muammolik yuz berdi!`)
+			} else throw new InternalServerError(`${uzNames[addressField]}ni yoqishda muammolik yuz berdi!`)
 		}
 	},
 

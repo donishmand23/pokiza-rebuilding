@@ -1,5 +1,5 @@
+import { BadRequestError, InternalServerError } from '#errors'
 import stateModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
@@ -12,8 +12,10 @@ export default {
 						message: "Yangi viloyat qo'shildi!",
 						data: newState
 					}
-				} throw new Error("Viloyat qo'shishda muammolik yuz berdi!")
-			} catch (error) { return mError(error) }
+				} throw new InternalServerError("Viloyat qo'shishda muammolik yuz berdi!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 
 		changeState: async (_, arg) => {
@@ -25,8 +27,10 @@ export default {
 						message: "Viloyat nomi yangilandi!",
 						data: updatedState
 					}
-				} throw new Error("Bunday viloyat mabjud emas!")
-			} catch (error) { return mError(error) }
+				} throw new BadRequestError("Bunday viloyat mabjud emas!")
+			} catch (error) { 
+				throw error
+			 }
 		},
 	},
 
