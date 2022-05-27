@@ -4,13 +4,6 @@ import permissions from '../permissions.js'
 import PermissionQuery from '#sql/permission'
 import UserQuery from '#sql/user'
 
-/*
-    queryName
-    permissions to query
-    branchId
-    arguments
-*/
-
 export default async ({ operation, variables, fieldName }, payload) => {
     const query = fieldName.trim()
     const queryPermissions = permissions[query]
@@ -42,6 +35,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
         // check staff has permissions
         if (!staffPermissions.length) throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
+        
         // permissions that are not relevant to branches
         if (['changeDeliveryHour'].includes(query)) return
         
