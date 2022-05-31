@@ -81,6 +81,15 @@ const client = async ({ clientId }) => {
 	return client
 }
 
+const staff = async ({ staffId }) => {
+	const { staff } = await fetch(UserQuery.USER, false, 0, staffId, 0)
+	return staff
+}
+
+const orderBindings = async ({ orderId }) => {
+	return await fetchAll(OrderQuery.ORDER_BINDINGS, orderId)
+}
+
 const addOrder = async ({ clientId, special, summary, bringTime, address }, user) => {
 	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = address
 
@@ -212,6 +221,7 @@ const restoreOrder = async ({ orderId }, { clientId, userId }) => {
 export default {
 	changeOrderStatus,
 	orderStatuses,
+	orderBindings,
 	restoreOrder,
 	deleteOrder,
 	changeOrder,
@@ -222,4 +232,5 @@ export default {
 	client,
 	branch,
 	orders,
+	staff,
 }

@@ -118,9 +118,16 @@ export default {
 		statusProcess:  	   global => orderModel.orderStatuses({ orderId: global.order_id }),
 		products:  	           global => orderModel.products({ orderId: global.order_id }),
 		transport:  	       global => orderModel.transport({ orderId: global.order_id }),
+		transportsList:        global => orderModel.orderBindings({ orderId: global.order_id }),
 		status:          async global => {
 			const statuses = await orderModel.orderStatuses({ orderId: global.order_id })
 			return statuses[statuses.length - 1]
 		},
+	},
+
+	TransportDetail: {
+		transport: global => orderModel.transport({ orderId: global.order_id }),
+		driver:    global => orderModel.staff({ staffId: global.staff_id }),
+		direction: global => global.order_binding_type,
 	}
 }

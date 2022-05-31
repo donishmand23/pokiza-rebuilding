@@ -524,10 +524,32 @@ const CHANGE_ORDER_STATUS = `
 	WHERE order_id = $1
 `
 
+const ORDER_BINDINGS = `
+	SELECT
+		ob.order_binding_id,
+		ob.order_binding_type,
+		ob.transport_id,
+		ob.order_id,
+		ob.product_id,
+		ob.finished,
+		tr.staff_id,
+		ob.order_binding_created_at,
+		ob.order_binding_deleted_at
+	FROM order_bindings ob
+	LEFT JOIN LATERAL (
+		SELECT *
+		FROM transport_registration tr
+		WHERE tr.transport_id = ob.transport_id
+		ORDER BY tr.registration_id DESC
+		LIMIT 1
+	) tr ON tr.transport_id = ob.transport_id
+	WHERE ob.order_id = $1
+`
 
 export default {
 	CHANGE_ORDER_STATUS,
 	ORDER_STATUSES,
+	ORDER_BINDINGS,
 	SEARCH_ORDERS,
 	RESTORE_ORDER,
 	DELETE_ORDER,

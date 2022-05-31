@@ -60,6 +60,7 @@ type Order {
 	address: Address!
 	status: Status!
 	transport: Transport
+	transportsList: [TransportDetail!]
 	products: [Product]!
 	statusProcess: [Status!]!
 	bringTimeRemaining: Second
@@ -70,6 +71,12 @@ type Order {
 	deliveredTime: DateTime
 	orderCreatedAt: DateTime!
 	count: Int
+}
+
+type TransportDetail {
+	direction: BindType!
+	transport: Transport!
+	driver: Staff!
 }
 
 input OrderDateFilter {
