@@ -13,7 +13,7 @@ import { verify } from '#utils/jwt'
 export default async function ({ req }) {
     const body = queryParser(req.body)
     const { fieldName } = body
-
+    console.log(fieldName)
     const Token = req.headers.token
     const reqAgent = req['headers']['user-agent'].trim()
 
