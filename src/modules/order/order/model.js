@@ -72,8 +72,8 @@ const address = ({ addressId }) => {
 	return fetch(AddressQuery.ADDRESS, addressId)
 }
 
-const transport = ({ orderId }) => {
-	return fetch(TransportQuery.TRANSPORT, null, 0, 0, orderId, 0)
+const transport = ({ orderId = 0, productId = 0 }) => {
+	return fetch(TransportQuery.TRANSPORT, null, 0, 0, orderId, productId)
 }
 
 const client = async ({ clientId }) => {
@@ -87,7 +87,7 @@ const staff = async ({ staffId }) => {
 }
 
 const orderBindings = async ({ orderId }) => {
-	return await fetchAll(OrderQuery.ORDER_BINDINGS, orderId)
+	return await fetchAll(OrderQuery.ORDER_BINDINGS, orderId, 0)
 }
 
 const addOrder = async ({ clientId, special, summary, bringTime, address }, user) => {

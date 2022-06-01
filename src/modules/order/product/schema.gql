@@ -65,6 +65,7 @@ type Product {
 	productSizeDetails: Any!
 	productStatus: Status!
 	transport: Transport
+	transportsList: [TransportDetail!]
 	productStatusProcess: [Status!]!
 	productSummary: String
 	service: Service!

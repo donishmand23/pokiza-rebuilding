@@ -126,7 +126,7 @@ export default {
 	},
 
 	TransportDetail: {
-		transport: global => orderModel.transport({ orderId: global.order_id }),
+		transport: global => orderModel.transport({ orderId: global.order_id, productId: global.product_id }),
 		driver:    global => orderModel.staff({ staffId: global.staff_id }),
 		direction: global => global.order_binding_type,
 	}

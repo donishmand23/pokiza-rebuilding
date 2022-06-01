@@ -543,7 +543,15 @@ const ORDER_BINDINGS = `
 		ORDER BY tr.registration_id DESC
 		LIMIT 1
 	) tr ON tr.transport_id = ob.transport_id
-	WHERE ob.order_id = $1
+	WHERE 
+	CASE
+		WHEN $1 > 0 THEN ob.order_id = $1
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $2 > 0 THEN ob.product_id = $2
+		ELSE TRUE
+	END
 `
 
 export default {

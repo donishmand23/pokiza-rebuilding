@@ -79,6 +79,10 @@ const transport = ({ productId }) => {
 	return fetch(TransportQuery.TRANSPORT, null, 0, 0, 0, productId)
 }
 
+const orderBindings = async ({ productId }) => {
+	return await fetchAll(OrderQuery.ORDER_BINDINGS, 0, productId)
+}
+
 const addProduct = async ({ orderId, serviceId, file, productSizeDetails, productSummary }, { staffId }) => {
 	if(typeof productSizeDetails !== 'object' || Array.isArray(productSizeDetails)) {
 		throw new BadUserInputError("productSizeDetails should be a valid javaScript object type")
@@ -207,6 +211,7 @@ export default {
 	changeProductStatus,
 	productStatuses,
 	restoreProduct,
+	orderBindings,
 	deleteProduct,
 	changeProduct,
 	addProduct,
