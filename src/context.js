@@ -18,6 +18,7 @@ export default async function ({ req }) {
     const reqAgent = req['headers']['user-agent'].trim()
 
     if(fieldName == '__schema') return
+    if (fieldName == '__typename') return
 
     // public queries
     if(PUBLIC_QUERIES.includes(fieldName)) {
