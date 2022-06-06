@@ -1,6 +1,5 @@
 import { BadRequestError, InternalServerError } from '#errors'
 import socialSetModel from './model.js'
-import { mError } from '#helpers/error'
 
 export default {
 	Mutation: {
