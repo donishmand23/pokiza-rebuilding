@@ -1,0 +1,21 @@
+type Query {
+	balances(staffId: [ID] branchId: [ID]): [Balance!]!
+	mainBalances(branchId: [ID]): [MainBalance!]!
+}
+
+type Balance {
+	balanceId: ID!
+	branch: Branch!
+	staff: Staff!
+	balanceMoneyCash: Int!
+	balanceMoneyCard: Int!
+	balanceMoneyTotal: Int!
+	balanceCreatedAt: DateTime!
+}
+
+type MainBalance {
+	branch: Branch!
+	balanceMoneyCash: Int!
+	balanceMoneyCard: Int!
+	balanceMoneyTotal: Int!
+}

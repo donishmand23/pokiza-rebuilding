@@ -1,4 +1,8 @@
 export const PUBLIC_QUERIES = [
+    // temporary
+    'balances',
+    'mainBalances',
+    //
     'socialSets',
     'areas',
     'branches',
