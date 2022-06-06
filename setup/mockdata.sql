@@ -304,10 +304,31 @@ insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id,
 
 -- orders
 insert into orders (client_id, branch_id, address_id, order_special, order_bring_time, order_delivery_time) values
-/* 1 */ (1, 1, 9, true, NOW() + '86400 second'::INTERVAL, NOW() + '172800 second'::INTERVAL),
-/* 2 */ (2, 1, 10, false, NOW() + '64800 second'::INTERVAL, NOW() + '259200 second'::INTERVAL),
+/* 1 */ (1, 1, 9, true, NOW() + '86400 second'::INTERVAL, NOW() + '86400 second'::INTERVAL + '172800 second'::INTERVAL),
+/* 2 */ (2, 1, 10, false, NOW() + '64800 second'::INTERVAL, NOW() + '64800 second'::INTERVAL + '259200 second'::INTERVAL),
 /* 3 */ (2, 1, 10, true, NOW() + '172800 second'::INTERVAL, null),
 /* 4 */ (3, 2, 11, false, NOW() + '100800 second'::INTERVAL, null);
+
+insert into orders (
+	client_id, 
+	branch_id, 
+	address_id, 
+	order_special, 
+	order_bring_time, 
+	order_delivery_time, 
+	order_brougth_time,
+	order_delivered_time
+) values
+/* 5 */ (
+	1, 
+	1, 
+	9, 
+	true, 
+	NOW() + '100800 second'::INTERVAL, 
+	NOW() + '100800 second'::INTERVAL + '172800 second'::INTERVAL,
+	NOW() + '109900 second'::INTERVAL,
+	NOW() + '100800 second'::INTERVAL + '180800 second'::INTERVAL
+);
 
 -- order statuses
 insert into order_statuses (order_id, staff_id, order_status_code) values
@@ -319,7 +340,16 @@ insert into order_statuses (order_id, staff_id, order_status_code) values
 (2, 2, 3),
 (2, 3, 4),
 (3, null, 1),
-(4, null, 1);
+(4, null, 1),
+(5, null, 1),
+(5, 2, 2),
+(5, 2, 3),
+(5, 3, 4),
+(5, 2, 5),
+(5, 2, 6),
+(5, 2, 7),
+(5, 3, 8),
+(5, 3, 9);
 
 -- products
 insert into products (order_id, service_id, product_size, product_size_details, product_img, product_summary) values
@@ -327,7 +357,9 @@ insert into products (order_id, service_id, product_size, product_size_details, 
 /* 2 */(1, 1, 4, '{ "eni": 2, "bo''yi": 2 }', 'gilam02.jpg', null), 
 /* 3 */(1, 3, 1, '{ "qiymat": 1 }', 'sholcha.jpg', null),
 /* 4 */(2, 4, 2, '{ "qiymat": 2 }', 'parda.jpg', 'sarg''ayib ketgan parda ekan'),
-/* 5 */(2, 1, 8, '{ "eni": 4, "bo''yi": 4 }', 'gilam03.jpg', null);
+/* 5 */(2, 1, 8, '{ "eni": 4, "bo''yi": 4 }', 'gilam03.jpg', null),
+/* 6 */(5, 1, 32, '{ "eni": 4, "bo''yi": 8 }', 'gilam03.jpg', null),
+/* 7 */(5, 3, 1, '{ "qiymat": 1 }', 'sholcha.jpg', null);
 
 -- product statuses
 insert into product_statuses (product_id, staff_id, product_status_code) values
@@ -335,7 +367,27 @@ insert into product_statuses (product_id, staff_id, product_status_code) values
 (2, 3, 1),
 (3, 3, 1),
 (4, 3, 1),
-(5, 3, 1);
+(5, 3, 1),
+(6, 3, 1),
+(6, 2, 2),
+(6, 2, 3),
+(6, 2, 4),
+(6, 2, 5),
+(6, 2, 6),
+(6, 2, 7),
+(6, 2, 8),
+(6, 3, 9),
+(6, 3, 10),
+(7, 3, 1),
+(7, 2, 2),
+(7, 2, 3),
+(7, 2, 4),
+(7, 2, 5),
+(7, 2, 6),
+(7, 2, 7),
+(7, 2, 8),
+(7, 3, 9),
+(7, 3, 10);
 
 
 -- Transport
@@ -347,14 +399,35 @@ insert into transports(branch_id, transport_model, transport_color, transport_nu
 
 
 -- transport registration
-insert into transport_registration (staff_id, transport_id, unregistered_at) values (1, 1, current_timestamp);
-insert into transport_registration (staff_id, transport_id, unregistered_at) values (3, 1, null);
+insert into transport_registration (staff_id, transport_id, registered_at, unregistered_at) values (1, 1, NOW() - '200800 second'::INTERVAL, NOW() - '170800 second'::INTERVAL);
+insert into transport_registration (staff_id, transport_id, registered_at, unregistered_at) values (3, 1, NOW() - '170000 second'::INTERVAL, NOW() - '110000 second'::INTERVAL);
+insert into transport_registration (staff_id, transport_id, registered_at, unregistered_at) values (3, 2, NOW() - '10000 second'::INTERVAL, null);
 
 -- order_bindings
-insert into order_bindings (transport_id, order_id, order_binding_type) values
-(1, 1, 2),
-(1, 2, 2);
+insert into order_bindings (transport_id, order_id, order_binding_type, finished) values
+(1, 1, 2, false),
+(1, 2, 2, false),
+(2, 5, 2, true); 
 
+
+--------------------------------------------------------------- FINANCE --------------------------------------------------------------
+-- order transactions
+insert into order_transactions (
+	transaction_type,
+	transaction_money_cash,
+	transaction_money_card,
+	order_id,
+	staff_id,
+	transaction_summary
+) values 
+('income', 300000, 93000, 5, 3, 'gilam yetkazildi!');
+
+-- balance
+insert into account_balance (balance_money_cash, balance_money_card, staff_id) values (300000, 93000, 3);
+
+
+
+-------------------------------------------------------------PERMISSIONS----------------------------------------------------------------
 -- permissions
 insert into permissions (permission_action, permission_model) values     
 (1100, 'see disabled branch'),

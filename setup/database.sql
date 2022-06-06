@@ -269,11 +269,13 @@ create table order_bindings (
 	order_binding_id bigserial not null primary key,
 	order_binding_type smallint not null check (order_binding_type in (1, 2)),
 	transport_id bigint not null references transports(transport_id),
-	order_id bigint references orders(order_id) unique,
-	product_id bigint references products(product_id) unique,
+	order_id bigint references orders(order_id),
+	product_id bigint references products(product_id),
 	finished boolean default false,
 	order_binding_created_at timestamptz default current_timestamp,
-	order_binding_deleted_at timestamptz default null
+	order_binding_deleted_at timestamptz default null,
+	unique(order_id, order_binding_deleted_at),
+	unique(product_id, order_binding_deleted_at)
 );
 
 -- EXTRA SERVICES 
@@ -354,16 +356,30 @@ create table permission_group_sets (
 	unique (group_id, permission_action)
 );
 
--- -- 22. load order ( info about orders to which car they are loaded )
--- drop table if exists load_order cascade;
--- create table load_order (
--- 	load_order_id bigserial not null primary key,
--- 	order_id bigint not null references orders(order_id) unique,
--- 	transport_id bigint not null references transports(transport_id),
--- 	load_order_created_at timestamptz default current_timestamp,
--- 	load_order_deleted_at timestamptz default null,
--- 	unique (order_id, transport_id)
--- );
+-- 29. balance account ( for every accountant )
+drop table if exists account_balance cascade;
+create table account_balance (
+	balance_id serial not null primary key,
+	balance_money_cash int default 0,
+	balance_money_card int default 0,
+	staff_id int not null references staffs(staff_id),
+	balance_created_at timestamptz default current_timestamp,
+	balance_deleted_at timestamptz default null
+);
+
+-- 31. order transactions ( received money from orders )
+drop table if exists order_transactions cascade;
+create table order_transactions (
+	transaction_id serial not null primary key,
+	transaction_money_cash int not null default 0,
+	transaction_money_card int not null default 0,
+	order_id int not null references orders(order_id),
+	staff_id int not null references staffs(staff_id),
+	transaction_type character varying(10) not null check (transaction_type in ('income', 'outcome')),
+	transaction_summary character varying(512),
+	transaction_created_at timestamptz default current_timestamp,
+	transaction_deleted_at timestamptz default null
+);
 
 -- -- CASHIER MODULE
 -- -- 27. transaction types
@@ -383,17 +399,6 @@ create table permission_group_sets (
 -- 	expanse_deleted_at timestamptz default null
 -- );
 
--- -- 29. balance account ( for every accountant )
--- drop table if exists balance_account cascade;
--- create table balance_account (
--- 	balance_id serial not null primary key,
--- 	balance_money_amount int default 0,
--- 	balance_money_type smallint not null,
--- 	balance_owner int not null references staffs(staff_id),
--- 	balance_owner_role int not null references transaction_types(transaction_type_id),
--- 	balance_created_at timestamptz default current_timestamp,
--- 	balance_deleted_at timestamptz default null
--- );
 
 -- -- 30. transactions
 -- drop table if exists transactions cascade;
@@ -405,19 +410,6 @@ create table permission_group_sets (
 -- 	transaction_from int not null references staffs(staff_id),
 -- 	transaction_to int not null references staffs(staff_id),
 -- 	transaction_verified boolean default false,
--- 	transaction_summary character varying(512),
--- 	transaction_created_at timestamptz default current_timestamp,
--- 	transaction_deleted_at timestamptz default null
--- );
-
--- -- 31. order transactions ( received money from orders )
--- drop table if exists order_transactions cascade;
--- create table order_transactions (
--- 	transaction_id serial not null primary key,
--- 	transaction_money int not null,
--- 	transaction_money_type smallint not null,
--- 	order_id int not null references orders(order_id),
--- 	driver_id int not null references staffs(staff_id),
 -- 	transaction_summary character varying(512),
 -- 	transaction_created_at timestamptz default current_timestamp,
 -- 	transaction_deleted_at timestamptz default null
