@@ -21,7 +21,7 @@ const PRODUCTS = `
 	LEFT JOIN neighborhoods n ON n.neighborhood_id = a.neighborhood_id
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
-	LEFT JOIN order_bindings ob ON ob.product_id = p.product_id
+	LEFT JOIN order_bindings ob ON ob.product_id = p.product_id AND order_binding_deleted_at IS NULL
 	LEFT JOIN LATERAL (
 		SELECT * FROM product_statuses WHERE product_id = p.product_id
 		ORDER BY product_status_id DESC LIMIT 1

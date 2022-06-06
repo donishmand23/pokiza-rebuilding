@@ -322,7 +322,8 @@ const BIND_ORDER = `
 `
 
 const UNBOUND_ORDER = `
-	DELETE FROM order_bindings
+	UPDATE order_bindings SET
+		order_binding_deleted_at = current_timestamp
 	WHERE
 	CASE
 		WHEN $1 > 0 THEN order_id = $1

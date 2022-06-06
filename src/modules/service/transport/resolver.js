@@ -77,7 +77,7 @@ export default {
 					}
 				} else throw new InternalServerError("Xatolik yuz berdi!")
 			} catch (error) {
-				if(error.message.includes('order_bindings_product_id_key')) {
+				if(error.message.includes('unique')) {
 					throw new BadRequestError("Buyurtma yoki buyum allaqachon mashinaga biriktirilgan!")
 				}
 				throw error
