@@ -32,6 +32,7 @@ async function changeStatus ({ staffId, orderId, productId }) {
 		}
 
 		if (productId && product_general_status >= 10 && !(order_status >= 9)) {
+			await fetch(OrderQuery.CHANGE_ORDER_BINDING, order_id, true)
 			return fetch(OrderQuery.CHANGE_ORDER_STATUS, order_id, 9, staffId)
 		}
 
