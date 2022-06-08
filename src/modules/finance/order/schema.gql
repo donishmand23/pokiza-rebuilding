@@ -16,6 +16,8 @@ type Mutation {
 		transactionMoneyCard: Int = 0
 		transactionSummary: String
 	): MutationResponse!
+
+	#deleteOrderTransaction(transactionId: ID!): MutationResponse!
 }
 
 type OrderTransaction {
@@ -29,9 +31,19 @@ type OrderTransaction {
 	transactionSummary: String
 	transactionCreatedAt: DateTime!
 	transactionType: TransactionType!
+	transactionStatus: TransactionStatus!
 }
 
 enum TransactionType {
 	income
 	outcome
+}
+
+enum TransactionStatus {
+	pending
+	accepted
+	rejected
+	cancelled
+	deleted
+	active
 }
