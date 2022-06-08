@@ -1,0 +1,37 @@
+type Query {
+	orderTransactions(
+		staffId: [ID] 
+		branchId: [ID]
+		orderId: [ID]
+		dateFilter: RangeDate
+		transactionType: TransactionType!
+	): [OrderTransaction!]!
+}
+
+type Mutation {
+	makeOrderTransaction(
+		transactionType: TransactionType!
+		orderId: ID!
+		transactionMoneyCash: Int = 0
+		transactionMoneyCard: Int = 0
+		transactionSummary: String
+	): MutationResponse!
+}
+
+type OrderTransaction {
+	staff: Staff!
+	order: Order!
+	branch: Branch!
+	transactionId: ID!
+	transactionMoneyCash: Int!
+	transactionMoneyCard: Int!
+	transactionMoneyTotal: Int!
+	transactionSummary: String
+	transactionCreatedAt: DateTime!
+	transactionType: TransactionType!
+}
+
+enum TransactionType {
+	income
+	outcome
+}
