@@ -423,7 +423,7 @@ insert into order_transactions (
 ('income', 300000, 93000, 5, 3, 'gilam yetkazildi!');
 
 -- balance
-insert into account_balance (balance_money_cash, balance_money_card, staff_id) values (300000, 93000, 3);
+insert into balances (balance_money_cash, balance_money_card, staff_id) values (300000, 93000, 3);
 
 
 

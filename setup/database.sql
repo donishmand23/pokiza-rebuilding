@@ -357,8 +357,8 @@ create table permission_group_sets (
 );
 
 -- 29. balance account ( for every accountant )
-drop table if exists account_balance cascade;
-create table account_balance (
+drop table if exists balances cascade;
+create table balances (
 	balance_id serial not null primary key,
 	balance_money_cash int default 0,
 	balance_money_card int default 0,
