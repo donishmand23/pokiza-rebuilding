@@ -247,6 +247,8 @@ export default {
 				return 'Permission'
 			} else if(obj.group_id && obj.group_name) {
 				return 'PermissionGroup'
+			} else if(obj.transaction_id && obj.transaction_created_at && obj.order_id) {
+				return 'OrderTransaction'
 			} else return null
 		}
 	},
