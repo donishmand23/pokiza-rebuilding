@@ -7,10 +7,10 @@ const BALANCES = `
         b.staff_id,
         u.branch_id,
         to_char(balance_created_at, 'YYYY-MM-DD HH24:MI:SS') balance_created_at
-    FROM account_balance b
+    FROM balances b
     LEFT JOIN staffs s ON s.staff_id = b.staff_id
     LEFT JOIN users u ON u.user_id = s.user_id
-    WHERE balance_deleted_at IS NULL AND
+    WHERE b.balance_deleted_at IS NULL AND
     CASE
 		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN b.staff_id = ANY($1::INT[])
 		ELSE TRUE
@@ -20,7 +20,6 @@ const BALANCES = `
 		ELSE TRUE
 	END 
 `
-
 
 const MAIN_BALANCES = `
     SELECT
@@ -36,7 +35,7 @@ const MAIN_BALANCES = `
             b.balance_money_cash + b.balance_money_card AS balance_money_total,
             u.branch_id,
             to_char(balance_created_at, 'YYYY-MM-DD HH24:MI:SS') balance_created_at
-        FROM account_balance b
+        FROM balances b
         LEFT JOIN staffs s ON s.staff_id = b.staff_id
         LEFT JOIN users u ON u.user_id = s.user_id
 	) bb ON bb.branch_id = b.branch_id
@@ -48,8 +47,25 @@ const MAIN_BALANCES = `
     GROUP BY b.branch_id
 `
 
+const INCREMENT_BALANCE = `
+    UPDATE balances SET
+        balance_money_cash = balance_money_cash + $2,
+        balance_money_card = balance_money_card + $3
+    WHERE staff_id = $1
+    RETURNING *
+`
+
+const DECREMENT_BALANCE = `
+    UPDATE balances SET
+        balance_money_cash = balance_money_cash - $2,
+        balance_money_card = balance_money_card - $3
+    WHERE staff_id = $1
+    RETURNING *
+`
 
 export default {
+    INCREMENT_BALANCE,
+    DECREMENT_BALANCE,
     MAIN_BALANCES,
     BALANCES
 }

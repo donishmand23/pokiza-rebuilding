@@ -176,6 +176,7 @@ const ORDER = `
 		o.address_id,
 		tm.bring_time_remaining,
 		tm.delivery_time_remaining,
+		COALESCE( SUM(op.product_price) ,0) order_price,
 		to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
@@ -194,6 +195,21 @@ const ORDER = `
 			EXTRACT( EPOCH FROM (order_delivery_time::TIMESTAMPTZ - NOW()) ) AS delivery_time_remaining
 		FROM orders
 	) tm ON tm.order_id = o.order_id
+	LEFT JOIN (
+		SELECT
+			p.order_id,
+			p.product_id,
+			s.service_name,
+			CASE
+				WHEN o.order_special = TRUE THEN s.service_price_special * p.product_size
+				WHEN o.order_special = FALSE THEN s.service_price_simple * p.product_size
+				ELSE 0
+			END product_price
+		FROM products p
+		NATURAL JOIN orders o
+		LEFT JOIN services s ON s.service_id = p.service_id
+		WHERE p.product_deleted_at IS NULL
+	) op ON op.order_id = o.order_id
 	WHERE
 	CASE 
 		WHEN $1 = FALSE THEN o.order_deleted_at IS NULL
@@ -208,6 +224,7 @@ const ORDER = `
 		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN c.client_id = ANY($3::INT[])
 		ELSE TRUE
 	END
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining
 `
 
 const SEARCH_ORDERS = `
@@ -554,8 +571,55 @@ const ORDER_BINDINGS = `
 	END
 `
 
+const ORDER_BINDING = `
+	SELECT
+		ob.order_binding_id,
+		ob.order_binding_type,
+		ob.transport_id,
+		ob.order_id,
+		ob.product_id,
+		ob.finished,
+		tr.staff_id,
+		ob.order_binding_created_at,
+		ob.order_binding_deleted_at
+	FROM order_bindings ob
+	LEFT JOIN LATERAL (
+		SELECT *
+		FROM transport_registration tr
+		WHERE tr.transport_id = ob.transport_id
+		ORDER BY tr.registration_id DESC
+		LIMIT 1
+	) tr ON tr.transport_id = ob.transport_id
+	WHERE order_binding_deleted_at IS NULL AND
+	CASE
+		WHEN $1 > 0 THEN ob.order_id = $1
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $2 > 0 THEN ob.product_id = $2
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $3 > 0 THEN ob.transport_id = $3
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $4 > 0 THEN tr.staff_id = $4
+		ELSE TRUE
+	END
+`
+
+const CHANGE_ORDER_BINDING = `
+	UPDATE order_bindings SET
+		finished = $2
+	WHERE order_id = $1 AND
+	order_binding_deleted_at IS NULL
+`
+
 export default {
+	CHANGE_ORDER_BINDING,
 	CHANGE_ORDER_STATUS,
+	ORDER_BINDING,
 	ORDER_STATUSES,
 	ORDER_BINDINGS,
 	SEARCH_ORDERS,

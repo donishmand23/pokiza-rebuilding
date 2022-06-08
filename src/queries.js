@@ -1,8 +1,4 @@
 export const PUBLIC_QUERIES = [
-    // temporary
-    'balances',
-    'mainBalances',
-    //
     'socialSets',
     'areas',
     'branches',
@@ -41,6 +37,12 @@ export const PRIVATE_CLIENT_AND_STAFF_QUERIES = [
 ]
 
 export const PUBLIC_STAFF_ONLY_QUERIES = [
+    // temporary
+    'balances',
+    'mainBalances',
+    'orderTransactions',
+    'makeOrderTransaction',
+    //
     'addPermissionGroup',
     'changePermissionGroup',
     'deletePermissionGroup',
