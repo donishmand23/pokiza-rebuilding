@@ -34,6 +34,7 @@ const TRANSACTIONS = `
 			ot.transaction_created_at BETWEEN ($5::TIMESTAMPTZ[])[1] AND (($5::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
 		) ELSE TRUE
 	END
+    ORDER BY ot.transaction_id DESC
 `
 
 const MAKE_TRANSACTION = `
