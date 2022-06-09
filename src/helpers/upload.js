@@ -1,9 +1,9 @@
 import { InternalServerError } from '#errors'
 import TransportQuery from '#sql/transport'
+import { finished } from 'stream/promises'
 import ProductQuery from '#sql/product'
-import StaffQuery from '#sql/staff'
 import { fetch } from '#utils/postgres'
-import { finished } from 'stream'
+import StaffQuery from '#sql/staff'
 import path from 'path'
 import fs from 'fs'
 
@@ -26,10 +26,10 @@ export default async (args) => {
 			const fileName = (Date.now() % 100000) + filename.replace(/\s/g, "")
 			const filePath = path.join(process.cwd(), 'uploads', fileName)
 			const out = fs.createWriteStream(filePath)
-			stream.pipe(out)
+			await stream.pipe(out)
 			await finished(out)
 			args.file = fileName
-
+			
 			if (args.staffId) {
 				const oldFile = fetch(StaffQuery.STAFF_PHOTO, args.staffId)
 				if (oldFile.staff_img) fs.unlinkSync(path.join(process.cwd(), 'uploads', oldFile.staff_img))
