@@ -8,30 +8,35 @@ const TRANSACTIONS = `
         ot.staff_id,
         ot.transaction_type,
         ot.transaction_summary,
+        ot.transaction_deleted_at,
         to_char(ot.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM order_transactions ot
     LEFT JOIN staffs s ON s.staff_id = ot.staff_id
     LEFT JOIN users u ON u.user_id = s.user_id
-    WHERE ot.transaction_deleted_at IS NULL AND
+    WHERE
     CASE
-		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN ot.staff_id = ANY($1::INT[])
+		WHEN $1 > 0 THEN ot.transaction_id = $1
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN u.branch_id = ANY($2::INT[])
+		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN ot.staff_id = ANY($2::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN ot.order_id = ANY($3::INT[])
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN u.branch_id = ANY($3::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN LENGTH($4) > 0 THEN ot.transaction_type = $4
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN ot.order_id = ANY($4::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($5::TIMESTAMPTZ[], 1) = 2 THEN (
-			ot.transaction_created_at BETWEEN ($5::TIMESTAMPTZ[])[1] AND (($5::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		WHEN LENGTH($5) > 0 THEN ot.transaction_type = $5
+		ELSE TRUE
+	END AND
+    CASE
+		WHEN ARRAY_LENGTH($6::TIMESTAMPTZ[], 1) = 2 THEN (
+			ot.transaction_created_at BETWEEN ($6::TIMESTAMPTZ[])[1] AND (($6::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
 		) ELSE TRUE
 	END
     ORDER BY ot.transaction_id DESC
@@ -50,7 +55,17 @@ const MAKE_TRANSACTION = `
     to_char(transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
 `
 
+const DELETE_TRANSACTION = `
+    UPDATE order_transactions SET
+        transaction_deleted_at = current_timestamp
+    WHERE transaction_deleted_at IS NULL AND
+    transaction_id = $1 and staff_id = $2
+    RETURNING *,
+    to_char(transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
+`
+
 export default {
+    DELETE_TRANSACTION,
     MAKE_TRANSACTION,
     TRANSACTIONS
 }

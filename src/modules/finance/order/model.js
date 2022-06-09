@@ -9,7 +9,7 @@ import UserQuery from '#sql/user'
 const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType }, user) => {
 	dateFilter = dateFilter ? [dateFilter.from, dateFilter.to] : []
 
-	return fetchAll(OrderTransactionQuery.TRANSACTIONS, staffId, branchId, orderId, transactionType, dateFilter)
+	return fetchAll(OrderTransactionQuery.TRANSACTIONS, 0, staffId, branchId, orderId, transactionType, dateFilter)
 }
 
 const branch = ({ branchId }) => {
@@ -28,7 +28,7 @@ const staff = async ({ staffId }) => {
 const makeOrderTransaction = async ({ orderId, transactionMoneyCash, transactionMoneyCard, transactionType, transactionSummary }, user) => {
 	const binding = await fetch(OrderQuery.ORDER_BINDING, orderId, 0, 0, user.staffId)
 	if (!binding) {
-		throw new ForbiddenError("Transaksiyani faqat buyurtmani faqat u biriktirilgan haydovchi amalga oshira oladi!")
+		throw new ForbiddenError("Transaksiyani faqat buyurtma biriktirilgan transport haydovchi amalga oshira oladi!")
 	}
 
 	const statuses = await fetchAll(OrderQuery.ORDER_STATUSES, orderId)
@@ -54,7 +54,25 @@ const makeOrderTransaction = async ({ orderId, transactionMoneyCash, transaction
 	return transaction
 }
 
+const deleteOrderTransaction = async ({ transactionId }, user) => {
+	const transaction = await fetch(OrderTransactionQuery.DELETE_TRANSACTION, transactionId, user.staffId)
+	if (!transaction) {
+		throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chira olmaysiz yoki bunday transaksiya mavjud emas!")
+	}
+	
+	if (transaction.transaction_type === 'income') {
+		await fetch(BalanceQuery.DECREMENT_BALANCE, user.staffId, transaction.transaction_money_cash, transaction.transaction_money_card)
+	}
+
+	if (transaction.transaction_type === 'outcome') {
+		await fetch(BalanceQuery.INCREMENT_BALANCE, user.staffId, transaction.transaction_money_cash, transaction.transaction_money_card)
+	}
+	
+	return transaction
+}
+
 export default {
+	deleteOrderTransaction,
 	makeOrderTransaction,
 	orderTransactions,
 	branch,

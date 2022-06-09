@@ -17,7 +17,7 @@ type Mutation {
 		transactionSummary: String
 	): MutationResponse!
 
-	#deleteOrderTransaction(transactionId: ID!): MutationResponse!
+	deleteOrderTransaction(transactionId: ID!): MutationResponse!
 }
 
 type OrderTransaction {

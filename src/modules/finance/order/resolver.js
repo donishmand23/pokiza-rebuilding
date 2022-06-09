@@ -1,11 +1,11 @@
 import { BadRequestError, InternalServerError, AuthorizationError, BadUserInputError, ForbiddenError } from '#errors'
-import balanceModel from './model.js'
+import transactionModel from './model.js'
 
 export default {
 	Mutation: {
 		makeOrderTransaction: async (_, args, user) => {
 			try {
-				const orderTransaction = await balanceModel.makeOrderTransaction(args, user)
+				const orderTransaction = await transactionModel.makeOrderTransaction(args, user)
 				if (orderTransaction) {
 					return {
 						status: 200,
@@ -17,18 +17,32 @@ export default {
 				throw error
 			}
 		},
+
+		deleteOrderTransaction: async (_, args, user) => {
+			try {
+				const deletedOrderTransaction = await transactionModel.deleteOrderTransaction(args, user)
+				if (deletedOrderTransaction) {
+					return {
+						status: 200,
+						message: "Transaksiya o'chirildi. Pul akkountga qayta o'tkazildi!",
+						data: deletedOrderTransaction
+					}
+				} else throw new InternalServerError("Transaksiyani o'chirishda muammolik yuz berdi!")
+			} catch (error) {
+				throw error
+			}
+		},
 	},
 	
 	Query: {
 		orderTransactions: async (_, args, user) => {
 			try {
-				const balances = await balanceModel.orderTransactions(args, user)
+				const balances = await transactionModel.orderTransactions(args, user)
 				return balances
 			} catch(error) {
 				throw error
 			}
 		},
-
 	},
 	
 	OrderTransaction: {
@@ -39,8 +53,9 @@ export default {
 		transactionMoneyCash:  global => global.transaction_money_cash,
 		transactionMoneyCard:  global => global.transaction_money_card,
 		transactionMoneyTotal: global => global.transaction_money_total,
-		branch: global => balanceModel.branch({ branchId: global.branch_id }),
-		staff: 	global => balanceModel.staff({ staffId: global.staff_id }),
-		order: 	global => balanceModel.order({ orderId: global.order_id }),
+		transactionStatus:     global => global.transaction_deleted_at ? 'deleted' : 'active',
+		branch: global => transactionModel.branch({ branchId: global.branch_id }),
+		staff: 	global => transactionModel.staff({ staffId: global.staff_id }),
+		order: 	global => transactionModel.order({ orderId: global.order_id }),
 	}
 }
