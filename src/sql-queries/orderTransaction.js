@@ -64,7 +64,17 @@ const DELETE_TRANSACTION = `
     to_char(transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
 `
 
+const UPDATE_TRANSACTION = `
+    UPDATE order_transactions SET
+        transaction_summary = $3
+    WHERE transaction_deleted_at IS NULL AND
+    transaction_id = $1 and staff_id = $2
+    RETURNING *,
+    to_char(transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
+`
+
 export default {
+    UPDATE_TRANSACTION,
     DELETE_TRANSACTION,
     MAKE_TRANSACTION,
     TRANSACTIONS

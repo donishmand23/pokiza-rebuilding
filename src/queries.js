@@ -42,6 +42,7 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
     'mainBalances',
     'orderTransactions',
     'makeOrderTransaction',
+    'changeOrderTransaction',
     'deleteOrderTransaction',
     //
     'addPermissionGroup',

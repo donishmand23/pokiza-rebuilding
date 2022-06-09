@@ -1,4 +1,4 @@
-import { BadRequestError, InternalServerError, AuthorizationError, BadUserInputError, ForbiddenError } from '#errors'
+import { BadRequestError, ForbiddenError } from '#errors'
 import { fetch, fetchAll } from '#utils/postgres'
 import OrderTransactionQuery from '#sql/orderTransaction'
 import BalanceQuery from '#sql/balance'
@@ -71,7 +71,17 @@ const deleteOrderTransaction = async ({ transactionId }, user) => {
 	return transaction
 }
 
+const changeOrderTransaction = async ({ transactionId, transactionSummary }, user) => {
+	const transaction = await fetch(OrderTransactionQuery.UPDATE_TRANSACTION, transactionId, user.staffId, transactionSummary)
+	if (!transaction) {
+		throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'zgartira olmaysiz yoki bunday transaksiya mavjud emas!")
+	}
+	
+	return transaction
+}
+
 export default {
+	changeOrderTransaction,
 	deleteOrderTransaction,
 	makeOrderTransaction,
 	orderTransactions,

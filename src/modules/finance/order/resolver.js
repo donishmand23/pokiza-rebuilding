@@ -1,4 +1,4 @@
-import { BadRequestError, InternalServerError, AuthorizationError, BadUserInputError, ForbiddenError } from '#errors'
+import { InternalServerError } from '#errors'
 import transactionModel from './model.js'
 
 export default {
@@ -28,6 +28,21 @@ export default {
 						data: deletedOrderTransaction
 					}
 				} else throw new InternalServerError("Transaksiyani o'chirishda muammolik yuz berdi!")
+			} catch (error) {
+				throw error
+			}
+		},
+
+		changeOrderTransaction: async (_, args, user) => {
+			try {
+				const changedOrderTransaction = await transactionModel.changeOrderTransaction(args, user)
+				if (changedOrderTransaction) {
+					return {
+						status: 200,
+						message: "Transaksiya izohi o'zgartirildi!",
+						data: changedOrderTransaction
+					}
+				} else throw new InternalServerError("Transaksiyaning izohini o'zgartirishda muammolik yuz berdi!")
 			} catch (error) {
 				throw error
 			}
