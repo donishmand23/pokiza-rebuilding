@@ -381,6 +381,20 @@ create table order_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
+-- 31. debt transactions ( received money from orders )
+drop table if exists debt_transactions cascade;
+create table debt_transactions (
+	transaction_id serial not null primary key,
+	transaction_money_cash int not null default 0,
+	transaction_money_card int not null default 0,
+	transaction_from int not null references staffs(staff_id),
+	transaction_to int not null references staffs(staff_id),
+	transaction_status character varying(10) not null check (transaction_status in ('pending', 'accepted', 'rejected', 'cancelled', 'deleted')),
+	transaction_summary character varying(512),
+	transaction_created_at timestamptz default current_timestamp,
+	transaction_deleted_at timestamptz default null
+);
+
 -- -- CASHIER MODULE
 -- -- 27. transaction types
 -- drop table if exists transaction_types cascade;

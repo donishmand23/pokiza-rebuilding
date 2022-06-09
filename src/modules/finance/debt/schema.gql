@@ -1,0 +1,44 @@
+type Query {
+	debtTransactions(
+		branchId: [ID]
+		moneyAmount: Int
+		transactionId: ID
+		transactionTo: ID
+		transactionFrom: ID
+		moneyType: MoneyType
+		dateFilter: RangeDate
+		transactionType: TransactionType!
+		transactionStatus: TransactionStatus
+	): [DebtTransaction!]!
+}
+
+type Mutation {
+	makeDebtTransaction(
+		transactionType: TransactionType!
+		transactionFrom: ID!
+		transactionTo: ID!
+		transactionMoneyCash: Int = 0
+		transactionMoneyCard: Int = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+	): MutationResponse!
+}
+
+enum MoneyType {
+	card
+	cash
+}
+
+type DebtTransaction {
+	branch: Branch!
+	transactionId: ID!
+	transactionTo: Staff!
+	transactionFrom: Staff!
+	transactionMoneyCash: Int!
+	transactionMoneyCard: Int!
+	transactionMoneyTotal: Int!
+	transactionSummary: String
+	transactionCreatedAt: DateTime!
+	transactionType: TransactionType!
+	transactionStatus: TransactionStatus!
+}

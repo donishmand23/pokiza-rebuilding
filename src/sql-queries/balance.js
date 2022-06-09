@@ -63,9 +63,17 @@ const DECREMENT_BALANCE = `
     RETURNING *
 `
 
+const CREATE_BALANCE = `
+    INSERT INTO balances (
+        staff_id
+    ) VALUES ($1)
+    RETURNING *
+`
+
 export default {
     INCREMENT_BALANCE,
     DECREMENT_BALANCE,
+    CREATE_BALANCE,
     MAIN_BALANCES,
     BALANCES
 }

@@ -44,6 +44,9 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
     'makeOrderTransaction',
     'changeOrderTransaction',
     'deleteOrderTransaction',
+
+    'debtTransactions',
+    'makeDebtTransaction',
     //
     'addPermissionGroup',
     'changePermissionGroup',
