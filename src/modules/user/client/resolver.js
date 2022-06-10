@@ -99,7 +99,7 @@ export default {
 
 		enterClientPassword: async (_, args, { userId, agent }) => {
 			try {
-				console.log(1, args)
+				console.log(1, args, userId)
 				const code = codeGen(4)
 				const client = await clientModel.enterClientPassword({ userId, code, ...args })
 				if(client) {
