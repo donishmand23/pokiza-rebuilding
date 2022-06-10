@@ -76,7 +76,7 @@ export default {
 				const code = codeGen(4)
 				const client = await clientModel.enterClientPhone({ code, ...args })
 				if(client) {
-					await sendPassword(args.mainContact, code)
+					//await sendPassword(args.mainContact, code)
 					return {
 						status: 200,
 						registered: client.is_registered,
