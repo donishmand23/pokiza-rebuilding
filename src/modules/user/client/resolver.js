@@ -75,6 +75,7 @@ export default {
 			try {
 				const code = codeGen(4)
 				const client = await clientModel.enterClientPhone({ code, ...args })
+				console.log(client)
 				if (client) {
 					//await sendPassword(args.mainContact, code)
 					return {
