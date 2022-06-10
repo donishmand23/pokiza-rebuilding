@@ -163,6 +163,7 @@ const enterClientPhone = async ({ mainContact, code }) => {
 
 const enterClientPassword = async ({ password, userId, code }) => {
 	const user = await fetch(ClientQuery.CHECK_CLIENT_PASSWORD, userId, password)
+	console.log(2, user)
 	if(!user) throw new AuthorizationError("Wrong password or username!")
 	await fetch(ClientQuery.CHANGE_CLIENT_PASSWORD, userId, '', code)
 	if(!user.client_id) return fetch(ClientQuery.ADD_CLIENT_PART, user.user_id)
