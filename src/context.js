@@ -37,7 +37,8 @@ export default async function ({ req }) {
         throw new ForbiddenError('token is sent from wrong device!')
     }
 
-    if(fieldName === 'enterClientPassword') {
+    if (fieldName === 'enterClientPassword') {
+        console.log(payload)
         return payload
     }
 
