@@ -16,7 +16,7 @@ export default async function ({ req }) {
 
     const Token = req.headers.token
     const reqAgent = req['headers']['user-agent'].trim()
-
+    console.log('fieldName: ', fieldName)
     if(fieldName == '__schema') return
     if(fieldName == '__typename') return
 
