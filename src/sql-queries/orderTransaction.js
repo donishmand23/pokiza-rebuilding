@@ -38,6 +38,10 @@ const TRANSACTIONS = `
 		WHEN ARRAY_LENGTH($6::TIMESTAMPTZ[], 1) = 2 THEN (
 			ot.transaction_created_at BETWEEN ($6::TIMESTAMPTZ[])[1] AND (($6::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
 		) ELSE TRUE
+	END AND
+    CASE
+		WHEN $7 > 0 AND ot.transaction_money_cash + ot.transaction_money_card > 0 THEN ot.transaction_money_cash + ot.transaction_money_card <= $7
+		ELSE TRUE
 	END
     ORDER BY ot.transaction_id DESC
 `

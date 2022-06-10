@@ -6,10 +6,10 @@ import BranchQuery from '#sql/branch'
 import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
 
-const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType }, user) => {
+const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType, moneyAmount, transactionId }, user) => {
 	dateFilter = dateFilter ? [dateFilter.from, dateFilter.to] : []
 
-	return fetchAll(OrderTransactionQuery.TRANSACTIONS, 0, staffId, branchId, orderId, transactionType, dateFilter)
+	return fetchAll(OrderTransactionQuery.TRANSACTIONS, transactionId, staffId, branchId, orderId, transactionType, dateFilter, moneyAmount)
 }
 
 const branch = ({ branchId }) => {

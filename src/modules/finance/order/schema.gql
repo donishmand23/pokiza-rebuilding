@@ -3,6 +3,8 @@ type Query {
 		staffId: [ID] 
 		branchId: [ID]
 		orderId: [ID]
+		moneyAmount: Int
+		transactionId: ID
 		dateFilter: RangeDate
 		transactionType: TransactionType!
 	): [OrderTransaction!]!
