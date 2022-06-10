@@ -38,7 +38,7 @@ export default async function ({ req }) {
     }
 
     if (fieldName === 'enterClientPassword') {
-        console.log(payload)
+        console.log(3, payload)
         return payload
     }
 
