@@ -34,9 +34,9 @@ export default async function ({ req }) {
     const payload = verify(Token)
     const { registered, userId, staffId, clientId, agent } = payload
 
-    if(!(agent === reqAgent)) {
-        throw new ForbiddenError('token is sent from wrong device!')
-    }
+    //if(!(agent === reqAgent)) {
+    //    throw new ForbiddenError('token is sent from wrong device!')
+    //}
 
     if (fieldName === 'enterClientPassword') {
         console.log(3, payload)
