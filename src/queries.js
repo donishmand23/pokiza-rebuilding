@@ -38,13 +38,6 @@ export const PRIVATE_CLIENT_AND_STAFF_QUERIES = [
 
 export const PUBLIC_STAFF_ONLY_QUERIES = [
     // temporary
-    'balances',
-    'mainBalances',
-    'orderTransactions',
-    'makeOrderTransaction',
-    'changeOrderTransaction',
-    'deleteOrderTransaction',
-
     'debtTransactions',
     'makeDebtTransaction',
     //
@@ -57,6 +50,14 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
 ]
 
 export const PRIVATE_STAFF_ONLY_QUERIES = [
+    'balances',
+    'mainBalances',
+
+    'orderTransactions',
+    'makeOrderTransaction',
+    'changeOrderTransaction',
+    'deleteOrderTransaction',
+
     'staffs',
     'deletedStaffs',
     'addStaff',

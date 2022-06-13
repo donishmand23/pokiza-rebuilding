@@ -19,7 +19,13 @@ type Mutation {
 		transactionSummary: String
 	): MutationResponse!
 
-	changeOrderTransaction(transactionId: ID! transactionSummary: String!): MutationResponse!
+	changeOrderTransaction(
+		transactionId: ID! 
+		transactionSummary: String
+		transactionMoneyCash: Int = 0
+		transactionMoneyCard: Int = 0
+	): MutationResponse!
+	
 	deleteOrderTransaction(transactionId: ID!): MutationResponse!
 }
 

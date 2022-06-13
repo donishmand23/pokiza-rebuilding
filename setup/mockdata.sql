@@ -3,6 +3,7 @@
 -- BRANCHES - filiallar
 insert into branches (branch_name) values ('Toshkent');	
 insert into branches (branch_name) values ('Qo''qon');
+insert into branches (branch_name) values ('Andijon');
 
 
 -- STATES - viloyatlar 
@@ -423,7 +424,9 @@ insert into order_transactions (
 ('income', 300000, 93000, 5, 3, 'gilam yetkazildi!');
 
 -- balance
-insert into balances (balance_money_cash, balance_money_card, staff_id) values (insert into balances (balance_money_cash, balance_money_card, staff_id) values (900000, 60000, 1);300000, 93000, 3);
+insert into balances (balance_money_cash, balance_money_card, staff_id) values
+(900000, 60000, 1),
+(300000, 93000, 3);
 
 
 
@@ -520,7 +523,20 @@ insert into permissions (permission_action, permission_model) values
 (2302, 'delete notification'),
 (2303, 'change deliveryHours'),
 (2304, 'see monitoring'),
-(2305, 'search global');
+(2305, 'search global'),
+
+(2400, 'see personal balance'),
+(2401, 'see any balances'),
+(2402, 'see branch balances'),
+
+(2500, 'see personal order transactions'),
+(2501, 'see any order transactions'),
+(2502, 'make personal order transactions'),
+(2503, 'make any order transactions'),
+(2504, 'change personal order transactions'),
+(2505, 'change any order transactions'),
+(2506, 'delete personal order transactions'),
+(2507, 'delete any order transactions');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
@@ -536,6 +552,23 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1901);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1902);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2402);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2402);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2503);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2501);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2501);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 3, 2500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2506);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2507);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2505);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');
@@ -557,16 +590,3 @@ insert into permission_group_sets (group_id, permission_action) values (2, 1806)
 insert into permission_group_sets (group_id, permission_action) values (2, 1807);
 insert into permission_group_sets (group_id, permission_action) values (2, 1808);
 insert into permission_group_sets (group_id, permission_action) values (2, 1809);
-
-
-
-
-
-
-
-
-
-
-
-
-

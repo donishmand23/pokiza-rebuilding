@@ -198,8 +198,18 @@ const BRANCHES_BY_USERS = `
 	WHERE u.user_id = ANY($1::INT[])
 `
 
+const BRANCHES_BY_ORDER_TRANSACTIONS = `
+	SELECT
+		o.branch_id
+	FROM order_transactions ot
+	NATURAL JOIN orders o
+	WHERE ot.transaction_id = ANY($1::INT[]) AND
+	ot.transaction_deleted_at IS NULL
+`
+
 
 export default {
+	BRANCHES_BY_ORDER_TRANSACTIONS,
 	BRANCHES_BY_TRANSPORTS,
 	BRANCHES_BY_PRODUCTS,
 	BRANCHES_BY_SERVICES,

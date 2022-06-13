@@ -1,13 +1,48 @@
 import { ForbiddenError, BadRequestError } from '#errors'
 import { fetch, fetchAll } from '#utils/postgres'
 import permissions from '../permissions.js'
+import OrderTransactionQuery from '#sql/orderTransaction'
 import PermissionQuery from '#sql/permission'
+import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
+
+const personalPermissions = {
+    2400: "see personal balances",
+    2500: "see personal order transactions",
+    2502: "make personal order transactions",
+    2504: "change personla order transactions",
+    2506: "delete personal order transactions",
+}
 
 export default async ({ operation, variables, fieldName }, payload) => {
     const query = fieldName.trim()
     const queryPermissions = permissions[query]
     const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, queryPermissions)
+    
+    if (staffPermissions.length == 1 && personalPermissions[staffPermissions[0]?.permission_action]) {
+        payload.personal = true
+        payload.personalBranchId = [staffPermissions[0].branch_id]
+    } else if (staffPermissions.length > 2 && staffPermissions.find(per => personalPermissions[per.permission_action])) {
+        const personalPermissionIndexes = staffPermissions.filter(per => {
+            return personalPermissions[per.permission_action] &&
+            staffPermissions.filter(innerPer => innerPer.permission_set_id != per.permission_set_id).map(per => +per.branch_id).includes(+per.branch_id)
+        }).map((_, index) => +index)
+
+        if (personalPermissionIndexes.length) {
+            personalPermissionIndexes.map(index => staffPermissions.splice(index, 1))
+        }
+
+        const personalBranchId = staffPermissions.filter(per => personalPermissions[per.permission_action]).map(per => +per.branch_id)
+        
+        if (personalBranchId.length) {
+            payload.personal = true
+            payload.personalBranchId = personalBranchId
+        } else {
+            payload.personal = false
+        }
+    } else {
+        payload.personal = false
+    }
 
     if (operation === 'query') {
         payload.allowedBranches = []
@@ -515,6 +550,54 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
         }
 
-    }   
+        // finance module
+        else if (query === 'makeOrderTransaction') {
+            const orderId = variables.orderId          // ID!
+
+            const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [orderId]))?.branch_id
+
+            if (!orderBranchId) {
+                throw new BadRequestError("Bunday buyurtma mavjud emas!")
+            }
+
+            if (staffPermissions.find(per => personalPermissions[per.permission_action])) {
+                const binding = await fetch(OrderQuery.ORDER_BINDING, orderId, 0, 0, payload.staffId)
+                if (!binding) {
+                    throw new ForbiddenError("Transaksiyani faqat buyurtma biriktirilgan transport haydovchisi amalga oshira oladi!")
+                }
+            }
+
+            if (
+                orderId && !allowedBranches.includes(+orderBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+            
+        else if (query === 'deleteOrderTransaction' || query === 'changeOrderTransaction') {
+            const transactionId = variables.transactionId          // ID!
+
+            const transactionBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDER_TRANSACTIONS, [transactionId]))?.branch_id
+
+            if (!transactionBranchId) {
+                throw new BadRequestError("Bunday transaksiya mavjud emas!")
+            }
+
+            if (staffPermissions.find(per => personalPermissions[per.permission_action])) {
+                const transaction = await fetch(OrderTransactionQuery.TRANSACTION, transactionId, payload.staffId, 0, 0)
+                if (!transaction) {
+                    throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chira olmaysiz!")
+                }
+            }
+
+            if (
+                transactionId && !allowedBranches.includes(+transactionBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+    } else {
+        throw new BadRequestError("Use query variables!")
+    }  
 
 }

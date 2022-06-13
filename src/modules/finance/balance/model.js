@@ -4,10 +4,14 @@ import BranchQuery from '#sql/branch'
 import UserQuery from '#sql/user'
 
 const balances = ({ staffId, branchId }, user) => {
-	return fetchAll(BalanceQuery.BALANCES, staffId, branchId)
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
+	return fetchAll(BalanceQuery.BALANCES, staffId, branchId, user.personal, user.personalBranchId, user.staffId)
 }
 
 const mainBalances = ({ branchId }, user) => {
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+	
 	return fetchAll(BalanceQuery.MAIN_BALANCES, branchId)
 }
 

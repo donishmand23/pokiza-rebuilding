@@ -9,7 +9,13 @@ import UserQuery from '#sql/user'
 const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType, moneyAmount, transactionId }, user) => {
 	dateFilter = dateFilter ? [dateFilter.from, dateFilter.to] : []
 
-	return fetchAll(OrderTransactionQuery.TRANSACTIONS, transactionId, staffId, branchId, orderId, transactionType, dateFilter, moneyAmount)
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
+	return fetchAll(
+		OrderTransactionQuery.TRANSACTIONS, 
+		transactionId, staffId, branchId, orderId, transactionType, dateFilter, moneyAmount,
+		user.personal, user.personalBranchId, user.staffId
+	)
 }
 
 const branch = ({ branchId }) => {
@@ -26,11 +32,7 @@ const staff = async ({ staffId }) => {
 }
 
 const makeOrderTransaction = async ({ orderId, transactionMoneyCash, transactionMoneyCard, transactionType, transactionSummary }, user) => {
-	const binding = await fetch(OrderQuery.ORDER_BINDING, orderId, 0, 0, user.staffId)
-	if (!binding) {
-		throw new ForbiddenError("Transaksiyani faqat buyurtma biriktirilgan transport haydovchi amalga oshira oladi!")
-	}
-
+	const binding = await fetch(OrderQuery.ORDER_BINDING, orderId, 0, 0, 0)
 	const statuses = await fetchAll(OrderQuery.ORDER_STATUSES, orderId)
 	if (statuses.at(-1) != 9 && transactionType === 'income') {
 		throw new BadRequestError("Transaksiyani amalga oshirish uchun buyurtma yetkazildi statusida bo'lishi kerak!")
@@ -41,40 +43,75 @@ const makeOrderTransaction = async ({ orderId, transactionMoneyCash, transaction
 		throw new BadRequestError(`Transaksiyani amalga oshirish uchun buyurtma summasi ${order.order_price} ga teng yoki yuqori bo'lishi kerak!`)
 	}
 
-	const transaction = await fetch(OrderTransactionQuery.MAKE_TRANSACTION, orderId, user.staffId, transactionMoneyCash, transactionMoneyCard, transactionType, transactionSummary)
+	if (order.order_price < transactionMoneyCard + transactionMoneyCash && transactionType === 'outcome') {
+		throw new BadRequestError(`Transaksiyani o'zgartirish uchun buyurtma summasi ${order.order_price} ga teng yoki kichik bo'lishi kerak!`)
+	}
+
+	const transaction = await fetch(OrderTransactionQuery.MAKE_TRANSACTION, orderId, binding.staff_id, transactionMoneyCash, transactionMoneyCard, transactionType, transactionSummary)
+
+	const balance = await fetch(BalanceQuery.BALANCE, binding.staff_id, 0)
+	if (!balance) {
+		await fetch(BalanceQuery.CREATE_BALANCE, binding.staff_id)
+	}
 	
 	if (transactionType === 'income') {
-		await fetch(BalanceQuery.INCREMENT_BALANCE, user.staffId, transactionMoneyCash, transactionMoneyCard)
+		await fetch(BalanceQuery.INCREMENT_BALANCE, binding.staff_id, transactionMoneyCash, transactionMoneyCard)
 	}
 
 	if (transactionType === 'outcome') {
-		await fetch(BalanceQuery.DECREMENT_BALANCE, user.staffId, transactionMoneyCash, transactionMoneyCard)
+		await fetch(BalanceQuery.DECREMENT_BALANCE, binding.staff_id, transactionMoneyCash, transactionMoneyCard)
 	}
 	
 	return transaction
 }
 
 const deleteOrderTransaction = async ({ transactionId }, user) => {
-	const transaction = await fetch(OrderTransactionQuery.DELETE_TRANSACTION, transactionId, user.staffId)
-	if (!transaction) {
-		throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chira olmaysiz yoki bunday transaksiya mavjud emas!")
-	}
-	
-	if (transaction.transaction_type === 'income') {
-		await fetch(BalanceQuery.DECREMENT_BALANCE, user.staffId, transaction.transaction_money_cash, transaction.transaction_money_card)
+	const transaction = await fetch(OrderTransactionQuery.DELETE_TRANSACTION, transactionId)
+
+	if (transaction?.transaction_type === 'income') {
+		const transactions = await fetchAll(OrderTransactionQuery.TRANSACTION, 0, 0, 0, transaction.order_id, 'outcome')
+		const transactionMoneyCash = transaction.transaction_money_cash - transactions.reduce((acc, el) => acc + el.transaction_money_cash, 0)
+		const transactionMoneyCard = transaction.transaction_money_card - transactions.reduce((acc, el) => acc + el.transaction_money_card, 0)
+		await fetch(BalanceQuery.DECREMENT_BALANCE, transaction.staff_id, transactionMoneyCash, transactionMoneyCard)
 	}
 
-	if (transaction.transaction_type === 'outcome') {
-		await fetch(BalanceQuery.INCREMENT_BALANCE, user.staffId, transaction.transaction_money_cash, transaction.transaction_money_card)
+	if (transaction?.transaction_type === 'outcome') {
+		await fetch(BalanceQuery.INCREMENT_BALANCE, transaction.staff_id, transaction.transaction_money_cash, transaction.transaction_money_card)
 	}
 	
 	return transaction
 }
 
-const changeOrderTransaction = async ({ transactionId, transactionSummary }, user) => {
-	const transaction = await fetch(OrderTransactionQuery.UPDATE_TRANSACTION, transactionId, user.staffId, transactionSummary)
-	if (!transaction) {
-		throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'zgartira olmaysiz yoki bunday transaksiya mavjud emas!")
+const changeOrderTransaction = async ({ transactionId, transactionMoneyCash, transactionMoneyCard, transactionSummary }, user) => {
+	const oldTransaction = await fetch(OrderTransactionQuery.TRANSACTION, transactionId, 0, 0, 0, undefined)
+	const order = await fetch(OrderQuery.ORDER, null, oldTransaction.order_id, [])
+
+	if (
+		(oldTransaction.transaction_type === 'income') && 
+		(transactionMoneyCash || transactionMoneyCard) &&
+		(order.order_price > transactionMoneyCard + transactionMoneyCash)
+	) {
+		throw new BadRequestError(`Transaksiyani o'zgartirish uchun buyurtma summasi ${order.order_price} ga teng yoki yuqori bo'lishi kerak!`)
+	}
+
+	if (
+		(oldTransaction.transaction_type === 'outcome') &&
+		(transactionMoneyCash || transactionMoneyCard) &&
+		(order.order_price < transactionMoneyCard + transactionMoneyCash)
+	) {
+		throw new BadRequestError(`Transaksiyani o'zgartirish uchun buyurtma summasi ${order.order_price} ga teng yoki kichik bo'lishi kerak!`)
+	}
+
+	const transaction = await fetch(OrderTransactionQuery.UPDATE_TRANSACTION, transactionId, transactionMoneyCash, transactionMoneyCard, transactionSummary)
+
+	if ((transactionMoneyCash || transactionMoneyCard) && transaction?.transaction_type === 'income') {
+		await fetch(BalanceQuery.DECREMENT_BALANCE, oldTransaction.staff_id, oldTransaction.transaction_money_cash, oldTransaction.transaction_money_card)
+		await fetch(BalanceQuery.INCREMENT_BALANCE, oldTransaction.staff_id, transaction.transaction_money_cash, transaction.transaction_money_card)
+	}
+
+	if ((transactionMoneyCash || transactionMoneyCard) && transaction?.transaction_type === 'outcome') {
+		await fetch(BalanceQuery.INCREMENT_BALANCE, oldTransaction.staff_id, oldTransaction.transaction_money_cash, oldTransaction.transaction_money_card)
+		await fetch(BalanceQuery.DECREMENT_BALANCE, transaction.staff_id, transaction.transaction_money_cash, transaction.transaction_money_card)
 	}
 	
 	return transaction

@@ -77,5 +77,13 @@ export default {
     'changeRegion': [1202],
     'addNeighborhood': [1202],
     'changeArea': [1202],
-    'changeStreet': [1202]
+    'changeStreet': [1202],
+
+    'balances': [2400, 2401],
+    'mainBalances': [2402],
+
+    'orderTransactions': [2500, 2501],
+    'makeOrderTransaction': [2502, 2503],
+    'changeOrderTransaction': [2504, 2505],
+    'deleteOrderTransaction': [2506, 2507],
 }
