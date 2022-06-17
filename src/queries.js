@@ -37,10 +37,6 @@ export const PRIVATE_CLIENT_AND_STAFF_QUERIES = [
 ]
 
 export const PUBLIC_STAFF_ONLY_QUERIES = [
-    // temporary
-    'debtTransactions',
-    'makeDebtTransaction',
-    //
     'addPermissionGroup',
     'changePermissionGroup',
     'deletePermissionGroup',
@@ -57,6 +53,14 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'makeOrderTransaction',
     'changeOrderTransaction',
     'deleteOrderTransaction',
+
+    'debtTransactions',
+    'makeDebtTransactionIncome',
+    'makeDebtTransactionOutcome',
+    'changeDebtTransaction',
+    'cancelDebtTransaction',
+    'acceptDebtTransaction',
+    'deleteDebtTransaction',
 
     'staffs',
     'deletedStaffs',

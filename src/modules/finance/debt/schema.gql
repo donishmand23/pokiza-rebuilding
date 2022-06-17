@@ -7,21 +7,44 @@ type Query {
 		transactionFrom: ID
 		moneyType: MoneyType
 		dateFilter: RangeDate
+		pagination: Pagination = {}
 		transactionType: TransactionType!
 		transactionStatus: TransactionStatus
 	): [DebtTransaction!]!
 }
 
 type Mutation {
-	makeDebtTransaction(
-		transactionType: TransactionType!
-		transactionFrom: ID!
+	makeDebtTransactionIncome(
 		transactionTo: ID!
-		transactionMoneyCash: Int = 0
-		transactionMoneyCard: Int = 0
+		transactionFrom: ID!
+		transactionMoney: Int! = 0
 		transactionSummary: String
 		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType!
 	): MutationResponse!
+
+	makeDebtTransactionOutcome(
+		transactionTo: ID!
+		transactionFrom: ID!
+		transactionMoney: Int! = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType!
+	): MutationResponse!
+
+	changeDebtTransaction(
+		transactionId: ID!
+		transactionTo: ID
+		transactionFrom: ID
+		transactionMoney: Int = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType
+	): MutationResponse!
+
+	cancelDebtTransaction(transactionId: ID!): MutationResponse!
+	acceptDebtTransaction(transactionId: ID!): MutationResponse!
+	deleteDebtTransaction(transactionId: ID!): MutationResponse!
 }
 
 enum MoneyType {
@@ -34,11 +57,10 @@ type DebtTransaction {
 	transactionId: ID!
 	transactionTo: Staff!
 	transactionFrom: Staff!
-	transactionMoneyCash: Int!
-	transactionMoneyCard: Int!
-	transactionMoneyTotal: Int!
+	transactionMoney: Int!
 	transactionSummary: String
 	transactionCreatedAt: DateTime!
+	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
 }

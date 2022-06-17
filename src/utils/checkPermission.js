@@ -2,6 +2,7 @@ import { ForbiddenError, BadRequestError } from '#errors'
 import { fetch, fetchAll } from '#utils/postgres'
 import permissions from '../permissions.js'
 import OrderTransactionQuery from '#sql/orderTransaction'
+import DebtTransactionQuery from '#sql/debtTransaction'
 import PermissionQuery from '#sql/permission'
 import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
@@ -10,8 +11,17 @@ const personalPermissions = {
     2400: "see personal balances",
     2500: "see personal order transactions",
     2502: "make personal order transactions",
-    2504: "change personla order transactions",
+    2504: "change personal order transactions",
     2506: "delete personal order transactions",
+
+    2600: "see personal equities",
+    2603: "see personal debt transactions",
+    2605: "make personal debt transaction income",
+    2607: "make personal debt transaction outcome",
+    2609: "accept personal debt transaction",
+    2611: "cancel personal debt transaction",
+    2613: "change personal debt transaction",
+    2615: "delete personal debt transaction",
 }
 
 export default async ({ operation, variables, fieldName }, payload) => {
@@ -22,7 +32,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
     if (staffPermissions.length == 1 && personalPermissions[staffPermissions[0]?.permission_action]) {
         payload.personal = true
         payload.personalBranchId = [staffPermissions[0].branch_id]
-    } else if (staffPermissions.length > 2 && staffPermissions.find(per => personalPermissions[per.permission_action])) {
+    } else if (staffPermissions.length > 1 && staffPermissions.find(per => personalPermissions[per.permission_action])) {
         const personalPermissionIndexes = staffPermissions.filter(per => {
             return personalPermissions[per.permission_action] &&
             staffPermissions.filter(innerPer => innerPer.permission_set_id != per.permission_set_id).map(per => +per.branch_id).includes(+per.branch_id)
@@ -70,7 +80,6 @@ export default async ({ operation, variables, fieldName }, payload) => {
         // check staff has permissions
         if (!staffPermissions.length) throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
         const allowedBranches = staffPermissions.map(per => +per.branch_id)
-        
         // permissions that are not relevant to branches
         if (['changeDeliveryHour'].includes(query)) return
         
@@ -586,7 +595,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             if (staffPermissions.find(per => personalPermissions[per.permission_action])) {
                 const transaction = await fetch(OrderTransactionQuery.TRANSACTION, transactionId, payload.staffId, 0, 0)
                 if (!transaction) {
-                    throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chira olmaysiz!")
+                    throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chirish yoki o'zgartirish mumkin emas!")
                 }
             }
 
@@ -596,6 +605,140 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
         }
+            
+        else if (query === 'makeDebtTransactionIncome') {
+            const transactionTo = variables.transactionTo          // ID!
+
+            const transactionToBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionTo]))?.branch_id
+            
+            if (!transactionToBranchId) {
+                throw new BadRequestError("Bunday xodim mavjud emas!")
+            }
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                payload.staffId != transactionTo
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingizga pul o'tkazishingiz mumkin!")
+            }
+
+            if (
+                transactionTo && !allowedBranches.includes(+transactionToBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+            
+        else if (query === 'makeDebtTransactionOutcome') {
+            const transactionFrom = variables.transactionFrom          // ID!
+
+            const transactionFromBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionFrom]))?.branch_id
+            
+            if (!transactionFromBranchId) {
+                throw new BadRequestError("Bunday xodim mavjud emas!")
+            }
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                payload.staffId != transactionFrom
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingizdan pul o'tkazishingiz mumkin!")
+            }
+
+            if (
+                transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+            
+        else if (query === 'changeDebtTransaction') {
+            const transactionId = variables.transactionId          // ID!
+            const transactionTo = variables.transactionTo         // ID
+            const transactionFrom = variables.transactionFrom          // ID
+
+            const transactionBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_DEBT_TRANSACTIONS, [transactionId])).map(el => +el.branch_id)
+            const transactionFromBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionFrom]))?.branch_id
+            
+            if (!transactionBranchIds.length) {
+                throw new BadRequestError("Bunday transaksiya mavjud emas!")
+            }
+
+            const transaction = await fetch(DebtTransactionQuery.TRANSACTION, transactionId, 0, 0)
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                (
+                    (
+                        transactionFrom && payload.staffId != transactionFrom ||
+                        transactionTo && payload.staffId != transactionTo
+                    ) ||
+                    (
+                        payload.staffId != transaction.transaction_from &&
+                        payload.staffId != transaction.transaction_to
+                    )
+                )
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingiz amalga oshirgan transaksiyani o'zgartirishingiz mumkin!")
+            }
+
+            if (
+                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
+                transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+            
+        else if (['cancelDebtTransaction', 'acceptDebtTransaction', 'deleteDebtTransaction'].includes(query)) {
+            const transactionId = variables.transactionId          // ID!
+
+            const transactionBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_DEBT_TRANSACTIONS, [transactionId])).map(el => +el.branch_id)
+            
+            if (!transactionBranchIds.length) {
+                throw new BadRequestError("Bunday transaksiya mavjud emas!")
+            }
+
+            const transaction = await fetch(DebtTransactionQuery.TRANSACTION, transactionId, 0, 0)
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                query === 'cancelDebtTransaction' &&
+                (
+                    payload.staffId != transaction.transaction_from &&
+                    payload.staffId != transaction.transaction_to
+                )
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingiz amalga oshirgan transaksiyani bekor qilishingiz mumkin!")
+            }
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                query === 'acceptDebtTransaction' &&
+                (
+                    payload.staffId != transaction.transaction_to
+                )
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat sizga yuborilgan transaksiyani qabul qilishingiz mumkin!")
+            }
+
+            if (
+                staffPermissions.find(per => personalPermissions[per.permission_action]) &&
+                query === 'deleteDebtTransaction' &&
+                (
+                    payload.staffId != transaction.transaction_from
+                )
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingiz amalga transaksiyani o'chirishingiz qilishingiz mumkin!")
+            }
+
+            if (
+                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
     } else {
         throw new BadRequestError("Use query variables!")
     }  

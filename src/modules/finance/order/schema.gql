@@ -51,7 +51,6 @@ enum TransactionType {
 enum TransactionStatus {
 	pending
 	accepted
-	rejected
 	cancelled
 	deleted
 	active

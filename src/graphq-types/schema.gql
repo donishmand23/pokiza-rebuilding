@@ -19,7 +19,7 @@ scalar Second
 
 
 # unions
-union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service | DeliveryHour | Order | Product | Transport | Permission  | PermissionGroup | OrderTransaction
+union AllTypes = Branch | State | Region | Neighborhood | Street | Area | SocialSet | Client | Staff | Service | DeliveryHour | Order | Product | Transport | Permission  | PermissionGroup | OrderTransaction | DebtTransaction
 union UserType = Staff | Client
 
 #enums

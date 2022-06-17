@@ -16,8 +16,7 @@ export default async function ({ req }) {
 
     const Token = req.headers.token
     const reqAgent = req['headers']['user-agent'].trim()
-    console.log('fieldName: ', fieldName)
-    console.log('body: ', req.body)
+
     if(fieldName == '__schema') return
     if(fieldName == '__typename') return
 
@@ -39,7 +38,6 @@ export default async function ({ req }) {
     //}
 
     if (fieldName === 'enterClientPassword') {
-        console.log(3, payload)
         return payload
     }
 

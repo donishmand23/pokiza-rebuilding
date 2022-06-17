@@ -75,18 +75,38 @@ const MAIN_BALANCES = `
 `
 
 const INCREMENT_BALANCE = `
-    UPDATE balances SET
-        balance_money_cash = balance_money_cash + $2,
-        balance_money_card = balance_money_card + $3
-    WHERE staff_id = $1
+    UPDATE balances b SET
+        balance_money_cash = (
+            CASE
+                WHEN $2 > 0 THEN b.balance_money_cash + $2
+                ELSE b.balance_money_cash
+            END
+        ),
+        balance_money_card = (
+            CASE
+                WHEN $3 > 0 THEN b.balance_money_card + $3
+                ELSE b.balance_money_card
+            END
+        )
+    WHERE b.staff_id = $1
     RETURNING *
 `
 
 const DECREMENT_BALANCE = `
-    UPDATE balances SET
-        balance_money_cash = balance_money_cash - $2,
-        balance_money_card = balance_money_card - $3
-    WHERE staff_id = $1
+    UPDATE balances b SET
+        balance_money_cash = (
+            CASE
+                WHEN $2 > 0 THEN b.balance_money_cash - $2
+                ELSE b.balance_money_cash
+            END
+        ),
+        balance_money_card = (
+            CASE
+                WHEN $3 > 0 THEN b.balance_money_card - $3
+                ELSE b.balance_money_card
+            END
+        )
+    WHERE b.staff_id = $1
     RETURNING *
 `
 
