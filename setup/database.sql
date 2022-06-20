@@ -387,6 +387,7 @@ create table debt_transactions (
 	transaction_id serial not null primary key,
 	transaction_money int not null default 0,
 	transaction_money_type character varying(10) not null check (transaction_money_type in ('cash', 'card')),
+	transaction_type character varying(10) not null check (transaction_type in ('income', 'outcome')),
 	transaction_from int not null references staffs(staff_id),
 	transaction_to int not null references staffs(staff_id),
 	transaction_status character varying(10) not null check (transaction_status in ('pending', 'accepted', 'cancelled', 'deleted')),

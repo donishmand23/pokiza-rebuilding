@@ -46,28 +46,13 @@ const makeDebtTransactionIncome = async ({
 	transactionDateTime,
 	transactionMoneyType,
 }, user) => {
-	const senderBalance = await fetch(BalanceQuery.BALANCE, transactionFrom, 0)
 	const receiverBalance = await fetch(BalanceQuery.BALANCE, transactionTo, 0)
 
-	if (
-		(!senderBalance) ||
-		(senderBalance && transactionMoneyType === 'cash' && senderBalance.balance_money_cash < transactionMoney) ||
-		(senderBalance && transactionMoneyType === 'card' && senderBalance.balance_money_card < transactionMoney)
-	) {
-		throw new BadRequestError("Yuboruvchi kassasida yetarlicha mablag' yo'q yoki kassa hali ochilmagan!")
-	}
-	
 	if (!receiverBalance) {
 		await fetch(BalanceQuery.CREATE_BALANCE, transactionTo)
 	}
 
-	const transaction = await fetch(DebtTransactionQuery.MAKE_TRANSACTION, transactionMoney, transactionMoneyType, transactionFrom, transactionTo, 'accepted', transactionSummary, transactionDateTime)
-	
-	const decrement = await fetch(
-		BalanceQuery.DECREMENT_BALANCE, transactionFrom, 
-		transactionMoneyType === 'cash' ? transactionMoney : 0,
-		transactionMoneyType === 'card' ? transactionMoney : 0,
-	)
+	const transaction = await fetch(DebtTransactionQuery.MAKE_TRANSACTION, transactionMoney, transactionMoneyType, transactionFrom, transactionTo, 'accepted', transactionSummary, 'income', transactionDateTime)
 
 	const increment = await fetch(
 		BalanceQuery.INCREMENT_BALANCE, transactionTo, 
@@ -75,7 +60,7 @@ const makeDebtTransactionIncome = async ({
 		transactionMoneyType === 'card' ? transactionMoney : 0,
 	)
 
-	if (decrement && increment) return transaction
+	if (increment) return transaction
 }
 
 const makeDebtTransactionOutcome = async ({
@@ -87,7 +72,6 @@ const makeDebtTransactionOutcome = async ({
 	transactionMoneyType,
 }, user) => {
 	const senderBalance = await fetch(BalanceQuery.BALANCE, transactionFrom, 0)
-	const receiverBalance = await fetch(BalanceQuery.BALANCE, transactionTo, 0)
 
 	if (
 		(!senderBalance) ||
@@ -96,12 +80,8 @@ const makeDebtTransactionOutcome = async ({
 	) {
 		throw new BadRequestError("Yuboruvchi kassasida yetarlicha mablag' yo'q yoki kassa hali ochilmagan!")
 	}
-	
-	if (!receiverBalance) {
-		await fetch(BalanceQuery.CREATE_BALANCE, transactionTo)
-	}
 
-	const transaction = await fetch(DebtTransactionQuery.MAKE_TRANSACTION, transactionMoney, transactionMoneyType, transactionFrom, transactionTo, 'pending', transactionSummary, transactionDateTime)
+	const transaction = await fetch(DebtTransactionQuery.MAKE_TRANSACTION, transactionMoney, transactionMoneyType, transactionFrom, transactionTo, 'pending', transactionSummary, 'outcome', transactionDateTime)
 	return transaction
 }
 
@@ -140,13 +120,7 @@ const acceptDebtTransaction = async ({ transactionId }, user) => {
 		transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 	)
 
-	const increment = await fetch(
-		BalanceQuery.INCREMENT_BALANCE, transaction.transaction_to,
-		transaction.transaction_money_type === 'cash' ? transaction.transaction_money : 0,
-		transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
-	)
-
-	if (decrement && increment) return transaction
+	if (decrement) return transaction
 }
 
 const deleteDebtTransaction = async ({ transactionId }, user) => {
@@ -156,31 +130,32 @@ const deleteDebtTransaction = async ({ transactionId }, user) => {
 		throw new BadRequestError("Holati 'pending' yoki 'accepted' bo'lgan transaksiyalarnigina o'chirish mumkin!")
 	}
 
-	const senderBalance = await fetch(BalanceQuery.BALANCE, oldTransaction.transaction_to, 0)
+	const sender = oldTransaction.transaction_type === 'income' ? oldTransaction.transaction_to : oldTransaction.transaction_from
+	const senderBalance = await fetch(BalanceQuery.BALANCE, sender, 0)
 	if (
 		(!senderBalance) ||
 		(senderBalance && oldTransaction.transaction_money_type === 'cash' && senderBalance.balance_money_cash < oldTransaction.transaction_money) ||
 		(senderBalance && oldTransaction.transaction_money_type === 'card' && senderBalance.balance_money_card < oldTransaction.transaction_money)
 	) {
-		throw new BadRequestError("Yuboruvchi kassasida yetarlicha mablag' yo'q yoki kassa hali ochilmagan!")
+		throw new BadRequestError("Yetarli mablag' bo'lmaganligi sababli transaksiyani o'chirib bo'lmaydi!")
 	}
 	
 	const transaction = await fetch(DebtTransactionQuery.DELETE_TRANSACTION, transactionId)
 
-	if (oldTransaction.transaction_status === 'accepted') {
-		const decrement = await fetch(
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'income') {
+		await fetch(
 			BalanceQuery.DECREMENT_BALANCE, transaction.transaction_to,
 			transaction.transaction_money_type === 'cash' ? transaction.transaction_money : 0,
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
-
-		const increment = await fetch(
+	}
+	
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'outcome') {
+		await fetch(
 			BalanceQuery.INCREMENT_BALANCE, transaction.transaction_from,
 			transaction.transaction_money_type === 'cash' ? transaction.transaction_money : 0,
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
-
-		if (decrement && increment) return transaction
 	}
 		
 	return transaction
@@ -208,13 +183,15 @@ const changeDebtTransaction = async ({
 		throw new BadRequestError("Qabul qilingan transaksiyaning yuboruvchi va qabul qiluvchisini o'zgartirish mumkin emas!")
 	}
 
-	if (oldTransaction.transaction_status === 'accepted') { 
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'income') { 
 		await fetch(
 			BalanceQuery.DECREMENT_BALANCE, oldTransaction.transaction_to,
 			oldTransaction.transaction_money_type === 'cash' ? oldTransaction.transaction_money : 0,
 			oldTransaction.transaction_money_type === 'card' ? oldTransaction.transaction_money : 0,
 		)
+	}
 
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'outcome') { 
 		await fetch(
 			BalanceQuery.INCREMENT_BALANCE, oldTransaction.transaction_from,
 			oldTransaction.transaction_money_type === 'cash' ? oldTransaction.transaction_money : 0,
@@ -227,20 +204,20 @@ const changeDebtTransaction = async ({
 		transactionId, transactionTo, transactionFrom, transactionMoney, transactionMoneyType, transactionSummary, transactionDateTime
 	)
 
-	if (oldTransaction.transaction_status === 'accepted') {
-		const decrement = await fetch(
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'income') {
+		await fetch(
 			BalanceQuery.INCREMENT_BALANCE, transaction.transaction_to,
 			transaction.transaction_money_type === 'cash' ? transaction.transaction_money : 0,
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
+	}
 
-		const increment = await fetch(
+	if (oldTransaction.transaction_status === 'accepted' && oldTransaction.transaction_type === 'outcome') {
+		await fetch(
 			BalanceQuery.DECREMENT_BALANCE, transaction.transaction_from,
 			transaction.transaction_money_type === 'cash' ? transaction.transaction_money : 0,
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
-
-		if (decrement && increment) return transaction
 	}
 		
 	return transaction

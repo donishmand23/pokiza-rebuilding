@@ -11,7 +11,7 @@ const TRANSACTIONS = `
         CASE
             WHEN dt.transaction_from = $14 THEN 'outcome'
             WHEN dt.transaction_to = $14 THEN 'income'
-            ELSE $9
+            ELSE dt.transaction_type
         END AS transaction_type,
         CASE    
             WHEN $9 = 'income' THEN fu.branch_id
@@ -51,7 +51,10 @@ const TRANSACTIONS = `
 	END AND
     CASE    
         WHEN $9 = 'income' AND dt.transaction_to = $14 THEN dt.transaction_to = $14
+        WHEN $9 = 'income' AND dt.transaction_from = $14 THEN dt.transaction_type = 'outcome'
         WHEN $9 = 'outcome' AND dt.transaction_from = $14 THEN dt.transaction_from = $14
+        WHEN $9 = 'outcome' AND dt.transaction_to = $14 THEN dt.transaction_type = 'income'
+        WHEN LENGTH($9) > 0 THEN dt.transaction_type = $9
         ELSE TRUE
     END AND
     CASE
@@ -81,6 +84,7 @@ const TRANSACTION = `
         dt.transaction_to,
         dt.transaction_status,
         dt.transaction_summary,
+        dt.transaction_type,
         dt.transaction_deleted_at,
         to_char(dt.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM debt_transactions dt
@@ -108,10 +112,11 @@ const MAKE_TRANSACTION = `
         transaction_to,
         transaction_status,
         transaction_summary,
+        transaction_type,
         transaction_created_at
-    ) SELECT $1, $2, $3, $4, $5, $6,
+    ) SELECT $1, $2, $3, $4, $5, $6, $7,
     CASE
-        WHEN LENGTH($7) > 0 THEN $7::timestamptz
+        WHEN LENGTH($8) > 0 THEN $8::timestamptz
         ELSE current_timestamp
     END AS transaction_created_at
     RETURNING *,

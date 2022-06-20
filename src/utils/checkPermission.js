@@ -726,7 +726,8 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 staffPermissions.find(per => personalPermissions[per.permission_action]) &&
                 query === 'deleteDebtTransaction' &&
                 (
-                    payload.staffId != transaction.transaction_from
+                    payload.staffId != transaction.transaction_from &&
+                    payload.staffId != transaction.transaction_to
                 )
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan. Siz faqat o'zingiz amalga transaksiyani o'chirishingiz qilishingiz mumkin!")
