@@ -23,8 +23,6 @@ type Mutation {
 		transactionMoneyType: MoneyType!
 	): MutationResponse!
 
-	x
-
 	makeDebtTransactionOutcome(
 		transactionTo: ID!
 		transactionFrom: ID!
