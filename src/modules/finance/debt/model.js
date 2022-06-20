@@ -29,6 +29,16 @@ const debtTransactions = ({
 	)
 }
 
+const equities = ({ staffId, branchId, pagination }, user) => {
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+	const { page, limit } = pagination
+
+	return fetchAll(
+		DebtTransactionQuery.EQUITIES, (page - 1) * limit, limit,
+		staffId, branchId, user.personal, user.personalBranchId, user.staffId
+	)
+}
+
 const staff = async ({ staffId }) => {
 	const { staff } = await fetch(UserQuery.USER, false, 0, staffId, 0)
 	return staff
@@ -232,6 +242,7 @@ export default {
 	cancelDebtTransaction,
 	acceptDebtTransaction,
 	debtTransactions,
+	equities,
 	branch,
 	staff,
 }

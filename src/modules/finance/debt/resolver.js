@@ -103,6 +103,15 @@ export default {
 				throw error
 			}
 		},
+
+		equities: async (_, args, user) => {
+			try {
+				const equities = await transactionModel.equities(args, user)
+				return equities
+			} catch(error) {
+				throw error
+			}
+		},
 	},
 	
 	DebtTransaction: {
@@ -116,5 +125,16 @@ export default {
 		branch: 	     global => transactionModel.branch({ branchId: global.branch_id }),
 		transactionTo:   global => transactionModel.staff({ staffId: global.transaction_to }),
 		transactionFrom: global => transactionModel.staff({ staffId: global.transaction_from }),
-	}
+	},
+
+	Equity: {
+		debtCash:    global => global.debt_cash,
+		debtCard:    global => global.debt_card,
+		equityCash:  global => global.equity_cash,
+		equityCard:  global => global.equity_card,
+		totalDebt:   global => +global.debt_cash + +global.debt_card,
+		totalEquity: global => +global.equity_cash + +global.equity_card,
+		branch: 	 global => transactionModel.branch({ branchId: global.branch_id }),
+		staff:   	 global => transactionModel.staff({ staffId: global.staff_id }),
+	},
 }

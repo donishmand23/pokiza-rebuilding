@@ -11,6 +11,12 @@ type Query {
 		transactionType: TransactionType!
 		transactionStatus: TransactionStatus
 	): [DebtTransaction!]!
+
+	equities(
+		staffId: [ID]
+		branchId: [ID]
+		pagination: Pagination = {}
+	): [Equity!]!
 }
 
 type Mutation {
@@ -63,4 +69,15 @@ type DebtTransaction {
 	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+}
+
+type Equity {
+	staff: Staff!
+	branch: Branch!
+	equityCash: Int!
+	equityCard: Int!
+	debtCard: Int!
+	debtCash: Int!
+	totalEquity: Int!
+	totalDebt: Int!
 }

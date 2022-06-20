@@ -104,6 +104,69 @@ const TRANSACTION = `
     ORDER BY dt.transaction_id DESC
 `
 
+const EQUITIES = `
+    SELECT DISTINCT ON (s.staff_id)
+        CASE
+            WHEN transaction_type = 'income' THEN tu.branch_id
+            WHEN transaction_type = 'outcome' THEN fu.branch_id
+        END AS branch_id,
+        CASE
+            WHEN transaction_type = 'income' THEN dt.transaction_to
+            WHEN transaction_type = 'outcome' THEN dt.transaction_from
+        END AS staff_id,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_to AND
+            transaction_type = 'income' AND transaction_money_type = 'cash' AND
+            transaction_status = 'accepted'
+        ) AS debt_cash,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_to AND
+            transaction_type = 'income' AND transaction_money_type = 'card' AND
+            transaction_status = 'accepted'
+        ) AS debt_card,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_from AND
+            transaction_type = 'outcome' AND transaction_money_type = 'cash' AND
+            transaction_status = 'accepted'
+        ) AS equity_cash,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_from AND
+            transaction_type = 'outcome' AND transaction_money_type = 'card' AND
+            transaction_status = 'accepted'
+        ) AS equity_card
+    FROM debt_transactions dt
+    INNER JOIN staffs s ON s.staff_id = dt.transaction_from OR s.staff_id = dt.transaction_to
+    LEFT JOIN staffs fs ON fs.staff_id = dt.transaction_from
+    LEFT JOIN staffs ts ON ts.staff_id = dt.transaction_to
+    LEFT JOIN users fu ON fu.user_id = fs.user_id
+    LEFT JOIN users tu ON tu.user_id = ts.user_id
+    WHERE dt.transaction_status = 'accepted' AND
+    CASE
+        WHEN dt.transaction_type = 'income' THEN s.staff_id = dt.transaction_to
+        WHEN dt.transaction_type = 'outcome' THEN s.staff_id = dt.transaction_from
+    END AND
+    CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 AND dt.transaction_type = 'income' THEN ts.staff_id = ANY($3::INT[])
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 AND dt.transaction_type = 'outcome' THEN fs.staff_id = ANY($3::INT[])
+		ELSE TRUE
+	END AND
+    CASE
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND dt.transaction_type = 'income' THEN tu.branch_id = ANY($4::INT[])
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND dt.transaction_type = 'outcome' THEN fu.branch_id = ANY($4::INT[])
+		ELSE TRUE
+	END AND
+    CASE   
+        WHEN dt.transaction_type = 'income' AND $5 = TRUE AND tu.branch_id = ANY($6::INT[]) THEN dt.transaction_to = $7
+        WHEN dt.transaction_type = 'outcome' AND $5 = TRUE AND fu.branch_id = ANY($6::INT[]) THEN dt.transaction_from = $7
+        ELSE TRUE
+    END
+    OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
+`
+
 const MAKE_TRANSACTION = `
     INSERT INTO debt_transactions (
         transaction_money,
@@ -199,4 +262,5 @@ export default {
     MAKE_TRANSACTION,
     TRANSACTIONS,
     TRANSACTION,
+    EQUITIES,
 }

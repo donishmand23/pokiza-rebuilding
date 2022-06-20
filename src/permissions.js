@@ -87,6 +87,7 @@ export default {
     'changeOrderTransaction': [2504, 2505],
     'deleteOrderTransaction': [2506, 2507],
 
+    'equities': [2600, 2601],
     'debtTransactions': [2603, 2604],
     'makeDebtTransactionIncome': [2605, 2606],
     'makeDebtTransactionOutcome': [2607, 2608],

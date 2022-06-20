@@ -588,10 +588,13 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (3, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2507);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2505);
 
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2600);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2605);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2606);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2607);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2614);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2601);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2613);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2611);
 insert into permission_sets (staff_id, branch_id, permission_action) values (2, 1, 2611);
@@ -600,6 +603,7 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (2, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2605);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2603);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2604);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2609);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');

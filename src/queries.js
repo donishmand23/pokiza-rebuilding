@@ -54,6 +54,7 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'changeOrderTransaction',
     'deleteOrderTransaction',
 
+    'equities',
     'debtTransactions',
     'makeDebtTransactionIncome',
     'makeDebtTransactionOutcome',
