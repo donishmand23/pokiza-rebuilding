@@ -554,7 +554,20 @@ insert into permissions (permission_action, permission_model) values
 (2613, 'change personal debt transaction'),
 (2614, 'change any debt transaction'),
 (2615, 'delete personal debt transaction'),
-(2616, 'delete any debt transaction');
+(2616, 'delete any debt transaction'),
+
+(2700, 'see personal money transactions'),
+(2701, 'see any money transactions'),
+(2702, 'make personal money transaction'),
+(2703, 'make any money transaction'),
+(2704, 'accept personal money transaction'),
+(2705, 'accept any money transaction'),
+(2706, 'cancel personal money transaction'),
+(2707, 'cancel any money transaction'),
+(2708, 'change personal money transaction'),
+(2709, 'change any money transaction'),
+(2710, 'delete personal money transaction'),
+(2711, 'delete any money transaction');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
@@ -604,6 +617,15 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (3, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2603);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2604);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2609);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2700);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2701);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2702);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2703);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2704);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2705);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2708);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2708);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');

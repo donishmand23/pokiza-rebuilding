@@ -63,6 +63,13 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'acceptDebtTransaction',
     'deleteDebtTransaction',
 
+    'moneyTransactions',
+    'makeMoneyTransaction',
+    'changeMoneyTransaction',
+    'acceptMoneyTransaction',
+    'cancelMoneyTransaction',
+    'deleteMoneyTransaction',
+
     'staffs',
     'deletedStaffs',
     'addStaff',

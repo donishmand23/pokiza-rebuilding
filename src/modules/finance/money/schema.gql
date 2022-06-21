@@ -1,0 +1,52 @@
+type Query {
+	moneyTransactions(
+		branchId: [ID]
+		moneyAmount: Int
+		transactionId: ID
+		transactionTo: ID
+		transactionFrom: ID
+		moneyType: MoneyType
+		dateFilter: RangeDate
+		pagination: Pagination = {}
+		transactionType: TransactionType!
+		transactionStatus: TransactionStatus
+	): [DebtTransaction!]!
+}
+
+type Mutation {
+	makeMoneyTransaction(
+		transactionTo: ID!
+		transactionFrom: ID!
+		transactionMoney: Int! = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType!
+	): MutationResponse!
+
+	changeMoneyTransaction(
+		transactionId: ID!
+		transactionTo: ID
+		transactionFrom: ID
+		transactionMoney: Int = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType
+	): MutationResponse!
+
+	acceptMoneyTransaction(transactionId: ID!): MutationResponse!
+	cancelMoneyTransaction(transactionId: ID!): MutationResponse!
+	deleteMoneyTransaction(transactionId: ID!): MutationResponse!
+}
+
+type MoneyTransaction {
+	branch: Branch!
+	transactionId: ID!
+	transactionTo: Staff!
+	transactionFrom: Staff!
+	transactionMoney: Int!
+	transactionSummary: String
+	transactionCreatedAt: DateTime!
+	transactionMoneyType: MoneyType!
+	transactionType: TransactionType!
+	transactionStatus: TransactionStatus!
+}

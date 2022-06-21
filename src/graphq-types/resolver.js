@@ -247,10 +247,12 @@ export default {
 				return 'Permission'
 			} else if(obj.group_id && obj.group_name) {
 				return 'PermissionGroup'
-			} else if(obj.transaction_id && obj.transaction_created_at && obj.order_id) {
+			} else if(obj.transaction_id && obj.order_id) {
 				return 'OrderTransaction'
-			} else if(obj.transaction_id && obj.transaction_money && obj.transaction_money_type) {
+			} else if(obj.transaction_id && obj.transaction_type) {
 				return 'DebtTransaction'
+			} else if(obj.transaction_id && obj.transaction_money_type) {
+				return 'MoneyTransaction'
 			} else return null
 		}
 	},

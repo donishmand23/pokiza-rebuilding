@@ -95,4 +95,11 @@ export default {
     'cancelDebtTransaction': [2611, 2612],
     'changeDebtTransaction': [2613, 2614],
     'deleteDebtTransaction': [2615, 2616],
+
+    'moneyTransactions': [2700, 2701],
+    'makeMoneyTransaction': [2702, 2703],
+    'acceptMoneyTransaction': [2704, 2705],
+    'cancelMoneyTransaction': [2706, 2707],
+    'changeMoneyTransaction': [2708, 2709],
+    'deleteMoneyTransaction': [2710, 2711],
 }

@@ -34,6 +34,7 @@ import StatusModule from './order/status/index.js'
 import BalanceModule from './finance/balance/index.js'
 import OrderTransactionModule from './finance/order/index.js'
 import DebtTransactionModule from './finance/debt/index.js'
+import MoneyTransactionModule from './finance/money/index.js'
 
 export default {
 	typeDefs: [
@@ -68,6 +69,7 @@ export default {
   		BalanceModule.typeDefs,
   		OrderTransactionModule.typeDefs,
   		DebtTransactionModule.typeDefs,
+  		MoneyTransactionModule.typeDefs,
 	],
 	resolvers: [
 		// address
@@ -101,5 +103,6 @@ export default {
   		BalanceModule.resolvers,
   		OrderTransactionModule.resolvers,
   		DebtTransactionModule.resolvers,
+  		MoneyTransactionModule.resolvers,
 	]
 }
