@@ -227,8 +227,19 @@ const BRANCHES_BY_MONEY_TRANSACTIONS = `
 	mt.transaction_deleted_at IS NULL
 `
 
+const BRANCHES_BY_EXPANSE_TRANSACTIONS = `
+	SELECT
+		u.branch_id
+	FROM expanse_transactions et
+	INNER JOIN staffs s ON s.staff_id = et.transaction_from OR s.staff_id = et.transaction_to
+	INNER JOIN users u ON u.user_id = s.user_id
+	WHERE et.transaction_id = ANY($1::INT[]) AND
+	et.transaction_deleted_at IS NULL
+`
+
 
 export default {
+	BRANCHES_BY_EXPANSE_TRANSACTIONS,
 	BRANCHES_BY_ORDER_TRANSACTIONS,
 	BRANCHES_BY_MONEY_TRANSACTIONS,
 	BRANCHES_BY_DEBT_TRANSACTIONS,

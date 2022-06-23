@@ -429,7 +429,10 @@ insert into balances (balance_money_cash, balance_money_card, staff_id) values
 (300000, 93000, 3);
 
 
-
+-- expanse types
+insert into expanses (expanse_name) values ('Benzin');
+insert into expanses (expanse_name) values ('Qurilish');
+insert into expanses (expanse_name) values ('Bazm uyushtirish');
 
 -------------------------------------------------------------PERMISSIONS----------------------------------------------------------------
 -- permissions
@@ -567,7 +570,22 @@ insert into permissions (permission_action, permission_model) values
 (2708, 'change personal money transaction'),
 (2709, 'change any money transaction'),
 (2710, 'delete personal money transaction'),
-(2711, 'delete any money transaction');
+(2711, 'delete any money transaction'),
+
+(2800, 'see personal expanse transactions'),
+(2801, 'see any expanse transactions'),
+(2802, 'make personal expanse transaction'),
+(2803, 'make any expanse transaction'),
+(2804, 'accept personal expanse transaction'),
+(2805, 'accept any expanse transaction'),
+(2806, 'cancel personal expanse transaction'),
+(2807, 'cancel any expanse transaction'),
+(2808, 'change personal expanse transaction'),
+(2809, 'change any expanse transaction'),
+(2810, 'delete personal expanse transaction'),
+(2811, 'delete any expanse transaction'),
+(2812, 'add expence type'),
+(2813, 'delete any expence type');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
@@ -626,6 +644,13 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2705);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2708);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2708);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2802);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2804);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2805);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2808);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2809);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2801);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');

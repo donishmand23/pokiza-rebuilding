@@ -13,7 +13,7 @@ export const PUBLIC_QUERIES = [
     'productStatusInfo',
     'monitoringSections',
     'deliveryHours',
-    'checkToken'
+    'checkToken',
 ]
 
 export const PUBLIC_CLIENT_AND_STAFF_QUERIES = [
@@ -43,6 +43,7 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
     'permissionsList',
     'addSocialSet',
     'changeSocialSet',
+    'expanses',
 ]
 
 export const PRIVATE_STAFF_ONLY_QUERIES = [
@@ -69,6 +70,15 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'acceptMoneyTransaction',
     'cancelMoneyTransaction',
     'deleteMoneyTransaction',
+
+    'addExpanse',
+    'deleteExpanse',
+    'expanseTransactions',
+    'makeExpanseTransaction',
+    'changeExpanseTransaction',
+    'acceptExpanseTransaction',
+    'cancelExpanseTransaction',
+    'deleteExpanseTransaction',
 
     'staffs',
     'deletedStaffs',

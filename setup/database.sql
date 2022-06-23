@@ -410,53 +410,26 @@ create table money_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
--- -- CASHIER MODULE
--- -- 27. transaction types
--- drop table if exists transaction_types cascade;
--- create table transaction_types (
--- 	transaction_type_id serial not null primary key,
--- 	transaction_type_name character varying(64),
--- 	transaction_type_role character varying(64)
--- );
+-- 28. expanse types
+drop table if exists expanses cascade;
+create table expanses (
+	expanse_id serial not null primary key,
+	expanse_name character varying(128) not null,
+	expanse_created_at timestamptz default current_timestamp,
+	expanse_deleted_at timestamptz default null
+);
 
--- -- 28. expanse types
--- drop table if exists expanse_types cascade;
--- create table expanse_types (
--- 	expanse_type_id serial not null primary key,
--- 	expanse_type_name character varying(128) not null,
--- 	expanse_created_at timestamptz default current_timestamp,
--- 	expanse_deleted_at timestamptz default null
--- );
-
-
--- -- 30. transactions
--- drop table if exists transactions cascade;
--- create table transactions (
--- 	transaction_id serial not null primary key,
--- 	transaction_money int not null,
--- 	transaction_money_type smallint not null,
--- 	transaction_type int not null references transaction_types(transaction_type_id),
--- 	transaction_from int not null references staffs(staff_id),
--- 	transaction_to int not null references staffs(staff_id),
--- 	transaction_verified boolean default false,
--- 	transaction_summary character varying(512),
--- 	transaction_created_at timestamptz default current_timestamp,
--- 	transaction_deleted_at timestamptz default null
--- );
-
--- -- 32. expanses
--- drop table if exists expanses cascade;
--- create table expanses (
--- 	expanse_id serial not null primary key,
--- 	expanse_money int not null,
--- 	expanse_money_type smallint not null,
--- 	expanse_type int not null references expanse_types(expanse_type_id),
--- 	expanse_from int not null references staffs(staff_id),
--- 	expanse_to int not null references staffs(staff_id),
--- 	expanse_summary character varying(512),
--- 	expanse_created_at timestamptz default current_timestamp,
--- 	expanse_deleted_at timestamptz default null
--- );
-
-
-
+-- 31. debt transactions ( received money from orders )
+drop table if exists expanse_transactions cascade;
+create table expanse_transactions (
+	transaction_id serial not null primary key,
+	transaction_money int not null default 0,
+	transaction_money_type character varying(10) not null check (transaction_money_type in ('cash', 'card')),
+	transaction_from int not null references staffs(staff_id),
+	transaction_to int not null references staffs(staff_id),
+	expanse_id int not null references expanses(expanse_id),
+	transaction_status character varying(10) not null check (transaction_status in ('pending', 'accepted', 'cancelled', 'deleted')),
+	transaction_summary character varying(512),
+	transaction_created_at timestamptz default current_timestamp,
+	transaction_deleted_at timestamptz default null
+);

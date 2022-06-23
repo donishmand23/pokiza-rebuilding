@@ -102,4 +102,13 @@ export default {
     'cancelMoneyTransaction': [2706, 2707],
     'changeMoneyTransaction': [2708, 2709],
     'deleteMoneyTransaction': [2710, 2711],
+
+    'addExpanse': [2812],
+    'deleteExpanse': [2813],
+    'expanseTransactions': [2800, 2801],
+    'makeExpanseTransaction': [2802, 2803],
+    'acceptExpanseTransaction': [2804, 2805],
+    'cancelExpanseTransaction': [2806, 2807],
+    'changeExpanseTransaction': [2808, 2809],
+    'deleteExpanseTransaction': [2810, 2811],
 }

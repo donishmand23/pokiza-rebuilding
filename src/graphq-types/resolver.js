@@ -214,7 +214,7 @@ export default {
 	},
 
 	AllTypes: {
-		__resolveType (obj, context, info) {
+		__resolveType (obj) {
 			if(obj.branch_id && obj.branch_name && obj.branch_created_at) {
 				return 'Branch'
 			} else if(obj.state_id && obj.state_name && obj.state_created_at) {
@@ -247,18 +247,22 @@ export default {
 				return 'Permission'
 			} else if(obj.group_id && obj.group_name) {
 				return 'PermissionGroup'
+			} else if (obj.transaction_id && obj.expanse_id) {
+				return 'ExpanseTransaction'
 			} else if(obj.transaction_id && obj.order_id) {
 				return 'OrderTransaction'
 			} else if(obj.transaction_id && obj.transaction_type) {
 				return 'DebtTransaction'
 			} else if(obj.transaction_id && obj.transaction_money_type) {
 				return 'MoneyTransaction'
+			} else if (obj.expanse_id && obj.expanse_created_at) {
+				return 'Expanse'
 			} else return null
 		}
 	},
 
 	UserType: {
-		__resolveType (obj, context, info) {
+		__resolveType (obj) {
 			if(obj.client_id && obj.client_status && obj.client_created_at) {
 				return 'Client'
 			}
