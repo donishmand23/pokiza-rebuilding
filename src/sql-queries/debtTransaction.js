@@ -29,8 +29,8 @@ const TRANSACTIONS = `
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND $9 = 'income' THEN fu.branch_id = ANY($4::INT[])
-		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND $9 = 'outcome' THEN tu.branch_id = ANY($4::INT[])
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND $9 = 'income' THEN tu.branch_id = ANY($4::INT[])
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 AND $9 = 'outcome' THEN fu.branch_id = ANY($4::INT[])
 		ELSE TRUE
 	END AND
     CASE
