@@ -18,14 +18,14 @@ const personalPermissions = {
     2506: "delete personal order transactions",
 
     2600: "see personal equities",
-    2603: "see personal debt transactions",
-    2605: "make personal debt transaction income",
-    2607: "make personal debt transaction outcome",
-    2609: "accept personal debt transaction",
-    2611: "cancel personal debt transaction",
-    2613: "change personal debt transaction",
-    2615: "delete personal debt transaction",
-
+    2602: "see personal debt transactions",
+    2604: "make personal debt transaction income",
+    2606: "make personal debt transaction outcome",
+    2608: "accept personal debt transaction",
+    2610: "cancel personal debt transaction",
+    2612: "change personal debt transaction",
+    2614: "delete personal debt transaction",
+    
     2700: "see personal money transactions",
     2702: "make personal money transaction",
     2704: "accept personal money transaction",
