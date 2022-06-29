@@ -585,7 +585,14 @@ insert into permissions (permission_action, permission_model) values
 (2810, 'delete personal expanse transaction'),
 (2811, 'delete any expanse transaction'),
 (2812, 'add expence type'),
-(2813, 'delete any expence type');
+(2813, 'delete any expence type'),
+
+(2900, 'see fond transactions'),
+(2901, 'make fond transaction'),
+(2902, 'accept fond transaction'),
+(2903, 'cancel fond transaction'),
+(2904, 'change fond transaction'),
+(2905, 'delete fond transaction');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
@@ -651,6 +658,13 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2809);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2801);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2901);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2902);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2904);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2904);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (4, 2, 2900);
 
 insert into permission_groups (group_name) values ('moderator');
 insert into permission_groups (group_name) values ('haydovchi');

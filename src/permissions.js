@@ -111,4 +111,11 @@ export default {
     'cancelExpanseTransaction': [2806, 2807],
     'changeExpanseTransaction': [2808, 2809],
     'deleteExpanseTransaction': [2810, 2811],
+
+    'fondTransactions': [2900],
+    'makeFondTransaction': [2901],
+    'acceptFondTransaction': [2902],
+    'cancelFondTransaction': [2903],
+    'changeFondTransaction': [2904],
+    'deleteFondTransaction': [2905],
 }

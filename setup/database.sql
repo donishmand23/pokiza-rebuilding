@@ -433,3 +433,17 @@ create table expanse_transactions (
 	transaction_created_at timestamptz default current_timestamp,
 	transaction_deleted_at timestamptz default null
 );
+
+-- 31. debt transactions ( received money from orders )
+drop table if exists fond_transactions cascade;
+create table fond_transactions (
+	transaction_id serial not null primary key,
+	transaction_money int not null default 0,
+	transaction_money_type character varying(10) not null check (transaction_money_type in ('cash', 'card')),
+	transaction_from int not null references staffs(staff_id),
+	transaction_to int not null references staffs(staff_id),
+	transaction_status character varying(10) not null check (transaction_status in ('pending', 'accepted', 'cancelled', 'deleted')),
+	transaction_summary character varying(512),
+	transaction_fond_created_at timestamptz default current_timestamp,
+	transaction_fond_deleted_at timestamptz default null
+);

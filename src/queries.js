@@ -80,6 +80,13 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'cancelExpanseTransaction',
     'deleteExpanseTransaction',
 
+    'fondTransactions',
+    'makeFondTransaction',
+    'changeFondTransaction',
+    'acceptFondTransaction',
+    'cancelFondTransaction',
+    'deleteFondTransaction',
+
     'staffs',
     'deletedStaffs',
     'addStaff',

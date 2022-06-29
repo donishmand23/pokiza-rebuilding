@@ -1,0 +1,53 @@
+type Query {
+	fondTransactions(
+		branchId: [ID]
+		moneyAmount: Int
+		transactionId: ID
+		transactionTo: ID
+		transactionFrom: ID
+		moneyType: MoneyType
+		dateFilter: RangeDate
+		pagination: Pagination = {}
+		transactionType: TransactionType!
+		transactionStatus: TransactionStatus
+	): [FondTransaction!]!
+}
+
+type Mutation {
+	makeFondTransaction(
+		transactionTo: ID!
+		transactionFrom: ID!
+		transactionMoney: Int! = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType!
+	): MutationResponse!
+
+	changeFondTransaction(
+		transactionId: ID!
+		transactionTo: ID
+		transactionFrom: ID
+		transactionMoney: Int = 0
+		transactionSummary: String
+		transactionDateTime: DateTime
+		transactionMoneyType: MoneyType
+	): MutationResponse!
+
+	acceptFondTransaction(transactionId: ID!): MutationResponse!
+	cancelFondTransaction(transactionId: ID!): MutationResponse!
+	deleteFondTransaction(transactionId: ID!): MutationResponse!
+}
+
+type FondTransaction {
+	branchTo: Branch!
+	branchFrom: Branch!
+	transactionId: ID!
+	transactionTo: Staff!
+	transactionFrom: Staff!
+	transactionMoney: Int!
+	transactionSummary: String
+	transactionCreatedAt: DateTime!
+	transactionMoneyType: MoneyType!
+	transactionType: TransactionType!
+	transactionStatus: TransactionStatus!
+}

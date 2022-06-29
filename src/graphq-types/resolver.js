@@ -253,6 +253,8 @@ export default {
 				return 'OrderTransaction'
 			} else if(obj.transaction_id && obj.transaction_type) {
 				return 'DebtTransaction'
+			} else if (obj.transaction_id && obj.transaction_fond_created_at) {
+				return 'FondTransaction'
 			} else if(obj.transaction_id && obj.transaction_money_type) {
 				return 'MoneyTransaction'
 			} else if (obj.expanse_id && obj.expanse_created_at) {

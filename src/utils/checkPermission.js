@@ -4,6 +4,7 @@ import permissions from '../permissions.js'
 import OrderTransactionQuery from '#sql/orderTransaction'
 import DebtTransactionQuery from '#sql/debtTransaction'
 import MoneyTransactionQuery from '#sql/moneyTransaction'
+import FondTransactionQuery from '#sql/fondTransaction'
 import ExpanseTransactionQuery from '#sql/expanseTransaction'
 import PermissionQuery from '#sql/permission'
 import OrderQuery from '#sql/order'
@@ -699,7 +700,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId)) ||
                 transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
@@ -750,7 +751,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId))
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId))
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
@@ -810,7 +811,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId)) ||
                 transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
@@ -860,7 +861,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId))
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId))
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
@@ -920,7 +921,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId)) ||
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId)) ||
                 transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
@@ -970,7 +971,69 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (
-                !transactionBranchIds.every(branchId => allowedBranches.includes(+branchId))
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'makeFondTransaction') {
+            const transactionTo = variables.transactionTo          // ID!
+            const transactionFrom = variables.transactionFrom      // ID!
+
+            const transactionToBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionTo]))?.branch_id
+            const transactionFromBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionFrom]))?.branch_id
+            const staffBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [payload.staffId]))?.branch_id
+
+            if (!transactionToBranchId || !transactionFromBranchId) {
+                throw new BadRequestError("Bunday xodim mavjud emas!")
+            }
+
+            if (staffBranchId != transactionFromBranchId) {
+                throw new BadRequestError("Transaksiyani amalga oshirayotgan xodim va pul o'tkazuvchi xodim bitta filialda bo'lishi kerak!")
+            }
+
+            if (transactionToBranchId == transactionFromBranchId) {
+                throw new ForbiddenError("Faqatgina boshqa filialdagi xodimga pul o'tkazish mumkin!")
+            }
+
+            if (
+                transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (['cancelFondTransaction', 'acceptFondTransaction', 'deleteFondTransaction'].includes(query)) {
+            const transactionId = variables.transactionId          // ID!
+
+            const transactionBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_FOND_TRANSACTIONS, [transactionId])).map(el => +el.branch_id)
+
+            if (!transactionBranchIds.length) {
+                throw new BadRequestError("Bunday transaksiya mavjud emas!")
+            }
+
+            if (
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId))
+            ) {
+                throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
+            }
+        }
+
+        else if (query === 'changeFondTransaction') {
+            const transactionId = variables.transactionId          // ID!
+            const transactionFrom = variables.transactionFrom      // ID
+
+            const transactionBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_FOND_TRANSACTIONS, [transactionId])).map(el => +el.branch_id)
+            const transactionFromBranchId = (await fetch(PermissionQuery.BRANCHES_BY_STAFFS, [transactionFrom]))?.branch_id
+
+            if (!transactionBranchIds.length) {
+                throw new BadRequestError("Bunday transaksiya mavjud emas!")
+            }
+
+            if (
+                !transactionBranchIds.some(branchId => allowedBranches.includes(+branchId)) ||
+                transactionFrom && !allowedBranches.includes(+transactionFromBranchId)
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }

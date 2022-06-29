@@ -237,11 +237,22 @@ const BRANCHES_BY_EXPANSE_TRANSACTIONS = `
 	et.transaction_deleted_at IS NULL
 `
 
+const BRANCHES_BY_FOND_TRANSACTIONS = `
+	SELECT
+		u.branch_id
+	FROM fond_transactions ft
+	INNER JOIN staffs s ON s.staff_id = ft.transaction_from OR s.staff_id = ft.transaction_to
+	INNER JOIN users u ON u.user_id = s.user_id
+	WHERE ft.transaction_id = ANY($1::INT[]) AND
+	ft.transaction_fond_deleted_at IS NULL
+`
+
 
 export default {
 	BRANCHES_BY_EXPANSE_TRANSACTIONS,
 	BRANCHES_BY_ORDER_TRANSACTIONS,
 	BRANCHES_BY_MONEY_TRANSACTIONS,
+	BRANCHES_BY_FOND_TRANSACTIONS,
 	BRANCHES_BY_DEBT_TRANSACTIONS,
 	BRANCHES_BY_TRANSPORTS,
 	BRANCHES_BY_PRODUCTS,
