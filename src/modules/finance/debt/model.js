@@ -1,5 +1,6 @@
-import { BadRequestError } from '#errors'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
+import { BadRequestError } from '#errors'
 import DebtTransactionQuery from '#sql/debtTransaction'
 import BalanceQuery from '#sql/balance'
 import BranchQuery from '#sql/branch'
@@ -103,6 +104,19 @@ const cancelDebtTransaction = async ({ transactionId }, user) => {
 	}
 
 	const transaction = await fetch(DebtTransactionQuery.CANCEL_TRANSACTION, transactionId)
+
+	const transactionBranch = await fetch(DebtTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeDebts',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
+	
 	return transaction
 }
 
@@ -130,6 +144,18 @@ const acceptDebtTransaction = async ({ transactionId }, user) => {
 		transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 	)
 
+	const transactionBranch = await fetch(DebtTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeDebts',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
+
 	if (decrement) return transaction
 }
 
@@ -143,6 +169,7 @@ const deleteDebtTransaction = async ({ transactionId }, user) => {
 	const sender = oldTransaction.transaction_type === 'income' ? oldTransaction.transaction_to : oldTransaction.transaction_from
 	const senderBalance = await fetch(BalanceQuery.BALANCE, sender, 0)
 	if (
+		oldTransaction?.transaction_status === 'accepted' &&
 		(!senderBalance) ||
 		(senderBalance && oldTransaction.transaction_money_type === 'cash' && senderBalance.balance_money_cash < oldTransaction.transaction_money) ||
 		(senderBalance && oldTransaction.transaction_money_type === 'card' && senderBalance.balance_money_card < oldTransaction.transaction_money)
@@ -167,6 +194,18 @@ const deleteDebtTransaction = async ({ transactionId }, user) => {
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
 	}
+
+	const transactionBranch = await fetch(DebtTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeDebts',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
 		
 	return transaction
 }
@@ -229,6 +268,28 @@ const changeDebtTransaction = async ({
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
 	}
+
+	const transactionBranch = await fetch(DebtTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeDebts',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_receiver: oldTransaction.transaction_to,
+		new_receiver: transaction.transaction_to,
+		old_sender: oldTransaction.transaction_from,
+		new_sender: transaction.transaction_from,
+		old_money: oldTransaction.transaction_money,
+		new_money: transaction.transaction_money,
+		old_summary: oldTransaction.transaction_summary,
+		new_summary: transaction.transaction_summary,
+		old_date_time: oldTransaction.transaction_created_at,
+		new_date_time: transaction.transaction_created_at,
+		old_money_type: oldTransaction.transaction_money_type,
+		new_money_type: transaction.transaction_money_type,
+	})
 		
 	return transaction
 }

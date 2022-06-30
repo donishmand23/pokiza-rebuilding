@@ -294,6 +294,14 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 				newValue: `staffId: ${data.new_sender}`
 			})
 		}
+		
+		if (data.new_expanse && (data.new_expanse != data.old_expanse)) {
+			innerSetMonitor({
+				sectionField: 'expanse',
+				oldValue: `expanseId: ${data.old_expanse}`,
+				newValue: `expanseId: ${data.new_expanse}`
+			})
+		}
 
 		if (
 			(data.new_money && (data.new_money != data.old_money)) ||

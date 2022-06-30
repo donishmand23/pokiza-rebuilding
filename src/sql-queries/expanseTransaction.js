@@ -225,8 +225,17 @@ const DELETE_EXPANSE = `
     to_char(expanse_created_at, 'YYYY-MM-DD HH24:MI:SS') expanse_created_at
 `
 
+const TRANSACTION_BRANCH = `
+    SELECT
+        u.branch_id
+    FROM expanse_transactions et
+    INNER JOIN staffs s ON s.staff_id = et.transaction_from
+    INNER JOIN users u ON u.user_id = s.user_id
+    WHERE et.transaction_id = $1
+`
 
 export default {
+    TRANSACTION_BRANCH,
     ACCEPT_TRANSACTION,
     UPDATE_TRANSACTION,
     DELETE_TRANSACTION,

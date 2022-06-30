@@ -183,7 +183,17 @@ const UPDATE_TRANSACTION = `
     to_char(transaction_fond_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_fond_created_at
 `
 
+const TRANSACTION_BRANCH = `
+    SELECT
+        u.branch_id
+    FROM fond_transactions ft
+    INNER JOIN staffs s ON s.staff_id = ft.transaction_from
+    INNER JOIN users u ON u.user_id = s.user_id
+    WHERE ft.transaction_id = $1
+`
+
 export default {
+    TRANSACTION_BRANCH,
     DELETE_TRANSACTION,
     UPDATE_TRANSACTION,
     CANCEL_TRANSACTION,

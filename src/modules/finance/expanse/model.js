@@ -1,5 +1,6 @@
-import { BadRequestError } from '#errors'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
+import { BadRequestError } from '#errors'
 import ExpanseTransactionQuery from '#sql/expanseTransaction'
 import BalanceQuery from '#sql/balance'
 import BranchQuery from '#sql/branch'
@@ -100,6 +101,18 @@ const acceptExpanseTransaction = async ({ transactionId }, user) => {
 		transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 	)
 
+	const transactionBranch = await fetch(ExpanseTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeExpanses',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
+
 	if (decrement) return transaction
 }
 
@@ -111,6 +124,19 @@ const cancelExpanseTransaction = async ({ transactionId }, user) => {
 	}
 
 	const transaction = await fetch(ExpanseTransactionQuery.CANCEL_TRANSACTION, transactionId)
+
+	const transactionBranch = await fetch(ExpanseTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeExpanses',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
+
 	return transaction
 }
 
@@ -130,6 +156,18 @@ const deleteExpanseTransaction = async ({ transactionId }, user) => {
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
 	}
+
+	const transactionBranch = await fetch(ExpanseTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeExpanses',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: oldTransaction.transaction_status,
+		new_status: transaction.transaction_status,
+	})
 		
 	return transaction
 }
@@ -177,6 +215,30 @@ const changeExpanseTransaction = async ({
 			transaction.transaction_money_type === 'card' ? transaction.transaction_money : 0,
 		)
 	}
+
+	const transactionBranch = await fetch(ExpanseTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeExpanses',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_receiver: oldTransaction.transaction_to,
+		new_receiver: transaction.transaction_to,
+		old_sender: oldTransaction.transaction_from,
+		new_sender: transaction.transaction_from,
+		old_money: oldTransaction.transaction_money,
+		new_money: transaction.transaction_money,
+		old_summary: oldTransaction.transaction_summary,
+		new_summary: transaction.transaction_summary,
+		old_date_time: oldTransaction.transaction_created_at,
+		new_date_time: transaction.transaction_created_at,
+		old_money_type: oldTransaction.transaction_money_type,
+		new_money_type: transaction.transaction_money_type,
+		old_expanse: transaction.expanse_id,
+		new_expanse: transaction.expanse_id,
+	})
 	
 	return transaction
 }

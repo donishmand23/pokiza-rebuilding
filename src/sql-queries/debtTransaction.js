@@ -253,8 +253,22 @@ const UPDATE_TRANSACTION = `
     to_char(transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
 `
 
+const TRANSACTION_BRANCH = `
+    SELECT
+        u.branch_id
+    FROM debt_transactions dt
+    INNER JOIN staffs s ON 
+        CASE
+            WHEN dt.transaction_type = 'income' THEN s.staff_id = dt.transaction_to
+            WHEN dt.transaction_type = 'outcome' THEN s.staff_id = dt.transaction_from
+        END
+    INNER JOIN users u ON u.user_id = s.user_id
+    WHERE dt.transaction_id = $1
+`
+
 
 export default {
+    TRANSACTION_BRANCH,
     DELETE_TRANSACTION,
     UPDATE_TRANSACTION,
     ACCEPT_TRANSACTION,
