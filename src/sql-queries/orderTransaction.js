@@ -137,7 +137,16 @@ const UPDATE_TRANSACTION = `
     to_char(ot.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
 `
 
+const TRANSACTION_BRANCH = `
+    SELECT
+        o.branch_id
+    FROM order_transactions ot
+    NATURAL JOIN orders o
+    WHERE ot.transaction_id = $1
+`
+
 export default {
+    TRANSACTION_BRANCH,
     UPDATE_TRANSACTION,
     DELETE_TRANSACTION,
     MAKE_TRANSACTION,

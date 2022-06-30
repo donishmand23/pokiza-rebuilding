@@ -8,6 +8,11 @@ const sections = {
 	products: ['status', 'summary', 'service', 'file', 'size'],
 	services: ['name', 'price', 'branch', 'unit', 'unitKeys'],
 	settings: ['deliveryHours'],
+	financeOrders: ['moneyAmount', 'summary'],
+	financeDebts: ['moneyAmount', 'receiver', 'sender', 'status', 'dateTime', 'summary'],
+	financeExpanses: ['expanse', 'moneyAmount', 'receiver', 'sender', 'status', 'dateTime', 'summary'],
+	financeFonds: ['moneyAmount', 'receiver', 'sender', 'status', 'dateTime', 'summary'],
+	financeMoneys: ['moneyAmount', 'receiver', 'sender', 'status', 'dateTime', 'summary'],
 }
 
 export default {
@@ -34,7 +39,7 @@ export default {
 						return el
 					}
 
-					if((['birthDate', 'bringTime']).includes(el.section_field)) {
+					if((['birthDate', 'bringTime', 'dateTime']).includes(el.section_field)) {
 						let [, oldDate] = el.old_value.split('value: ')
 						let [, newDate] = el.new_value.split('value: ')
 						oldDate = new Date(oldDate)

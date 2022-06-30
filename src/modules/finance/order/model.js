@@ -1,4 +1,5 @@
-import { BadRequestError, ForbiddenError } from '#errors'
+import { BadRequestError } from '#errors'
+import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import OrderTransactionQuery from '#sql/orderTransaction'
 import BalanceQuery from '#sql/balance'
@@ -34,6 +35,7 @@ const staff = async ({ staffId }) => {
 const makeOrderTransaction = async ({ orderId, transactionMoneyCash, transactionMoneyCard, transactionType, transactionSummary }, user) => {
 	const binding = await fetch(OrderQuery.ORDER_BINDING, orderId, 0, 0, 0)
 	const statuses = await fetchAll(OrderQuery.ORDER_STATUSES, orderId)
+
 	if (statuses.at(-1) != 9 && transactionType === 'income') {
 		throw new BadRequestError("Transaksiyani amalga oshirish uchun buyurtma yetkazildi statusida bo'lishi kerak!")
 	}
@@ -78,6 +80,18 @@ const deleteOrderTransaction = async ({ transactionId }, user) => {
 	if (transaction?.transaction_type === 'outcome') {
 		await fetch(BalanceQuery.INCREMENT_BALANCE, transaction.staff_id, transaction.transaction_money_cash, transaction.transaction_money_card)
 	}
+
+	const transactionBranch = await fetch(OrderTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeOrders',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_status: 'active',
+		new_status: 'deleted',
+	})
 	
 	return transaction
 }
@@ -113,6 +127,22 @@ const changeOrderTransaction = async ({ transactionId, transactionMoneyCash, tra
 		await fetch(BalanceQuery.INCREMENT_BALANCE, oldTransaction.staff_id, oldTransaction.transaction_money_cash, oldTransaction.transaction_money_card)
 		await fetch(BalanceQuery.DECREMENT_BALANCE, transaction.staff_id, transaction.transaction_money_cash, transaction.transaction_money_card)
 	}
+
+	const transactionBranch = await fetch(OrderTransactionQuery.TRANSACTION_BRANCH, transactionId)
+	if (transaction) setMonitoring({
+		userId: user.userId,
+		sectionId: transactionId,
+		sectionName: 'financeOrders',
+		operationType: 'changed',
+		branchId: transactionBranch.branch_id,
+	}, {
+		old_money_cash: oldTransaction.transaction_money_cash,
+		old_money_card: oldTransaction.transaction_money_card,
+		new_money_cash: transaction.transaction_money_cash,
+		new_money_card: transaction.transaction_money_card,
+		old_summary: oldTransaction.transaction_summary,
+		new_summary: transaction.transaction_summary,
+	})
 	
 	return transaction
 }

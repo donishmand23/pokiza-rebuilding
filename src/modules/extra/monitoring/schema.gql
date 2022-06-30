@@ -65,6 +65,11 @@ enum MonitoringSectionFields {
 	color
 	number
 	unitKeys
+	dateTime
+	expanse
+	moneyAmount
+	receiver
+	sender
 }
 
 enum MonitoringSectionNames {
@@ -75,4 +80,9 @@ enum MonitoringSectionNames {
 	transports
 	settings
 	services
+	financeOrders
+	financeDebts
+	financeExpanses
+	financeFonds
+	financeMoneys
 }

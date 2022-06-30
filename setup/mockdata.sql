@@ -650,6 +650,7 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2705);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2708);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2708);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2711);
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2802);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2804);

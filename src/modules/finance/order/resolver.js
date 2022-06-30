@@ -39,10 +39,10 @@ export default {
 				if (changedOrderTransaction) {
 					return {
 						status: 200,
-						message: "Transaksiya izohi o'zgartirildi!",
+						message: "Transaksiya o'zgartirildi!",
 						data: changedOrderTransaction
 					}
-				} else throw new InternalServerError("Transaksiyaning izohini o'zgartirishda muammolik yuz berdi!")
+				} else throw new InternalServerError("Transaksiyani o'zgartirishda muammolik yuz berdi!")
 			} catch (error) {
 				throw error
 			}

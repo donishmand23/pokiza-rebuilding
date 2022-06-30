@@ -263,6 +263,57 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 			})
 		}
 
+		if (data.new_money_cash && (data.new_money_cash != data.old_money_cash)) {
+			innerSetMonitor({
+				sectionField: 'moneyAmount',
+				oldValue: `cash: ${data.old_money_cash}`,
+				newValue: `cash: ${data.new_money_cash}`
+			})
+		}
+
+		if (data.new_money_card && (data.new_money_card != data.old_money_card)) {
+			innerSetMonitor({
+				sectionField: 'moneyAmount',
+				oldValue: `card: ${data.old_money_card}`,
+				newValue: `card: ${data.new_money_card}`
+			})
+		}
+
+		if (data.new_receiver && (data.new_receiver != data.old_receiver)) {
+			innerSetMonitor({
+				sectionField: 'receiver',
+				oldValue: `staffId: ${data.old_receiver}`,
+				newValue: `staffId: ${data.new_receiver}`
+			})
+		}
+
+		if (data.new_sender && (data.new_sender != data.old_sender)) {
+			innerSetMonitor({
+				sectionField: 'sender',
+				oldValue: `staffId: ${data.old_sender}`,
+				newValue: `staffId: ${data.new_sender}`
+			})
+		}
+
+		if (
+			(data.new_money && (data.new_money != data.old_money)) ||
+			(data.old_money_type != data.new_money_type)
+		) {
+			innerSetMonitor({
+				sectionField: 'moneyAmount',
+				oldValue: `${data.old_money_type}: ${data.old_money}`,
+				newValue: `${data.new_money_type}: ${data.new_money}`
+			})
+		}
+
+		if (data.new_date_time && ((new Date(data.new_date_time))?.getTime() != (new Date(data.old_date_time))?.getTime())) {
+			innerSetMonitor({
+				sectionField: 'dateTime',
+				oldValue: `value: ${data.new_date_time}`,
+				newValue: `value: ${data.new_date_time}`
+			})
+		}
+
 		if (operationType == 'added' && sectionName == 'services') {
 			innerSetMonitor({
 				newValue: `serviceId: ${data.service_id}`
