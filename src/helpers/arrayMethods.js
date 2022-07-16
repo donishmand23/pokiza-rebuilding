@@ -11,7 +11,7 @@ Array.prototype.equalize = function (array1, array2) {
     }).filter(el => el)
 
     if (!array1 || (array1 && !array1.length)) {
-        return array2
+        return [0]
     }
 
     return array1
