@@ -18,6 +18,7 @@ export const PUBLIC_QUERIES = [
 
 export const PUBLIC_CLIENT_AND_STAFF_QUERIES = [
     'notifications',
+    'user'
 ]
 
 export const PRIVATE_CLIENT_AND_STAFF_QUERIES = [
@@ -43,8 +44,7 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
     'permissionsList',
     'addSocialSet',
     'changeSocialSet',
-    'expanses',
-    'user'
+    'expanses'
 ]
 
 export const PRIVATE_STAFF_ONLY_QUERIES = [
