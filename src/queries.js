@@ -44,6 +44,7 @@ export const PUBLIC_STAFF_ONLY_QUERIES = [
     'addSocialSet',
     'changeSocialSet',
     'expanses',
+    'user'
 ]
 
 export const PRIVATE_STAFF_ONLY_QUERIES = [

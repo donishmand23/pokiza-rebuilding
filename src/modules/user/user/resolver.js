@@ -3,7 +3,7 @@ import userModel from './model.js'
 
 export default {
 	Query: {
-		user: async (_, { userId }) => {
+		user: async (_, args, { userId }) => {
 			try {
 				const user = await userModel.user({ userId })
 				return user
