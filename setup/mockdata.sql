@@ -331,6 +331,27 @@ insert into orders (
 	NOW() + '100800 second'::INTERVAL + '180800 second'::INTERVAL
 );
 
+insert into orders (
+	client_id, 
+	branch_id, 
+	address_id, 
+	order_special, 
+	order_bring_time, 
+	order_delivery_time, 
+	order_brougth_time,
+	order_delivered_time
+) values
+/* 6 */ (
+	4, 
+	2, 
+	12, 
+	true, 
+	NOW() + '100800 second'::INTERVAL, 
+	NOW() + '100800 second'::INTERVAL + '172800 second'::INTERVAL,
+	NOW() + '109900 second'::INTERVAL,
+	NOW() + '100800 second'::INTERVAL + '180800 second'::INTERVAL
+);
+
 -- order statuses
 insert into order_statuses (order_id, staff_id, order_status_code) values
 (1, null, 1),
@@ -350,7 +371,9 @@ insert into order_statuses (order_id, staff_id, order_status_code) values
 (5, 2, 6),
 (5, 2, 7),
 (5, 3, 8),
-(5, 3, 9);
+(5, 3, 9),
+(6, null, 1),
+(6, 4, 2);
 
 -- products
 insert into products (order_id, service_id, product_size, product_size_details, product_img, product_summary) values
@@ -594,76 +617,299 @@ insert into permissions (permission_action, permission_model) values
 (2905, 'delete fond transaction');
 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1100);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1101);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1102);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1103);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1104);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1200);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1201);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1202);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1203);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1204);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1300);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1301);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1302);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1303);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1304);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1305);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1402);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1403);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1404);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1405);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1501);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1503);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1504);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1505);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1601);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1602);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1603);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1604);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1605);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1700);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1701);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1702);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1703);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1704);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1705);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1800);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1801);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1802);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1803);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1804);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1805);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1806);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1807);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1808);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1809);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1901);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1902);
-
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1100);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1200);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1900);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1901);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1902);
-
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2400);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2101);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2102);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2103);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2104);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2105);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2106);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2107);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2108);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2109);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2110);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2201);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2202);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2203);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2204);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2205);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2206);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2207);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2208);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2209);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2210);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2300);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2301);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2302);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2303);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2304);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2305);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2400);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2401);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2402);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2402);
-
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2500);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2502);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2503);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2500);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2501);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2501);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 3, 2500);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2506);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2507);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2503);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2504);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2505);
-
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2506);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2507);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2601);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2602);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2603);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2604);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2605);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2606);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2607);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2614);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2600);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2601);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2613);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2611);
-insert into permission_sets (staff_id, branch_id, permission_action) values (2, 1, 2611);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2608);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2609);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2610);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2611);
-insert into permission_sets (staff_id, branch_id, permission_action) values (2, 1, 2605);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2605);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2603);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2604);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2609);
-
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2612);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2613);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2614);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2615);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2700);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2701);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2702);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2703);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2704);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2705);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2706);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2707);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2708);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2708);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2709);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2710);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2711);
-
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2800);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2801);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2802);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2803);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2804);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2805);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2806);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2807);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2809);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2801);
-
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2810);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2811);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2812);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2813);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2901);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2902);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2904);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2903);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2904);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2905);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1100);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1101);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1102);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1103);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1104);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1200);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1201);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1202);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1203);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1204);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1300);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1301);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1302);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1303);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1304);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1305);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1402);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1403);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1404);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1405);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1501);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1503);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1504);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1505);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1601);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1602);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1603);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1604);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1605);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1700);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1701);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1702);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1703);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1704);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1705);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1800);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1801);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1802);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1803);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1804);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1805);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1806);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1807);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1808);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1809);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1901);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1902);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2101);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2102);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2103);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2104);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2105);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2106);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2107);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2108);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2109);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2110);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2201);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2202);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2203);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2204);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2205);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2206);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2207);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2208);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2209);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2210);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2300);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2301);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2302);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2303);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2304);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2305);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2402);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2501);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2503);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2504);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2505);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2506);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2507);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2601);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2602);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2603);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2604);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2605);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2606);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2607);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2608);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2609);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2610);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2611);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2612);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2613);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2614);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2615);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2700);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2701);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2702);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2703);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2704);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2705);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2706);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2707);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2708);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2709);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2710);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2711);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2800);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2801);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2802);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2803);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2804);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2805);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2806);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2807);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2808);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2809);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2810);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2811);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2812);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2813);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2900);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2901);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2902);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2903);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2904);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2905);
+
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2400);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2401);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2500);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2502);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2506);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2600);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2601);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2613);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2611);
+insert into permission_sets (staff_id, branch_id, permission_action) values (2, 1, 2611);
+insert into permission_sets (staff_id, branch_id, permission_action) values (2, 1, 2605);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2605);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2603);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2604);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2609);
+insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2708);
 insert into permission_sets (staff_id, branch_id, permission_action) values (4, 2, 2900);
 
 insert into permission_groups (group_name) values ('moderator');
