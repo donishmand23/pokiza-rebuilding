@@ -239,8 +239,11 @@ export default async ({ operation, variables, fieldName }, payload) => {
 
         else if (query === 'bindOrder') {
             const transportId = variables.transportId               // ID
-            const productId = variables.productId                   // [ID!]
-            const orderId = variables.orderId                       // [ID!]
+            let productId = variables.productId                   // [ID!]
+            let orderId = variables.orderId                       // [ID!]
+            
+            if(!Array.isArray(orderId)) orderId = [orderId]
+            if (!Array.isArray(productId)) productId = [productId]
 
             const transportBranchId = (await fetch(PermissionQuery.BRANCHES_BY_TRANSPORTS, [transportId]))?.branch_id
             const orderBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_ORDERS, orderId)).map(el => +el.branch_id)

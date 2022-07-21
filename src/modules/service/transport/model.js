@@ -2,6 +2,7 @@ import { BadRequestError, ForbiddenError } from '#errors'
 import { setMonitoring } from '#helpers/monitoring'
 import { fetch, fetchAll } from '#utils/postgres'
 import changeStatus from '#helpers/status'
+import PermissionQuery from '#sql/permission'
 import TransportQuery from '#sql/transport'
 import ProductQuery from '#sql/product'
 import BranchQuery from '#sql/branch'
@@ -131,6 +132,11 @@ const restoreTransport = async ({ transportId }, { userId }) => {
 const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { staffId, userId }) => {
 	const boundOrders = []
 
+	const transportBranchId = (await fetch(PermissionQuery.BRANCHES_BY_TRANSPORTS, [transportId]))?.branch_id
+	if (!transportBranchId) {
+		throw new ForbiddenError("Bunday mashina mavjud emas!")
+	}
+
 	for(let id of orderId) {
 		const orderStatuses = await fetchAll(OrderQuery.ORDER_STATUSES, id)
 
@@ -146,15 +152,24 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 		].every(cond => cond == false)) {
 			throw new ForbiddenError("Buyurtmani mashinaga biriktirish mumkin emas!")
 		}
+		
+		const orderBranchId = (await fetch(PermissionQuery.BRANCHES_BY_ORDERS, [id]))?.branch_id
+
+		if (orderBranchId != transportBranchId) {
+			throw new ForbiddenError("Buyurtmani boshqa filialdagi mashinaga biriktirish mumkin emas!")
+		}
 
 		const bound = await fetch(TransportQuery.BIND_ORDER, id, null, type, transportId)
-		bound && await fetch(
-			OrderQuery.CHANGE_ORDER_STATUS, id, 
-			orderStatus == 6 ? 7 : orderStatus == 2 ? 3 : 3, 
-			staffId
-		)
-		bound && await changeStatus({ orderId: id, staffId })
-		bound && boundOrders.push(bound)
+
+		if (bound) {
+			await fetch(
+				OrderQuery.CHANGE_ORDER_STATUS, id,
+				orderStatus == 6 ? 7 : orderStatus == 2 ? 3 : 3,
+				staffId
+			)
+			await changeStatus({ orderId: id, staffId })
+			boundOrders.push(bound)
+		}
 	}
 
 	for(let id of productId) {
@@ -172,10 +187,19 @@ const bindOrder = async ({ transportId, orderId = [], productId = [], type }, { 
 			throw new ForbiddenError("Buyumni mashinaga biriktirish mumkin emas!")
 		}
 
+		const productBranchId = (await fetch(PermissionQuery.BRANCHES_BY_PRODUCTS, [id]))?.branch_id
+
+		if (productBranchId != transportBranchId) {
+			throw new ForbiddenError("Buyumni boshqa filialdagi mashinaga biriktirish mumkin emas!")
+		}
+
 		const bound = await fetch(TransportQuery.BIND_ORDER, null, id, type, transportId)
-		bound && await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 8, staffId)
-		bound && await changeStatus({ productId: id, staffId })
-		bound && boundOrders.push(bound)
+
+		if (bound) {
+			await fetch(ProductQuery.CHANGE_PRODUCT_STATUS, id, 8, staffId)
+			await changeStatus({ productId: id, staffId })
+			boundOrders.push(bound)
+		}
 	}
 
 	return boundOrders
