@@ -145,7 +145,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'deleteStaff' || query === 'restoreStaff') {
-            const staffId = variables.staffId                  // [ID!]
+            let staffId = variables.staffId                  // [ID!]
+
+            if (!Array.isArray(staffId)) staffId = [staffId]
 
             const staffBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_STAFFS, staffId)).map(el => +el.branch_id)
 
@@ -197,7 +199,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'deleteClient' || query === 'restoreClient') {
-            const clientId = variables.clientId                  // [ID!]
+            let clientId = variables.clientId                  // [ID!]
+
+            if (!Array.isArray(clientId)) clientId = [clientId]
 
             const clientBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_CLIENTS, clientId)).map(el => +el.branch_id)
 
@@ -263,8 +267,11 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'unbindOrder') {
-            const productId = variables.productId                   // [ID!]
-            const orderId = variables.orderId                       // [ID!]
+            let productId = variables.productId                   // [ID!]
+            let orderId = variables.orderId                       // [ID!]
+
+            if (!Array.isArray(productId)) productId = [productId]
+            if (!Array.isArray(orderId)) orderId = [orderId]
 
             const orderBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_ORDERS, orderId)).map(el => +el.branch_id)
             const productBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_PRODUCTS, productId)).map(el => +el.branch_id)
@@ -317,7 +324,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'deleteTransport' || query === 'restoreTransport') {
-            const transportId = variables.transportId                  // [ID!]
+            let transportId = variables.transportId                  // [ID!]
+
+            if (!Array.isArray(transportId)) transportId = [transportId]
 
             const transportBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_TRANSPORTS, transportId)).map(el => +el.branch_id)
 
@@ -358,7 +367,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'disableService' || query === 'enableService') {
-            const serviceId = variables.serviceId                  // [ID!]
+            let serviceId = variables.serviceId                  // [ID!]
+
+            if (!Array.isArray(serviceId)) serviceId = [serviceId]
 
             const serviceBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_SERVICES, serviceId)).map(el => +el.branch_id)
 
@@ -449,7 +460,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'deleteProduct' || query === 'restoreProduct') {
-            const productId = variables.productId                  // [ID!]
+            let productId = variables.productId                  // [ID!]
+
+            if (!Array.isArray(productId)) productId = [productId]
 
             const productBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_PRODUCTS, productId)).map(el => +el.branch_id)
 
@@ -529,7 +542,9 @@ export default async ({ operation, variables, fieldName }, payload) => {
         }
 
         else if (query === 'deleteOrder' || query === 'restoreOrder') {
-            const orderId = variables.orderId                  // [ID!]
+            let orderId = variables.orderId                  // [ID!]
+
+            if (!Array.isArray(orderId)) orderId = [orderId]
 
             const orderBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_ORDERS, orderId)).map(el => +el.branch_id)
 
@@ -563,8 +578,11 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 'both': [2300, 2301]
             }
             const user = variables.user                  // UserSelection!
-            const userId = variables.userId              // [ID!]
-            const branchId = variables.branchId          // [ID!]
+            let userId = variables.userId              // [ID!]
+            let branchId = variables.branchId          // [ID!]
+
+            if (!Array.isArray(userId)) userId = [userId]
+            if (!Array.isArray(branchId)) branchId = [branchId]
 
             const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, [recepientPermissions[user]])
             const allowedBranches = staffPermissions.map(per => +per.branch_id)
