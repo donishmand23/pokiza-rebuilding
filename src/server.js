@@ -10,10 +10,15 @@ import {
 import context from './context.js'
 import { PORT } from '#config'
 import express from 'express'
+import https from 'https'
 import path from 'path'
-import http from 'http'
+import fs from 'fs'
 import './helpers/arrayMethods.js'
 
+const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem')
+}
 
 // loading modules
 import modules from '#modules/index.js'
@@ -27,7 +32,7 @@ const schema = makeExecutableSchema({
 
 ;(async () => {
     const app = express()
-    const httpServer = http.createServer(app)
+    const httpServer = https.createServer(options, app)
 
     app.use(graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 1 }))
     app.use('/data/uploads', express.static(path.join(process.cwd(), 'uploads')))
@@ -48,11 +53,10 @@ const schema = makeExecutableSchema({
 
     server.applyMiddleware({
         app,
-        path: '/graphql',
+        path: '/api/graphql',
     })
 
     await new Promise(resolve => httpServer.listen({ port: PORT }, resolve))
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
     console.log(`🚀 Server ready at http://127.0.0.1:${PORT}${server.graphqlPath}`)
-    console.log(`🚀 Server ready at http://192.168.0.111:${PORT}${server.graphqlPath}`)
 })()
