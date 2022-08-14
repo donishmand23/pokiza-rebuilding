@@ -18,8 +18,9 @@ import './helpers/arrayMethods.js'
 console.log(fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem', 'UTF-8'))
 
 const options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem', 'UTF-8'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem', 'UTF-8')
+    cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem', 'UTF-8'),
+    key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem', 'UTF-8'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/chain.pem', 'UTF-8')
 }
 
 // loading modules
