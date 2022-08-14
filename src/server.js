@@ -15,6 +15,8 @@ import path from 'path'
 import fs from 'fs'
 import './helpers/arrayMethods.js'
 
+console.log(fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem'))
+
 const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/fullchain.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem')
