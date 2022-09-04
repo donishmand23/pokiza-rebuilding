@@ -1,7 +1,9 @@
-// import dotenv from 'dotenv'
-// dotenv.config()	
+import dotenv from 'dotenv'
+import path from 'path'
+ 
+dotenv.config({ path: path.join(process.cwd(), '.env') })	
 
-const PORT = process.env.PORT || 443
+const PORT = process.env.NODE_ENV === 'production' ? 443 : 4000
 
 
 const PG = {

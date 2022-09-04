@@ -1,9 +1,8 @@
-console.clear()
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { ApolloServer } from 'apollo-server-express'
 import {
-  ApolloServerPluginLandingPageGraphQLPlayground,
+    ApolloServerPluginLandingPageGraphQLPlayground,
     ApolloServerPluginDrainHttpServer,
     ApolloServerPluginInlineTrace
 } from 'apollo-server-core'
@@ -11,15 +10,10 @@ import context from './context.js'
 import { PORT } from '#config'
 import express from 'express'
 import https from 'https'
+import http from 'http'
 import path from 'path'
 import fs from 'fs'
 import './helpers/arrayMethods.js'
-
-const options = {
-    cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/cert.pem', 'UTF-8'),
-    key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem', 'UTF-8'),
-    ca: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/chain.pem', 'UTF-8')
-}
 
 // loading modules
 import modules from '#modules/index.js'
@@ -33,7 +27,16 @@ const schema = makeExecutableSchema({
 
 ;(async () => {
     const app = express()
-    const httpServer = https.createServer(options, app)
+    let httpServer = http.createServer(app)
+
+    if (process.env.NODE_ENV === 'production') {
+        httpServer = https.createServer(
+            {
+                cert: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/cert.pem', 'UTF-8'),
+                key: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/privkey.pem', 'UTF-8'),
+                ca: fs.readFileSync('/etc/letsencrypt/live/pokiza-gilam.uz/chain.pem', 'UTF-8')
+            }, app)
+    }
 
     app.use(graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 1 }))
     app.use('/data/uploads', express.static(path.join(process.cwd(), 'uploads')))
