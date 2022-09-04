@@ -14,8 +14,8 @@ const user = ({ userId }) => {
 	return fetch(UserQuery.USER, false, userId, 0, 0)
 }
 
-const sendNotifications = ({ user, branchId, userId, staffId, file, notificationTitle, notificationBody }) => {
-	return fetchAll(NotificationQuery.SEND_NOTIFICATION, staffId, notificationTitle, notificationBody, file, branchId, user, userId)
+const sendNotifications = ({ user, branchId, userId, staffId, file, gender, notificationTitle, notificationBody }) => {
+	return fetchAll(NotificationQuery.SEND_NOTIFICATION, staffId, notificationTitle, notificationBody, file, branchId, user, userId, gender)
 }
 
 const deleteNotifications = ({ userId, notificationId }) => {

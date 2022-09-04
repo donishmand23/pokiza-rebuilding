@@ -39,6 +39,10 @@ const SEND_NOTIFICATION = `
 	CASE
 		WHEN ARRAY_LENGTH($7::INT[], 1) > 0 THEN u.user_id = ANY($7::INT[])
 		ELSE TRUE
+	END AND
+	CASE
+		WHEN $8 = ANY(ARRAY[1, 2]) THEN u.user_gender = $8
+		ELSE TRUE
 	END
 	RETURNING *
 `

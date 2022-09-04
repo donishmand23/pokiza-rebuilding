@@ -8,6 +8,7 @@ type Mutation {
 		branchId: [ID!]
 		userId: [ID!]
 		file: Upload
+		gender: Gender
 		notificationTitle: String!
 		notificationBody: String!
 	): MutationResponse!
