@@ -41,6 +41,10 @@ const schema = makeExecutableSchema({
     app.use(graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 1 }))
     app.use('/data/uploads', express.static(path.join(process.cwd(), 'uploads')))
     
+    app.get('/', (req, res) => { 
+        res.redirect('https://pokizagilam.netlify.app') 
+    })
+
     const server = new ApolloServer({
         schema,
         introspection: true,
