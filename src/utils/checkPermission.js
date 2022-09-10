@@ -578,11 +578,11 @@ export default async ({ operation, variables, fieldName }, payload) => {
                 'both': [2300, 2301]
             }
             const user = variables.user                  // UserSelection!
-            let userId = variables.userId              // [ID!]
-            let branchId = variables.branchId          // [ID!]
+            let userId = variables.userId || []             // [ID!]
+            let branchId = variables.branchId || []         // [ID!]
 
-            if (!Array.isArray(userId)) userId = [userId]
-            if (!Array.isArray(branchId)) branchId = [branchId]
+            if (!Array.isArray(userId) && !userId.length) userId = [userId]
+            if (!Array.isArray(branchId) && branchId.length) branchId = [branchId]
 
             const staffPermissions = await fetchAll(PermissionQuery.PERMISSION_SETS, payload.staffId || 0, [recepientPermissions[user]])
             const allowedBranches = staffPermissions.map(per => +per.branch_id)
@@ -590,8 +590,8 @@ export default async ({ operation, variables, fieldName }, payload) => {
             const userBranchIds = (await fetchAll(PermissionQuery.BRANCHES_BY_USERS, userId)).map(el => +el.branch_id)
 
             if (
-                !branchId.every(branchId => allowedBranches.includes(+branchId)) ||
-                !userBranchIds.every(branchId => allowedBranches.includes(+branchId))
+                (branchId.length && !branchId.some(branchId => allowedBranches.includes(+branchId))) ||
+                (userBranchIds.length && !userBranchIds.some(branchId => allowedBranches.includes(+branchId)))
             ) {
                 throw new ForbiddenError("Siz uchun ruxsatnoma berilmagan!")
             }
