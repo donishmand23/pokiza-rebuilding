@@ -1,5 +1,5 @@
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs'
 import { GraphQLScalarType, Kind } from 'graphql'
-import { GraphQLUpload } from 'graphql-upload'
 
 // DateTime scalar
 const dateTimeScalar = new GraphQLScalarType({

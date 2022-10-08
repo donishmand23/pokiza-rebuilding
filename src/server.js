@@ -1,5 +1,5 @@
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { graphqlUploadExpress } from 'graphql-upload'
 import { ApolloServer } from 'apollo-server-express'
 import {
     ApolloServerPluginLandingPageGraphQLPlayground,
