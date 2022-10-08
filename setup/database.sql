@@ -238,7 +238,7 @@ create table product_statuses (
 
 
 -- TRANSPORT MODULE
--- 21. transport
+-- 20. transport
 drop table if exists transports cascade;
 create table transports (
 	transport_id bigserial not null primary key,
@@ -253,7 +253,7 @@ create table transports (
 	transport_deleted_at timestamptz default null
 );
 
--- transport registration
+-- 21. transport registration
 drop table if exists transport_registration cascade;
 create table transport_registration (
 	registration_id bigserial not null primary key,
@@ -263,7 +263,7 @@ create table transport_registration (
 	unregistered_at timestamptz default null
 );
 
--- order bindings
+-- 22. order bindings
 drop table if exists order_bindings cascade;
 create table order_bindings (
 	order_binding_id bigserial not null primary key,
@@ -279,7 +279,7 @@ create table order_bindings (
 );
 
 -- EXTRA SERVICES 
--- 20. sms service
+-- 23. sms service
 drop table if exists sms_service cascade;
 create table sms_service (
 	sms_service_id bigserial not null primary key,
@@ -289,7 +289,7 @@ create table sms_service (
 	sms_service_created_at timestamptz default current_timestamp
 );
 
--- 21. notifications (notifications sent to clients and staffs)
+-- 24. notifications (notifications sent to clients and staffs)
 drop table if exists notifications cascade;
 create table notifications (
 	notification_id serial not null primary key,
@@ -303,7 +303,7 @@ create table notifications (
 );
 
 -- HISTORY
--- 15. monitoring ( store order, product, service, price, client and staff history data )
+-- 25. monitoring ( store order, product, service, price, client and staff history data )
 drop table if exists monitoring cascade;
 create table monitoring (
 	monitoring_id bigserial not null primary key,
@@ -320,14 +320,14 @@ create table monitoring (
 
 
 -- PERMISSIONS MODULE
--- 23. permissions ( general permission actions )
+-- 26. permissions ( general permission actions )
 drop table if exists permissions cascade;
 create table permissions (
 	permission_action int not null primary key unique,
 	permission_model character varying(128) not null
 );
 
--- 24. permission sets ( permissions that each user has )
+-- 27. permission sets ( permissions that each user has )
 drop table if exists permission_sets cascade;
 create table permission_sets (
 	permission_set_id bigserial not null primary key,
@@ -338,7 +338,7 @@ create table permission_sets (
 	unique (staff_id, permission_action, branch_id)
 );
 
--- 25. permission groups ( groups for grouping a set of permissions )
+-- 28. permission groups ( groups for grouping a set of permissions )
 drop table if exists permission_groups cascade;
 create table permission_groups (
 	group_id bigserial not null primary key,
@@ -347,7 +347,7 @@ create table permission_groups (
 	group_deleted_at timestamptz default null
 );
 
--- 26. permission group sets ( for grouping a set of permissions )
+-- 29. permission group sets ( for grouping a set of permissions )
 drop table if exists permission_group_sets cascade;
 create table permission_group_sets (
 	group_set_id bigserial not null primary key,
@@ -356,7 +356,8 @@ create table permission_group_sets (
 	unique (group_id, permission_action)
 );
 
--- 29. balance account ( for every accountant )
+-- FINANCE MODULE
+-- 30. balance account ( for every accountant )
 drop table if exists balances cascade;
 create table balances (
 	balance_id serial not null primary key,
@@ -381,7 +382,7 @@ create table order_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
--- 31. debt transactions ( received money from orders )
+-- 32. debt transactions ( received money from orders )
 drop table if exists debt_transactions cascade;
 create table debt_transactions (
 	transaction_id serial not null primary key,
@@ -396,7 +397,7 @@ create table debt_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
--- 31. debt transactions ( received money from orders )
+-- 33. debt transactions ( received money from orders )
 drop table if exists money_transactions cascade;
 create table money_transactions (
 	transaction_id serial not null primary key,
@@ -410,7 +411,7 @@ create table money_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
--- 28. expanse types
+-- 34. expanse types
 drop table if exists expanses cascade;
 create table expanses (
 	expanse_id serial not null primary key,
@@ -419,7 +420,7 @@ create table expanses (
 	expanse_deleted_at timestamptz default null
 );
 
--- 31. debt transactions ( received money from orders )
+-- 35. debt transactions ( received money from orders )
 drop table if exists expanse_transactions cascade;
 create table expanse_transactions (
 	transaction_id serial not null primary key,
@@ -434,7 +435,7 @@ create table expanse_transactions (
 	transaction_deleted_at timestamptz default null
 );
 
--- 31. debt transactions ( received money from orders )
+-- 36. debt transactions ( received money from orders )
 drop table if exists fond_transactions cascade;
 create table fond_transactions (
 	transaction_id serial not null primary key,
