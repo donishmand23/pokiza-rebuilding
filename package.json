@@ -6,7 +6,7 @@
     "main": "server.js",
     "scripts": {
         "start": "node src/server.js",
-        "dev": "nodemon -e * src/server.js"
+        "start:dev": "nodemon -e * src/server.js"
     },
     "keywords": [],
     "author": "",
@@ -20,7 +20,7 @@
         "formdata-node": "^4.3.1",
         "got": "^12.0.0",
         "graphql": "^15.8.0",
-        "graphql-upload": "^13.0.0",
+        "graphql-upload": "^16.0.2",
         "pg": "^8.7.1",
         "stream": "^0.0.2"
     },
