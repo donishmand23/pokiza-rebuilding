@@ -100,6 +100,7 @@ export default {
 	},
 	
 	Order: {
+		paid: 	               global => global.is_paid,
 		count: 	               global => global.full_count,
 		orderId:        	   global => global.order_id,
 		special:        	   global => global.order_special,

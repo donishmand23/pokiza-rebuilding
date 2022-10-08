@@ -70,6 +70,7 @@ type Order {
 	deliveryTime: DateTime
 	deliveredTime: DateTime
 	orderCreatedAt: DateTime!
+	paid: Boolean!
 	count: Int
 }
 

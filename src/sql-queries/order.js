@@ -14,7 +14,11 @@ const ORDERS = `
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		CASE
+			WHEN ot.transaction_id IS NOT NULL THEN TRUE
+			ELSE FALSE
+		END as is_paid
 	FROM orders o
 	NATURAL JOIN clients c
 	INNER JOIN users u ON u.user_id = c.user_id
@@ -25,6 +29,7 @@ const ORDERS = `
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
 	LEFT JOIN order_bindings ob ON o.order_id = ob.order_id AND order_binding_deleted_at IS NULL
+	LEFT JOIN order_transactions ot ON ot.order_id = o.order_id AND ot.transaction_type = 'income'
 	LEFT JOIN LATERAL (
 		SELECT * FROM order_statuses WHERE order_id = o.order_id
 		ORDER BY order_status_id DESC LIMIT 1
@@ -137,7 +142,7 @@ const ORDERS = `
 		ELSE TRUE
 	END
 	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code,
-		     n.neighborhood_distance, st.street_distance, ar.area_distance
+		     n.neighborhood_distance, st.street_distance, ar.area_distance, ot.transaction_id
 	ORDER BY
 	(CASE WHEN $21 = 1 AND $22 = 2 THEN o.order_id END) ASC,
 	(CASE WHEN $21 = 1 AND $22 = 1 THEN o.order_id END) DESC,
@@ -181,9 +186,14 @@ const ORDER = `
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		CASE
+			WHEN ot.transaction_id IS NOT NULL THEN TRUE
+			ELSE FALSE
+		END as is_paid
 	FROM orders o
 	NATURAL JOIN clients c
+	LEFT JOIN order_transactions ot ON ot.order_id = o.order_id AND ot.transaction_type = 'income'
 	LEFT JOIN LATERAL (
 		SELECT * FROM order_statuses WHERE order_id = o.order_id
 		ORDER BY order_status_id DESC LIMIT 1
@@ -224,7 +234,7 @@ const ORDER = `
 		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN c.client_id = ANY($3::INT[])
 		ELSE TRUE
 	END
-	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, ot.transaction_id
 `
 
 const SEARCH_ORDERS = `
@@ -243,9 +253,14 @@ const SEARCH_ORDERS = `
 		to_char(o.order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		CASE
+			WHEN ot.transaction_id IS NOT NULL THEN TRUE
+			ELSE FALSE
+		END as is_paid
 	FROM orders o
 	NATURAL JOIN clients c
+	LEFT JOIN order_transactions ot ON ot.order_id = o.order_id AND ot.transaction_type = 'income'
 	INNER JOIN users u ON u.user_id = c.user_id
 	LEFT JOIN (
 		SELECT
@@ -285,7 +300,7 @@ const SEARCH_ORDERS = `
 		) WHEN LENGTH($1) > 0 THEN o.order_id::VARCHAR = $1::VARCHAR
 		ELSE TRUE
 	END
-	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining
+	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, ot.transaction_id
 `
 
 const ADD_ORDER = `
