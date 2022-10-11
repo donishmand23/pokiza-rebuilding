@@ -11,7 +11,7 @@ type Query {
 		pagination: Pagination = {}
 		transactionType: TransactionType!
 		transactionStatus: TransactionStatus
-	): [DebtTransaction!]!
+	): [ExpanseTransaction!]!
 
 	expanses: [Expanse]!
 }
