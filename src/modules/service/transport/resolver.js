@@ -153,6 +153,8 @@ export default {
 	
 	Transport: {
 		count:                global => global.full_count, 
+		ordersCount:          global => global.orders_count, 
+		productsCount:        global => global.products_count, 
 		transportId:          global => global.transport_id,
 		transportModel:       global => global.transport_model, 
 		transportColor:       global => global.transport_color, 
