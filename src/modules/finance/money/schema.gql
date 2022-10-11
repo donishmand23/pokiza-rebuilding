@@ -10,7 +10,7 @@ type Query {
 		pagination: Pagination = {}
 		transactionType: TransactionType!
 		transactionStatus: TransactionStatus
-	): [DebtTransaction!]!
+	): [MoneyTransaction!]!
 }
 
 type Mutation {
