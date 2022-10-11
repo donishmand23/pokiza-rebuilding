@@ -10,6 +10,7 @@ const TRANSACTIONS = `
         fu.branch_id branch_from,
         tu.branch_id branch_to,
         ft.transaction_fond_deleted_at,
+        count(*) OVER() as count,
         CASE
             WHEN ft.transaction_from = $14 THEN 'outcome'
             WHEN ft.transaction_to = $14 THEN 'income'
@@ -80,6 +81,7 @@ const TRANSACTION = `
         ft.transaction_status,
         ft.transaction_summary,
         ft.transaction_fond_deleted_at,
+        count(*) OVER() as count,
         to_char(ft.transaction_fond_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_fond_created_at
     FROM fond_transactions ft
     WHERE

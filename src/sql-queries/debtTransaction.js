@@ -8,6 +8,7 @@ const TRANSACTIONS = `
         dt.transaction_status,
         dt.transaction_summary,
         dt.transaction_deleted_at,
+        count(*) OVER() as count,
         CASE
             WHEN dt.transaction_from = $14 THEN 'outcome'
             WHEN dt.transaction_to = $14 THEN 'income'
@@ -86,6 +87,7 @@ const TRANSACTION = `
         dt.transaction_summary,
         dt.transaction_type,
         dt.transaction_deleted_at,
+        count(*) OVER() as count,
         to_char(dt.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM debt_transactions dt
     WHERE

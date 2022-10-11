@@ -8,6 +8,7 @@ const TRANSACTIONS = `
         mt.transaction_status,
         mt.transaction_summary,
         mt.transaction_deleted_at,
+        count(*) OVER() as count,
         CASE
             WHEN mt.transaction_from = $14 THEN 'outcome'
             WHEN mt.transaction_to = $14 THEN 'income'
@@ -82,6 +83,7 @@ const TRANSACTION = `
         mt.transaction_status,
         mt.transaction_summary,
         mt.transaction_deleted_at,
+        count(*) OVER() as count,
         to_char(mt.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM money_transactions mt
     WHERE

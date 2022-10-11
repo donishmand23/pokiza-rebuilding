@@ -8,6 +8,7 @@ const TRANSACTIONS = `
         et.transaction_status,
         et.transaction_summary,
         et.transaction_deleted_at,
+        count(*) OVER() as count,
         CASE
             WHEN et.transaction_from = $15 THEN 'outcome'
             WHEN et.transaction_to = $15 THEN 'income'
@@ -87,6 +88,7 @@ const TRANSACTION = `
         et.transaction_status,
         et.transaction_summary,
         et.transaction_deleted_at,
+        count(*) OVER() as count,
         to_char(et.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM expanse_transactions et
     WHERE

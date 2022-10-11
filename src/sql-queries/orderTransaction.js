@@ -9,6 +9,7 @@ const TRANSACTIONS = `
         ot.transaction_type,
         ot.transaction_summary,
         ot.transaction_deleted_at,
+        count(*) OVER() as count,
         to_char(ot.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM order_transactions ot
     LEFT JOIN staffs s ON s.staff_id = ot.staff_id
@@ -61,6 +62,7 @@ const TRANSACTION = `
         ot.transaction_type,
         ot.transaction_summary,
         ot.transaction_deleted_at,
+        count(*) OVER() as count,
         to_char(ot.transaction_created_at, 'YYYY-MM-DD HH24:MI:SS') transaction_created_at
     FROM order_transactions ot
     LEFT JOIN staffs s ON s.staff_id = ot.staff_id
