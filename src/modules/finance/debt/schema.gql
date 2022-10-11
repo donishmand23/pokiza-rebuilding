@@ -69,6 +69,7 @@ type DebtTransaction {
 	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+	count: Int!
 }
 
 type Equity {

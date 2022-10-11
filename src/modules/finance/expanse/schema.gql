@@ -58,6 +58,7 @@ type ExpanseTransaction {
 	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+	count: Int!
 }
 
 type Expanse {

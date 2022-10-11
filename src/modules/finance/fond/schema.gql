@@ -50,4 +50,5 @@ type FondTransaction {
 	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+	count: Int!
 }

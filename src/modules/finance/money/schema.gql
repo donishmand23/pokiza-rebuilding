@@ -49,4 +49,5 @@ type MoneyTransaction {
 	transactionMoneyType: MoneyType!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+	count: Int!
 }

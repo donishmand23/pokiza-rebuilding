@@ -91,6 +91,7 @@ export default {
 	},
 	
 	FondTransaction: {
+		count:                 global => global.count,
 		transactionId: 		   global => global.transaction_id,
 		transactionType:       global => global.transaction_type,
 		transactionMoney:      global => global.transaction_money,
