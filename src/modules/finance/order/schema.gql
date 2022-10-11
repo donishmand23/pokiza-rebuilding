@@ -41,6 +41,7 @@ type OrderTransaction {
 	transactionCreatedAt: DateTime!
 	transactionType: TransactionType!
 	transactionStatus: TransactionStatus!
+	count: Int!
 }
 
 enum TransactionType {

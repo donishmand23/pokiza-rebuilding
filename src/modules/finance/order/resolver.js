@@ -61,6 +61,7 @@ export default {
 	},
 	
 	OrderTransaction: {
+		count: 		   		   global => global.count,
 		transactionId: 		   global => global.transaction_id,
 		transactionType:       global => global.transaction_type,
 		transactionSummary:    global => global.transaction_summary,
