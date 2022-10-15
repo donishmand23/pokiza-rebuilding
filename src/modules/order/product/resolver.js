@@ -109,6 +109,7 @@ export default {
 		productSummary:       global => global.product_summary,
 		productSpecial:       global => global.order_special,
 		productSizeDetails:   global => global.product_size_details,
+		productCreatedAt:     global => global.product_created_at,
 		productImg:           global => global.product_img && '/data/uploads/' + global.product_img,
 		productStatusProcess: global => productModel.productStatuses({ productId: global.product_id }),
 		service:              global => productModel.service({ serviceId: global.service_id }),

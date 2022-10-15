@@ -71,6 +71,7 @@ type Product {
 	service: Service!
 	order: Order!
 	count: Int
+	productCreatedAt: DateTime!
 }
 
 input ProductDateFilter {
