@@ -79,7 +79,11 @@ type Transport {
 	branch: Branch!
 	count: Int
 	ordersCount: Int!
+	bringingOrdersCount: Int!
+	deliveringOrdersCount: Int!
 	productsCount: Int!
+	bringingProductsCount: Int!
+	deliveringProductsCount: Int!
 }
 
 type Driver {

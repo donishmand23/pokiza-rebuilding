@@ -29,8 +29,32 @@ const TRANSPORTS = `
 		(
 			SELECT COUNT(*) FROM order_bindings 
 			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
 			finished = FALSE AND product_id IS NOT NULL
 		) AS products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_products_count,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
@@ -125,8 +149,32 @@ const TRANSPORT = `
 		(
 			SELECT COUNT(*) FROM order_bindings 
 			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
 			finished = FALSE AND product_id IS NOT NULL
 		) AS products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_products_count,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
@@ -186,8 +234,32 @@ const SEARCH_TRANSPORTS = `
 		(
 			SELECT COUNT(*) FROM order_bindings 
 			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND order_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_orders_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
 			finished = FALSE AND product_id IS NOT NULL
 		) AS products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 2
+		) AS bringing_products_count,
+		(
+			SELECT COUNT(*) FROM order_bindings 
+			WHERE transport_id = t.transport_id AND
+			finished = FALSE AND product_id IS NOT NULL AND
+			order_binding_type = 1
+		) AS delivering_products_count,
 		count(*) OVER() as full_count,
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
 	FROM transports t
