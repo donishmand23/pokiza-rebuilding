@@ -8,6 +8,7 @@ const TRANSACTIONS = `
         et.transaction_status,
         et.transaction_summary,
         et.transaction_deleted_at,
+        et.expanse_id,
         count(*) OVER() as count,
         CASE
             WHEN et.transaction_from = $15 THEN 'outcome'
