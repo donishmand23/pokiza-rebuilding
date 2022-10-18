@@ -1,0 +1,15 @@
+type Query {
+	ordersCountStatistics(
+		branchId: [ID!]
+		dateFilter: RangeDate = {}
+		addressFilter: AddressFilter = {}
+	): OrdersCountStatistics!
+}
+
+type OrdersCountStatistics {
+	totalOrdersCount: Int!
+	specialOrdersCount: Int!
+	simpleOrdersCount: Int!
+	specialOrdersPercent: Int!
+	simpleOrdersPercent: Int!
+}

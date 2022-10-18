@@ -118,4 +118,6 @@ export default {
     'cancelFondTransaction': [2903],
     'changeFondTransaction': [2904],
     'deleteFondTransaction': [2905],
+
+    'ordersCountStatistics': [2306]
 }

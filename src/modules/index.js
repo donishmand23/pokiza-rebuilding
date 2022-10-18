@@ -38,6 +38,9 @@ import MoneyTransactionModule from './finance/money/index.js'
 import ExpanseTransactionModule from './finance/expanse/index.js'
 import FondTransactionModule from './finance/fond/index.js'
 
+// statistics
+import StatisticsModule from './statistics/statistics/index.js'
+
 export default {
 	typeDefs: [
 		// address
@@ -74,6 +77,8 @@ export default {
   		MoneyTransactionModule.typeDefs,
   		ExpanseTransactionModule.typeDefs,
   		FondTransactionModule.typeDefs,
+		// statistics
+		StatisticsModule.typeDefs,
 	],
 	resolvers: [
 		// address
@@ -110,5 +115,7 @@ export default {
   		MoneyTransactionModule.resolvers,
   		ExpanseTransactionModule.resolvers,
   		FondTransactionModule.resolvers,
+		// statistics
+		StatisticsModule.resolvers,
 	]
 }

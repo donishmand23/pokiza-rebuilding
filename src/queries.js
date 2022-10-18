@@ -151,4 +151,6 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'changeNeighborhood',
     'changeArea',
     'changeStreet',
+
+    'ordersCountStatistics',
 ]
