@@ -550,6 +550,7 @@ insert into permissions (permission_action, permission_model) values
 (2303, 'change deliveryHours'),
 (2304, 'see monitoring'),
 (2305, 'search global'),
+(2306, 'see statistics'),
 
 (2400, 'see personal balance'),
 (2401, 'see any balances'),
@@ -695,6 +696,7 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2303);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2304);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2305);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2306);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2400);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2401);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2402);
@@ -834,6 +836,7 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2303);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2304);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2305);
+insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2306);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2400);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2401);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2402);
