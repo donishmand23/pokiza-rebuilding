@@ -630,7 +630,7 @@ export default async ({ operation, variables, fieldName }, payload) => {
             }
 
             if (staffPermissions.find(per => personalPermissions[per.permission_action])) {
-                const transaction = await fetch(OrderTransactionQuery.TRANSACTION, transactionId, payload.staffId, 0, 0)
+                const transaction = await fetch(OrderTransactionQuery.TRANSACTION, transactionId, payload.staffId, 0, 0, '')
                 if (!transaction) {
                     throw new ForbiddenError("Siz bu transaksiyani amalga oshirmaganligingiz uchun uni o'chirish yoki o'zgartirish mumkin emas!")
                 }
