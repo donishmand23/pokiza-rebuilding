@@ -4,12 +4,29 @@ type Query {
 		dateFilter: RangeDate = {}
 		addressFilter: AddressFilter = {}
 	): OrdersCountStatistics!
+
+	productsCountStatistics(
+		branchId: [ID!]
+		dateFilter: RangeDate = {}
+		addressFilter: AddressFilter = {}
+	): [ProductsCountStatistics!]
 }
 
 type OrdersCountStatistics {
 	totalOrdersCount: Int!
 	specialOrdersCount: Int!
 	simpleOrdersCount: Int!
-	specialOrdersPercent: Int!
-	simpleOrdersPercent: Int!
+	specialOrdersPercent: Float!
+	simpleOrdersPercent: Float!
+}
+
+type ProductsCountStatistics {
+	totalOrdersCount: Int!
+	totalProductsCount: Int!
+	serviceName: String!
+	serviceUnit: String!
+	serviceBranchName: String!
+	serviceProductCount: Int!
+	serviceProductSize: Int!
+	serviceProductPercent: Float!
 }
