@@ -16,9 +16,10 @@ export default {
 				const orderStatistics = await statisticsModel.ordersCountStatistics(args, user)
 				const productsStatistics = await statisticsModel.productsCountStatistics(args, user)
 
-				return productsStatistics.map(el => {
-					return { ...el, ...orderStatistics }
-				})
+				return {
+					...orderStatistics,
+					services: productsStatistics.map(el => ({ ...el, ...orderStatistics }))
+				}
 			} catch (error) {
 				throw error
 			}
@@ -40,11 +41,14 @@ export default {
 	ProductsCountStatistics: {
 		totalOrdersCount:       global => global.total_orders_count,
 		totalProductsCount:     global => global.total_products_count,
-		serviceName: 			global => global.service_name,
-		serviceUnit: 			global => global.service_unit,
+	},
+
+	ProductsServiceInfo: {
+		serviceName:            global => global.service_name,
+		serviceUnit:            global => global.service_unit,
 		serviceBranchName:      global => global.branch_name,
 		serviceProductCount:    global => global.service_products_count,
-		serviceProductPercent:  global => {
+		serviceProductPercent: global => {
 			return Number((100 / global.total_products_count) * global.service_products_count).toFixed(1)
 		},
 		serviceProductSize: global => {
@@ -53,7 +57,7 @@ export default {
 				.reduce((acc, el) => {
 					const values = Object.values(el)
 					if (values.length > 1) {
-						return acc + values.reduce((acc, el) => acc*el)
+						return acc + values.reduce((acc, el) => acc * el)
 					} else {
 						return acc + values[0]
 					}
