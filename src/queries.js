@@ -153,5 +153,5 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'changeStreet',
 
     'ordersCountStatistics',
-    'productsCountStatistics',
+    'productServiceCountStatistics',
 ]

@@ -5,7 +5,7 @@ type Query {
 		addressFilter: AddressFilter = {}
 	): OrdersCountStatistics!
 
-	productsCountStatistics(
+	productServiceCountStatistics(
 		branchId: [ID!]
 		dateFilter: RangeDate = {}
 		addressFilter: AddressFilter = {}
@@ -15,9 +15,10 @@ type Query {
 	#	branchId: ID!
 	#	serviceId: ID!
 	#	dateFilter: RangeDate = {}
-	#): [ProductStatusesCountStatistics!]!
+	#): ProductStatusesCountStatistics!
 }
 
+# ordersCountStatistics
 type OrdersCountStatistics {
 	totalOrdersCount: Int!
 	specialOrdersCount: Int!
@@ -26,6 +27,8 @@ type OrdersCountStatistics {
 	simpleOrdersPercent: Float!
 }
 
+
+#productsCountStatistics
 type ProductsCountStatistics {
 	totalOrdersCount: Int!
 	totalProductsCount: Int!
@@ -41,7 +44,17 @@ type ProductsServiceInfo {
 	serviceProductPercent: Float!
 }
 
+
+#productStatusesCountStatistics
 #type ProductStatusesCountStatistics {
 #	totalProductsCount: Int!
 #	totalProductSize: Int!
+#	statuses: [ProductsStatusInfo!]!
+#}
+
+#type ProductsStatusInfo {
+#	statusName: String!
+#	statusProductCount: Int!
+#	statusProductSize: Int!
+#	statusProductPercent: Float!
 #}

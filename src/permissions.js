@@ -120,5 +120,5 @@ export default {
     'deleteFondTransaction': [2905],
 
     'ordersCountStatistics': [2306],
-    'productsCountStatistics': [2306],
+    'productServiceCountStatistics': [2306],
 }

@@ -11,10 +11,10 @@ export default {
 			}
 		},
 
-		productsCountStatistics: async (_, args, user) => {
+		productServiceCountStatistics: async (_, args, user) => {
 			try {
 				const orderStatistics = await statisticsModel.ordersCountStatistics(args, user)
-				const productsStatistics = await statisticsModel.productsCountStatistics(args, user)
+				const productsStatistics = await statisticsModel.productServiceCountStatistics(args, user)
 
 				return {
 					...orderStatistics,
