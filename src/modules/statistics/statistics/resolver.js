@@ -24,6 +24,16 @@ export default {
 				throw error
 			}
 		},
+
+		productStatusesCountStatistics: async (_, args, user) => {
+			try {
+				const productsStatistics = await statisticsModel.productStatusesCountStatistics(args, user)
+				console.log(productsStatistics)
+				return true
+			} catch (error) {
+				throw error
+			}
+		},
 	},
 
 	OrdersCountStatistics: {

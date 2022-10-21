@@ -11,11 +11,11 @@ type Query {
 		addressFilter: AddressFilter = {}
 	): ProductsCountStatistics!
 
-	#productStatusesCountStatistics(
-	#	branchId: ID!
-	#	serviceId: ID!
-	#	dateFilter: RangeDate = {}
-	#): ProductStatusesCountStatistics!
+	productStatusesCountStatistics(
+		branchId: ID!
+		serviceId: ID!
+		dateFilter: RangeDate = {}
+	): ProductStatusesCountStatistics!
 }
 
 # ordersCountStatistics
@@ -46,15 +46,15 @@ type ProductsServiceInfo {
 
 
 #productStatusesCountStatistics
-#type ProductStatusesCountStatistics {
-#	totalProductsCount: Int!
-#	totalProductSize: Int!
-#	statuses: [ProductsStatusInfo!]!
-#}
+type ProductStatusesCountStatistics {
+	totalProductsCount: Int!
+	totalProductSize: Int!
+	statuses: [ProductsStatusInfo!]!
+}
 
-#type ProductsStatusInfo {
-#	statusName: String!
-#	statusProductCount: Int!
-#	statusProductSize: Int!
-#	statusProductPercent: Float!
-#}
+type ProductsStatusInfo {
+	statusName: String!
+	statusProductCount: Int!
+	statusProductSize: Int!
+	statusProductPercent: Float!
+}

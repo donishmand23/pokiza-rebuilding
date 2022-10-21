@@ -35,8 +35,25 @@ const productServiceCountStatistics = ({
 	)
 }
 
+const productStatusesCountStatistics = ({
+	branchId,
+	serviceId,
+	dateFilter = {},
+}, user) => {
+	dateFilter = Object.keys(dateFilter).length ? [dateFilter.from, dateFilter.to] : []
+
+	if(branchId) branchId = [branchId]
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
+	return fetchAll(
+		StatisticsQuery.PRODUCTS_INFO_PER_STATUS,
+		branchId, serviceId, dateFilter
+	)
+}
+
 
 export default {
+	productStatusesCountStatistics,
 	productServiceCountStatistics,
 	ordersCountStatistics,
 }
