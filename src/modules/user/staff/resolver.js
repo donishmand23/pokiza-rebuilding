@@ -96,17 +96,8 @@ export default {
 	Query: {
 		staffs: async (_, args, user) => {
 			try {
-				const staffs = await staffModel.staffs({ isDeleted: false, ...args }, user)
+				const staffs = await staffModel.staffs(args, user)
 				return staffs
-			} catch(error) {
-				throw error
-			}
-		},
-
-		deletedStaffs: async (_, args, user) => {
-			try {
-				const deletedStaffs = await staffModel.staffs({ isDeleted: true, ...args }, user)
-				return deletedStaffs
 			} catch(error) {
 				throw error
 			}
@@ -118,6 +109,7 @@ export default {
 		count:          global => global.full_count,
 		staffSummary:   global => global.staff_summary,
 		staffCreatedAt: global => global.staff_created_at,
+		staffDeletedAt: global => global.staff_deleted_at,
 		userInfo:       global => staffModel.user({ userId: global.user_id }),
 		staffImg:       global => {
 			if(!global.staff_img && global.user_gender == 1) return '/data/uploads/male.jpg'

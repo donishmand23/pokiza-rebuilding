@@ -2,15 +2,7 @@ type Query {
 	staffs(
 		staffId: ID
 		search: String
-		sort: UserSort = {}
-		pagination: Pagination = {} 
-		addressFilter: AddressFilter = {}
-		userInfoFilter: UserFilter = {}
-	): [Staff!]!
-
-	deletedStaffs(
-		staffId: ID
-		search: String
+		isDeleted: Boolean
 		sort: UserSort = {}
 		pagination: Pagination = {} 
 		addressFilter: AddressFilter = {}
@@ -52,4 +44,5 @@ type Staff {
 	userInfo: User!
 	staffSummary: String
 	staffCreatedAt: DateTime!
+	staffDeletedAt: DateTime
 }

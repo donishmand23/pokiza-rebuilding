@@ -6,6 +6,7 @@ const STAFFS = `
 		s.staff_summary,
 		u.user_gender,
 		to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+		to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at,
 		count(*) OVER() as full_count
 	FROM staffs s
 	NATURAL JOIN users u
@@ -19,6 +20,7 @@ const STAFFS = `
 	CASE 
 		WHEN $3 = FALSE THEN s.staff_deleted_at IS NULL
 		WHEN $3 = TRUE THEN s.staff_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $4 > 0 THEN s.staff_id = $4
@@ -94,6 +96,7 @@ const SEARCH_STAFFS = `
 		s.staff_summary,
 		u.user_gender,
 		to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+		to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at,
 		count(*) OVER() as full_count
 	FROM staffs s
 	NATURAL JOIN users u
@@ -138,7 +141,8 @@ const ADD_STAFF = `
 	) SELECT 
 		$16, $17, u.user_id FROM new_user u
 	RETURNING *,
-	to_char(staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+	to_char(staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+	to_char(staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at
 `
 
 const CHANGE_STAFF = `
@@ -310,7 +314,8 @@ const CHANGE_STAFF = `
 	s.*,
 	a.*,
 	u.*,
-	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+	to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at
 `
 
 const STAFF_PHOTO = `
@@ -335,7 +340,8 @@ const DELETE_STAFF = `
 	RETURNING s.*,
 	du.user_gender,
 	du.branch_id,
-	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+	to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at
 `
 
 const RESTORE_STAFF = `
@@ -355,7 +361,8 @@ const RESTORE_STAFF = `
 	RETURNING s.*,
 	ru.user_gender,
 	ru.branch_id,
-	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at
+	to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+	to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at
 `
 
 const LOGIN_STAFF = `
@@ -366,6 +373,7 @@ const LOGIN_STAFF = `
 		s.staff_summary,
 		u.user_gender,
 		to_char(s.staff_created_at, 'YYYY-MM-DD HH24:MI:SS') staff_created_at,
+		to_char(s.staff_deleted_at, 'YYYY-MM-DD HH24:MI:SS') staff_deleted_at,
 		count(*) OVER() as full_count
 	FROM users u
 	RIGHT JOIN staffs s ON s.user_id = u.user_id
