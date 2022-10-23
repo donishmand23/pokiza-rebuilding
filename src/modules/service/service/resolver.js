@@ -88,17 +88,8 @@ export default {
 	Query: {
 		services: async (_, args, user) => {
 			try {
-				const services = await serviceModel.services({ isDeleted: false, ...args }, user)
+				const services = await serviceModel.services(args, user)
 				return services
-			} catch(error) {
-				throw error
-			}
-		},
-
-		disabledServices: async (_, args, user) => {
-			try {
-				const disabledServices = await serviceModel.services({ isDeleted: true, ...args }, user)
-				return disabledServices
 			} catch(error) {
 				throw error
 			}
@@ -122,6 +113,7 @@ export default {
 		servicePriceSpecial: global => global.service_price_special,
 		servicePriceSimple:  global => global.service_price_simple,
 		serviceCreatedAt:    global => global.service_created_at,
+		serviceDeletedAt:    global => global.service_deleted_at,
 		branch:              global => serviceModel.branch({ branchId: global.branch_id }),
 	},
 

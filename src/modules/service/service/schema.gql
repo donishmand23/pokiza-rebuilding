@@ -1,6 +1,5 @@
 type Query {
-	services(serviceId: ID branchId: [ID!]): [Service!]!
-	disabledServices(serviceId: ID branchId: [ID!]): [Service!]!
+	services(serviceId: ID isDeleted: Boolean branchId: [ID!]): [Service!]!
 
 	deliveryHours(branchId: [ID!]): [DeliveryHour!]!
 }
@@ -39,6 +38,7 @@ type Service {
 	servicePriceSpecial: Float!
 	servicePriceSimple: Float!
 	serviceCreatedAt: DateTime!
+	serviceDeletedAt: DateTime
 	branch: Branch!
 }
 

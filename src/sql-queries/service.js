@@ -7,7 +7,8 @@ const SERVICES = `
 		s.service_price_special,
 		s.service_price_simple,
 		s.branch_id,
-		to_char(s.service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
+		to_char(s.service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at,
+		to_char(s.service_deleted_at, 'YYYY-MM-DD HH24:MI:SS') service_deleted_at
 	FROM services s
 	INNER JOIN branches b ON b.branch_id = s.branch_id AND b.branch_deleted_at IS NULL
 	WHERE 
@@ -41,7 +42,8 @@ const ADD_SERVICE = `
 		service_price_simple
 	) VALUES ($1, $2, $3, $4::VARCHAR[], $5, $6)
 	RETURNING *,
-	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
+	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at,
+	to_char(service_deleted_at, 'YYYY-MM-DD HH24:MI:SS') service_deleted_at
 `
 
 const CHANGE_SERVICE = `
@@ -87,7 +89,8 @@ const CHANGE_SERVICE = `
 			(NOT($6 > 0) OR $6 <> os.service_price_special) OR
 			(NOT($7 > 0) OR $7 <> os.service_price_simple)
 		) RETURNING *,
-		to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
+		to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at,
+		to_char(service_deleted_at, 'YYYY-MM-DD HH24:MI:SS') service_deleted_at
 	) UPDATE services s SET
 		service_deleted_at = current_timestamp
 	FROM new_service ns, old_service os
@@ -112,7 +115,8 @@ const DISABLE_SERVICE = `
 		service_active = $2
 	WHERE service_id = ANY($1::INT[]) AND service_active <> $2
 	RETURNING *,
-	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at
+	to_char(service_created_at, 'YYYY-MM-DD HH24:MI:SS') service_created_at,
+	to_char(service_deleted_at, 'YYYY-MM-DD HH24:MI:SS') service_deleted_at
 `
 
 const DELIVERY_HOURS = `
