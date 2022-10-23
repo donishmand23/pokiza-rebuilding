@@ -28,8 +28,37 @@ export default {
 		productStatusesCountStatistics: async (_, args, user) => {
 			try {
 				const productsStatistics = await statisticsModel.productStatusesCountStatistics(args, user)
-				console.log(productsStatistics)
-				return true
+				const statusProductCount = {}
+				const statusProductSize = {}
+				const distinctProducts = []
+
+				const map = new Map()
+				productsStatistics.forEach((el) => {
+					statusProductSize[el.product_status_code] = (statusProductSize[el.product_status_code] || 0) + +el.product_size
+					statusProductCount[el.product_status_code] = (statusProductCount[el.product_status_code] || 0) + 1
+
+					if (!map.has(el.product_status_code)) {
+						map.set(el.product_status_code)
+						distinctProducts.push(el)
+					}
+				})
+
+				return {
+					totalProductsCount: productsStatistics.length,
+					totalProductSize: Object.values(statusProductSize).reduce((acc, el) => acc + el),
+					serviceUnit: productsStatistics[0]?.service_unit || null,
+					serviceName: productsStatistics[0]?.service_name || null,
+					branchName: productsStatistics[0]?.branch_name || null,
+					statuses: distinctProducts.map(el => {
+						return {
+							statusName: process.PRODUCT_STATUSES[el.product_status_code]?.name,
+							statusProductCount: statusProductCount[el.product_status_code],
+							statusProductSize: statusProductSize[el.product_status_code],
+							statusProductPercent: Number((100 / productsStatistics.length) * statusProductCount[el.product_status_code]).toFixed(1)
+						}
+					})
+
+				}
 			} catch (error) {
 				throw error
 			}

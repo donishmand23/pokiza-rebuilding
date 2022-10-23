@@ -49,6 +49,9 @@ type ProductsServiceInfo {
 type ProductStatusesCountStatistics {
 	totalProductsCount: Int!
 	totalProductSize: Int!
+	serviceName: String
+	serviceUnit: String
+	branchName: String
 	statuses: [ProductsStatusInfo!]!
 }
 
