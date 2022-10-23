@@ -116,4 +116,5 @@ export default {
     'ordersCountStatistics': [2306],
     'productServiceCountStatistics': [2306],
     'productStatusesCountStatistics': [2306],
+    'serviceProductsCountStatistics': [2306],
 }

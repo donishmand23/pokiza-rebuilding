@@ -63,6 +63,44 @@ export default {
 				throw error
 			}
 		},
+
+		serviceProductsCountStatistics: async (_, args, user) => {
+			try {
+				const statistics = await statisticsModel.serviceProductsCountStatistics(args, user)
+				const serviceProductCount = {}
+				const serviceProductSize = {}
+				const distinctServices = []
+
+				const map = new Map()
+				statistics.forEach((el) => {
+					serviceProductSize[el.service_id] = (serviceProductSize[el.service_id] || 0) + +el.product_size
+					serviceProductCount[el.service_id] = (serviceProductCount[el.service_id] || 0) + 1
+
+					if (!map.has(el.service_id)) {
+						map.set(el.service_id)
+						distinctServices.push(el)
+					}
+				})
+
+				return {
+					totalProductsCount: statistics.length,
+					statusCode: statistics[0]?.product_status_code,
+					statusName: process.PRODUCT_STATUSES[statistics[0]?.product_status_code]?.name,
+					branchName: statistics[0]?.branch_name,
+					services: distinctServices.map(el => {
+						return {
+							serviceName: el.service_name,
+							serviceUnit: el.service_unit,
+							serviceProductCount: serviceProductCount[el.service_id],
+							serviceProductSize: serviceProductSize[el.service_id],
+							serviceProductPercent: Number((100 / statistics.length) * serviceProductCount[el.service_id]).toFixed(1)
+						}
+					})
+				}
+			} catch (error) {
+				throw error
+			}
+		},
 	},
 
 	OrdersCountStatistics: {

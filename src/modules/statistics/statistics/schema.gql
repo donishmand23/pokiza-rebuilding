@@ -16,6 +16,12 @@ type Query {
 		serviceId: ID!
 		dateFilter: RangeDate = {}
 	): ProductStatusesCountStatistics!
+
+	serviceProductsCountStatistics(
+		branchId: ID!
+		statusCode: StatusValue!
+		dateFilter: RangeDate = {}
+	): ServiceProductsCountStatistics!
 }
 
 # ordersCountStatistics
@@ -60,4 +66,21 @@ type ProductsStatusInfo {
 	statusProductCount: Int!
 	statusProductSize: Int!
 	statusProductPercent: Float!
+}
+
+#serviceProductsCountStatistics
+type ServiceProductsCountStatistics {
+	totalProductsCount: Int!
+	statusCode: StatusValue
+	statusName: String
+	branchName: String
+	services: [ServiceProductInfo!]!
+}
+
+type ServiceProductInfo {
+	serviceName: String!
+	serviceUnit: String!
+	serviceProductCount: Int!
+	serviceProductSize: Int!
+	serviceProductPercent: Float!
 }

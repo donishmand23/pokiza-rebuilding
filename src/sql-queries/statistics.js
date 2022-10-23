@@ -66,7 +66,7 @@ const PRODUCTS_INFO_PER_SERVICE = `
 	LEFT JOIN neighborhoods n ON n.neighborhood_id = a.neighborhood_id
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
-	WHERE s.service_deleted_at IS NULL AND
+	WHERE s.service_deleted_at IS NULL AND s.service_active = TRUE AND
 	CASE
 		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN o.branch_id = ANY($1::INT[])
 		ELSE TRUE
@@ -133,9 +133,43 @@ const PRODUCTS_INFO_PER_STATUS = `
 	GROUP BY ps.product_status_code, p.product_id, s.service_unit, s.service_name, b.branch_name
 `
 
+const SERVICE_PRODUCTS_COUNT = `
+	SELECT 
+		s.service_id,
+		ps.product_status_code,
+		p.product_size,
+		s.service_name,
+		s.service_unit,
+		b.branch_name
+	FROM services s
+	LEFT JOIN products p ON p.service_id = s.service_id AND p.product_deleted_at IS NULL
+	INNER JOIN branches b ON b.branch_id = s.branch_id AND b.branch_deleted_at IS NULL
+	INNER JOIN LATERAL (
+		SELECT * FROM product_statuses ps
+		WHERE ps.product_id = p.product_id
+		ORDER BY ps.product_status_id DESC
+		LIMIT 1
+	) ps ON ps.product_id = p.product_id
+	WHERE s.service_deleted_at IS NULL AND s.service_active = TRUE AND
+	CASE
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN s.branch_id = ANY($1::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN $2 > 0 THEN ps.product_status_code = $2
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($3::TIMESTAMPTZ[], 1) = 2 THEN (
+			s.service_created_at BETWEEN ($3::TIMESTAMPTZ[])[1] AND (($3::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		) ELSE TRUE
+	END
+	GROUP BY s.service_id, p.product_id, p.product_size, ps.product_status_code, b.branch_name
+`
 
 export default {
 	PRODUCTS_INFO_PER_SERVICE,
 	PRODUCTS_INFO_PER_STATUS,
 	ORDERS_COUNT_STATISTICS,
+	SERVICE_PRODUCTS_COUNT,
 }
