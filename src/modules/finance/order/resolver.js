@@ -52,8 +52,8 @@ export default {
 	Query: {
 		orderTransactions: async (_, args, user) => {
 			try {
-				const balances = await transactionModel.orderTransactions(args, user)
-				return balances
+				const orderTransactions = await transactionModel.orderTransactions(args, user)
+				return orderTransactions
 			} catch(error) {
 				throw error
 			}

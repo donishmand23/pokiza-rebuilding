@@ -6,6 +6,7 @@ type Query {
 		moneyAmount: Int
 		transactionId: ID
 		dateFilter: RangeDate
+		pagination: Pagination = {}
 		transactionType: TransactionType!
 	): [OrderTransaction!]!
 }

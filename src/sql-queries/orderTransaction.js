@@ -16,39 +16,40 @@ const TRANSACTIONS = `
     LEFT JOIN users u ON u.user_id = s.user_id
     WHERE
     CASE
-		WHEN $1 > 0 THEN ot.transaction_id = $1
+		WHEN $3 > 0 THEN ot.transaction_id = $3
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN ot.staff_id = ANY($2::INT[])
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN ot.staff_id = ANY($4::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN u.branch_id = ANY($3::INT[])
+		WHEN ARRAY_LENGTH($5::INT[], 1) > 0 THEN u.branch_id = ANY($5::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN ot.order_id = ANY($4::INT[])
+		WHEN ARRAY_LENGTH($6::INT[], 1) > 0 THEN ot.order_id = ANY($6::INT[])
 		ELSE TRUE
 	END AND
     CASE
-		WHEN LENGTH($5) > 0 THEN ot.transaction_type = $5
+		WHEN LENGTH($7) > 0 THEN ot.transaction_type = $7
 		ELSE TRUE
 	END AND
     CASE
-		WHEN ARRAY_LENGTH($6::TIMESTAMPTZ[], 1) = 2 THEN (
-			ot.transaction_created_at BETWEEN ($6::TIMESTAMPTZ[])[1] AND (($6::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		WHEN ARRAY_LENGTH($8::TIMESTAMPTZ[], 1) = 2 THEN (
+			ot.transaction_created_at BETWEEN ($8::TIMESTAMPTZ[])[1] AND (($8::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
 		) ELSE TRUE
 	END AND
     CASE
-		WHEN $7 > 0 AND ot.transaction_money_cash + ot.transaction_money_card > 0 THEN ot.transaction_money_cash + ot.transaction_money_card <= $7
+		WHEN $9 > 0 AND ot.transaction_money_cash + ot.transaction_money_card > 0 THEN ot.transaction_money_cash + ot.transaction_money_card <= $9
 		ELSE TRUE
 	END AND
     CASE   
-        WHEN $8 = TRUE AND u.branch_id = ANY($9::INT[]) THEN ot.staff_id = $10
+        WHEN $10 = TRUE AND u.branch_id = ANY($11::INT[]) THEN ot.staff_id = $12
         ELSE TRUE
     END
     ORDER BY ot.transaction_id DESC
+    OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
 const TRANSACTION = `

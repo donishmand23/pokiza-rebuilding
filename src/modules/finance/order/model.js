@@ -7,13 +7,13 @@ import BranchQuery from '#sql/branch'
 import OrderQuery from '#sql/order'
 import UserQuery from '#sql/user'
 
-const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType, moneyAmount, transactionId }, user) => {
+const orderTransactions = ({ staffId, branchId, orderId, dateFilter, transactionType, moneyAmount, transactionId, pagination }, user) => {
 	dateFilter = dateFilter ? [dateFilter.from, dateFilter.to] : []
-
 	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+	const { page, limit } = pagination
 
 	return fetchAll(
-		OrderTransactionQuery.TRANSACTIONS, 
+		OrderTransactionQuery.TRANSACTIONS, (page - 1) * limit, limit,
 		transactionId, staffId, branchId, orderId, transactionType, dateFilter, moneyAmount,
 		user.personal, user.personalBranchId, user.staffId
 	)
