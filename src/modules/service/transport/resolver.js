@@ -134,16 +134,7 @@ export default {
 	Query: {
 		transports: async (_, args, user) => {
 			try {
-				const transports = await transportModel.transports({ isDeleted: false, ...args }, user)
-				return transports
-			} catch(error) {
-				throw error
-			}
-		},
-
-		deletedTransports: async (_, args, user) => {
-			try {
-				const transports = await transportModel.transports({ isDeleted: true, ...args }, user)
+				const transports = await transportModel.transports(args, user)
 				return transports
 			} catch(error) {
 				throw error
@@ -166,6 +157,7 @@ export default {
 		transportBroken:      global => global.transport_broken, 
 		transportSummary:     global => global.transport_summary,		
 		transportCreatedAt:   global => global.transport_created_at, 
+		transportDeletedAt:   global => global.transport_deleted_at, 
 		transportRegistered:  global => global.transport_registered,
 		transportOrderLoaded: global => global.transport_order_loaded,
 		transportImg:         global => '/data/uploads/' + (global.transport_img || 'avto.jpg'),

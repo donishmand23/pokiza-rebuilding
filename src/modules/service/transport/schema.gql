@@ -7,18 +7,7 @@ type Query {
 		staffId: ID
 		branchId: [ID!]
 		available: Boolean
-		sort: TransportSort = {}
-		pagination: Pagination = {} 
-	): [Transport!]!
-
-	deletedTransports(
-		transportId: ID
-		search: String
-		productId: ID
-		orderId: ID
-		staffId: ID
-		branchId: [ID!]
-		available: Boolean
+		isDeleted: Boolean
 		sort: TransportSort = {}
 		pagination: Pagination = {} 
 	): [Transport!]!
@@ -72,6 +61,7 @@ type Transport {
 	transportSummary: String
 	transportBroken: Boolean!
 	transportCreatedAt: DateTime!
+	transportDeletedAt: DateTime
 	transportRegistered: Boolean!
 	transportOrderLoaded: Boolean!
 	driversList: [Driver!]

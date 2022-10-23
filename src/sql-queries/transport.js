@@ -56,7 +56,8 @@ const TRANSPORTS = `
 			order_binding_type = 1
 		) AS delivering_products_count,
 		count(*) OVER() as full_count,
-		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
+		to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 	FROM transports t
 	LEFT JOIN LATERAL (
 		SELECT *
@@ -176,7 +177,8 @@ const TRANSPORT = `
 			order_binding_type = 1
 		) AS delivering_products_count,
 		count(*) OVER() as full_count,
-		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
+		to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 	FROM transports t
 	LEFT JOIN LATERAL (
 		SELECT *
@@ -261,7 +263,8 @@ const SEARCH_TRANSPORTS = `
 			order_binding_type = 1
 		) AS delivering_products_count,
 		count(*) OVER() as full_count,
-		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
+		to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 	FROM transports t
 	WHERE t.transport_deleted_at IS NULL AND
 	CASE
@@ -367,7 +370,8 @@ const CHANGE_TRANSPORT = `
 	ot.transport_number as old_number,
 	ot.transport_summary as old_summary,
 	ot.transport_img as old_file,
-	to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at
+	to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
+	to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 `
 
 const CHECK_TRANSPORT = `
