@@ -5,19 +5,7 @@ type Query {
 		transportId: ID
 		clientId: [ID!]
 		branchId: [ID!]
-		orderSpecial: Boolean
-		orderStatus: [StatusValue!] 
-		sort: OrderSort = {}
-		pagination: Pagination = {} 
-		dateFilter: OrderDateFilter = {}
-		addressFilter: AddressFilter = {}
-	): [Order!]!
-
-	deletedOrders(
-		orderId: ID
-		search: String
-		clientId: [ID!]
-		branchId: [ID!]
+		isDeleted: Boolean
 		orderSpecial: Boolean
 		orderStatus: [StatusValue!] 
 		sort: OrderSort = {}
@@ -70,6 +58,7 @@ type Order {
 	deliveryTime: DateTime
 	deliveredTime: DateTime
 	orderCreatedAt: DateTime!
+	orderDeletedAt: DateTime
 	paid: Boolean!
 	count: Int
 }

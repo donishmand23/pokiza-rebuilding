@@ -15,6 +15,7 @@ const ORDERS = `
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
 		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(o.order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at,
 		CASE
 			WHEN ot.transaction_id IS NOT NULL THEN TRUE
 			ELSE FALSE
@@ -60,6 +61,7 @@ const ORDERS = `
 	CASE 
 		WHEN $3 = FALSE THEN o.order_deleted_at IS NULL
 		WHEN $3 = TRUE THEN o.order_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $4 > 0 THEN o.order_id = $4
@@ -187,6 +189,7 @@ const ORDER = `
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
 		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(o.order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at,
 		CASE
 			WHEN ot.transaction_id IS NOT NULL THEN TRUE
 			ELSE FALSE
@@ -254,6 +257,7 @@ const SEARCH_ORDERS = `
 		to_char(o.order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(o.order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
 		to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(o.order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at,
 		CASE
 			WHEN ot.transaction_id IS NOT NULL THEN TRUE
 			ELSE FALSE
@@ -326,7 +330,8 @@ const ADD_ORDER = `
 		RETURNING *,
 		EXTRACT( EPOCH FROM (order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
 		to_char(order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
-		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at
 	),
 	new_order_status AS (
 		INSERT INTO order_statuses (
@@ -475,7 +480,8 @@ const CHANGE_ORDER = `
 	END as old_plan,
 	EXTRACT( EPOCH FROM (o.order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
 	to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
-	to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+	to_char(o.order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+	to_char(o.order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at
 `
 
 const DELETE_ORDER = `
@@ -492,7 +498,8 @@ const DELETE_ORDER = `
 		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at
 	), deleted_product AS (
 		UPDATE products p SET
 			product_deleted_at = current_timestamp
@@ -516,7 +523,8 @@ const RESTORE_ORDER = `
 		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at
 	), restored_product AS (
 		UPDATE products p SET
 			product_deleted_at = NULL
@@ -551,7 +559,8 @@ const CHANGE_ORDER_STATUS = `
 		to_char(order_brougth_time, 'YYYY-MM-DD HH24:MI:SS') order_brougth_time,
 		to_char(order_delivery_time, 'YYYY-MM-DD HH24:MI:SS') order_delivery_time,
 		to_char(order_delivered_time, 'YYYY-MM-DD HH24:MI:SS') order_delivered_time,
-		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at
+		to_char(order_created_at, 'YYYY-MM-DD HH24:MI:SS') order_created_at,
+		to_char(order_deleted_at, 'YYYY-MM-DD HH24:MI:SS') order_deleted_at
 	FROM orders 
 	WHERE order_id = $1
 `

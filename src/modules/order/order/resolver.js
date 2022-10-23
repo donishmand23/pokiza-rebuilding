@@ -82,16 +82,7 @@ export default {
 	Query: {
 		orders: async (_, args, user) => {
 			try {
-				const orders = await orderModel.orders({ isDeleted: false, ...args }, user)
-				return orders
-			} catch(error) {
-				throw error
-			}
-		},
-
-		deletedOrders: async (_, args, user) => {
-			try {
-				const orders = await orderModel.orders({ isDeleted: true, ...args }, user)
+				const orders = await orderModel.orders(args, user)
 				return orders
 			} catch(error) {
 				throw error
@@ -111,6 +102,7 @@ export default {
 		deliveryTime:   	   global => global.order_delivery_time,
 		deliveredTime:  	   global => global.order_delivery_time,
 		orderCreatedAt: 	   global => global.order_created_at,
+		orderDeletedAt: 	   global => global.order_deleted_at,
 		bringTimeRemaining:    global => global.bring_time_remaining && global.bring_time_remaining | 0,
 		deliveryTimeRemaining: global => global.delivery_time_remaining && global.delivery_time_remaining | 0,
 		client:         	   global => orderModel.client({ clientId: global.client_id }),
