@@ -84,16 +84,7 @@ export default {
 	Query: {
 		products: async (_, args, user) => {
 			try {
-				const products = await productModel.products({ isDeleted: false, ...args }, user)
-				return products
-			} catch(error) {
-				throw error
-			}
-		},
-
-		deletedProducts: async (_, args, user) => {
-			try {
-				const products = await productModel.products({ isDeleted: true, ...args }, user)
+				const products = await productModel.products(args, user)
 				return products
 			} catch(error) {
 				throw error
@@ -110,6 +101,7 @@ export default {
 		productSpecial:       global => global.order_special,
 		productSizeDetails:   global => global.product_size_details,
 		productCreatedAt:     global => global.product_created_at,
+		productDeletedAt:     global => global.product_deleted_at,
 		productImg:           global => global.product_img && '/data/uploads/' + global.product_img,
 		productStatusProcess: global => productModel.productStatuses({ productId: global.product_id }),
 		service:              global => productModel.service({ serviceId: global.service_id }),

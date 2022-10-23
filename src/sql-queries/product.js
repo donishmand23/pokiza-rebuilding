@@ -10,7 +10,8 @@ const PRODUCTS = `
 		o.order_special,
 		pp.product_price,
 		count(*) OVER() as full_count,
-		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at,
+		to_char(p.product_deleted_at, 'YYYY-MM-DD HH24:MI:SS') product_deleted_at
 	FROM products p
 	LEFT JOIN orders o ON o.order_id = p.order_id AND o.order_deleted_at IS NULL
 	LEFT JOIN addresses a ON a.address_id = o.address_id
@@ -187,7 +188,8 @@ const PRODUCT = `
 		p.product_img,
 		o.order_special,
 		pp.product_price,
-		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at,
+		to_char(p.product_deleted_at, 'YYYY-MM-DD HH24:MI:SS') product_deleted_at
 	FROM products p
 	NATURAL JOIN orders o
 	NATURAL JOIN addresses a
@@ -262,7 +264,8 @@ const SEARCH_PRODUCTS = `
 		o.order_special,
 		pp.product_price,
 		count(*) OVER() as full_count,
-		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at,
+		to_char(p.product_deleted_at, 'YYYY-MM-DD HH24:MI:SS') product_deleted_at
 	FROM products p
 	LEFT JOIN orders o ON o.order_id = p.order_id AND o.order_deleted_at IS NULL
 	LEFT JOIN clients c ON c.client_id = o.client_id
@@ -401,7 +404,8 @@ const DELETE_PRODUCT = `
 	o.order_id = p.order_id
 	RETURNING p.*,
 	o.branch_id,
-	to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+	to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at,
+	to_char(p.product_deleted_at, 'YYYY-MM-DD HH24:MI:SS') product_deleted_at
 `
 
 const RESTORE_PRODUCT = `
@@ -442,7 +446,8 @@ const CHANGE_PRODUCT_STATUS = `
 		RETURNING *
 	) SELECT 
 		p.*,
-		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at
+		to_char(p.product_created_at, 'YYYY-MM-DD HH24:MI:SS') product_created_at,
+		to_char(p.product_deleted_at, 'YYYY-MM-DD HH24:MI:SS') product_deleted_at
 	FROM products p 
 	WHERE p.product_id = $1
 `
