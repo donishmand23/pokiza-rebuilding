@@ -89,32 +89,27 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'deleteFondTransaction',
 
     'staffs',
-    'deletedStaffs',
     'addStaff',
     'changeStaff',
     'deleteStaff',
     'restoreStaff',
 
     'addClient',
-    'deletedClients',
 
     'sendSMS',
     'sendNotifications',
 
-    'deletedProducts',
     'addProduct',
     'changeProduct',
     'changeProductStatus',
     'deleteProduct',
     'restoreProduct',
 
-    'deletedOrders',
     'changeOrderStatus',
     'bindOrder',
     'unbindOrder',
 
     'transports',
-    'deletedTransports',
     'addTransport',
     'changeTransport',
     'deleteTransport',
@@ -123,7 +118,6 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'unregisterTransport',
 
     'addService',
-    'disabledServices',
     'changeService',
     'enableService',
     'disableService',
