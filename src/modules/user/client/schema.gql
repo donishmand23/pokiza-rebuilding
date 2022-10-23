@@ -4,17 +4,7 @@ type Query {
 		search: String
 		socialSetId: [ID!]
 		clientStatus: [Int!]
-		sort: UserSort = {}
-		pagination: Pagination = {} 
-		addressFilter: AddressFilter = {}
-		userInfoFilter: UserFilter = {}
-	): [Client!]!
-
-	deletedClients(
-		clientId: ID
-		search: String
-		socialSetId: [ID!]
-		clientStatus: [Int!]
+		isDeleted: Boolean
 		sort: UserSort = {}
 		pagination: Pagination = {} 
 		addressFilter: AddressFilter = {}
@@ -62,4 +52,5 @@ type Client {
 	clientSummary: String
 	socialSet: SocialSet!
 	clientCreatedAt: DateTime!
+	clientDeletedAt: DateTime
 }

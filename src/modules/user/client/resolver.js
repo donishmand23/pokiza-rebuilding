@@ -1,7 +1,7 @@
 import { BadRequestError, InternalServerError } from '#errors'
-import clientModel from './model.js'
 import codeGen from '#helpers/randomNumberGenerator'
 import { sendPassword } from '#utils/sms'
+import clientModel from './model.js'
 import { sign } from '#utils/jwt'
 
 
@@ -76,7 +76,7 @@ export default {
 				const code = codeGen(4)
 				const client = await clientModel.enterClientPhone({ code, ...args })
 				if (client) {
-					//await sendPassword(args.mainContact, code)
+					await sendPassword(args.mainContact, code)
 					return {
 						status: 200,
 						registered: client.is_registered,
@@ -145,17 +145,8 @@ export default {
 	Query: {
 		clients: async (_, args, user) => {
 			try {
-				const clients = await clientModel.clients({ isDeleted: false, ...args }, user)
+				const clients = await clientModel.clients(args, user)
 				return clients
-			} catch(error) {
-				throw error
-			}
-		},
-
-		deletedClients: async (_, args, user) => {
-			try {
-				const deletedClients = await clientModel.clients({ isDeleted: true, ...args }, user)
-				return deletedClients
 			} catch(error) {
 				throw error
 			}
@@ -168,6 +159,7 @@ export default {
 		clientStatus:    global => global.client_status,
 		clientSummary:   global => global.client_summary,
 		clientCreatedAt: global => global.client_created_at,
+		clientDeletedAt: global => global.client_deleted_at,
 		userInfo:        global => clientModel.user({ userId: global.user_id }),
 		socialSet:       global => clientModel.socialSet({ socialSetId: global.social_set_id }),
 	}

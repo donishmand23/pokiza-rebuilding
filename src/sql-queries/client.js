@@ -6,7 +6,8 @@ const CLIENTS = `
 		c.social_set_id,
 		c.user_id,
 		count(*) OVER() as full_count,
-		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+		to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 	FROM clients c
 	NATURAL JOIN users u
 	LEFT JOIN addresses a ON a.address_id = u.address_id
@@ -19,6 +20,7 @@ const CLIENTS = `
 	CASE 
 		WHEN $3 = FALSE THEN c.client_deleted_at IS NULL
 		WHEN $3 = TRUE THEN c.client_deleted_at IS NOT NULL
+		ELSE TRUE
 	END AND
 	CASE
 		WHEN $4 > 0 THEN c.client_id = $4
@@ -101,7 +103,8 @@ const SEARCH_CLIENTS = `
 		c.social_set_id,
 		c.user_id,
 		count(*) OVER() as full_count,
-		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+		to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 	FROM clients c
 	NATURAL JOIN users u
 	WHERE c.client_deleted_at IS NULL AND
@@ -147,7 +150,8 @@ const ADD_CLIENT = `
 		(CASE WHEN $14 > 0 THEN $14 ELSE 1 END), 
 		$15, $16, u.user_id FROM new_user u
 	RETURNING *,
-	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+	to_char(client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 `
 
 const CHANGE_CLIENT = `
@@ -316,7 +320,8 @@ const CHANGE_CLIENT = `
 	a.*,
 	u.*,
 	c.*,
-	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+	to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 `
 
 const DELETE_CLIENT = `
@@ -337,7 +342,8 @@ const DELETE_CLIENT = `
 	ROW_TO_JSON(du.*) as user,
 	du.user_gender,
 	du.branch_id,
-	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+	to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 `
 
 const RESTORE_CLIENT = `
@@ -357,7 +363,8 @@ const RESTORE_CLIENT = `
 	RETURNING c.*,
 	ru.user_gender,
 	ru.branch_id,
-	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+	to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 `
 
 const CHANGE_CLIENT_PASSWORD = `
@@ -400,7 +407,8 @@ const CHECK_CLIENT_PASSWORD = `
 			WHEN u.branch_id IS NULL AND u.address_id IS NULL THEN FALSE
 			ELSE TRUE
 		END AS is_registered,
-		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+		to_char(c.client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+		to_char(c.client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 	FROM users u
 	LEFT JOIN clients c ON c.user_id = u.user_id
 	WHERE u.user_deleted_contact IS NULL AND
@@ -482,7 +490,8 @@ const FILL_CLIENT_DATA = `
 	WHERE c.client_deleted_at IS NULL AND
 	c.client_id = $1
 	RETURNING *,
-	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at
+	to_char(client_created_at, 'YYYY-MM-DD HH24:MI:SS') client_created_at,
+	to_char(client_deleted_at, 'YYYY-MM-DD HH24:MI:SS') client_deleted_at
 `
 
 
