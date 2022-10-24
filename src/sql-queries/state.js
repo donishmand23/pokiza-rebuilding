@@ -49,6 +49,7 @@ const ENABLE_STATE = `
 
 const DISABLED_STATES = `
 	SELECT 
+		DISTINCT ON(s.state_id)
 		s.state_id,
 		s.state_name,
 		to_char(s.state_created_at, 'YYYY-MM-DD HH24:MI:SS') state_created_at
