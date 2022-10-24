@@ -59,10 +59,6 @@ const DISABLED_STATES = `
 	CASE 
 		WHEN $1 > 0 THEN s.state_id = $1
 		ELSE true
-	END AND
-	CASE
-		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN r.branch_id = ANY($2::INT[])
-		ELSE TRUE
 	END
 `
 

@@ -56,7 +56,7 @@ const addresses = ({ addressField, addressFilter }, user) => {
 		case 'state': {
 			const { state = {} } = addressFilter
 			const { stateId } = state
-			return fetchAll(StateQuery.DISABLED_STATES, stateId, branchId)
+			return fetchAll(StateQuery.DISABLED_STATES, stateId)
 		}
 		case 'region': {
 			const { region = {} } = addressFilter
