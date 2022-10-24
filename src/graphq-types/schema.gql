@@ -64,7 +64,7 @@ type MutationResponse {
 type MutationResponses {
 	status: Any!
 	message: String!
-	data: [AllTypes!]
+	data: [AllTypes]
 }
 
 type AuthResponse {

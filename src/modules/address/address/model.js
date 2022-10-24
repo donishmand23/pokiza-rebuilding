@@ -35,12 +35,13 @@ const area = ({ areaId }) => {
 	return areaId && fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
 }
 
-const disableEnable = ({ addressField, addressFieldId, uzNames, actionName }) => {
-	return addressFieldId.map( async id => {
+const disableEnable = async ({ addressField, addressFieldId, actionName }) => {
+	const items = []
+	for(const id of addressFieldId) {
 		const item = await fetch(Query[`${actionName.toUpperCase()}_${addressField.toUpperCase()}`], id)
-		if(!item) throw new Error(`${id} idlik ${uzNames[addressField]} mavjud emas!`)
-		return item
-	} )
+		items.push(item)
+	}
+	return items.filter(el => el)
 }
 
 const addresses = ({ addressField, addressFilter }, user) => {
@@ -48,7 +49,7 @@ const addresses = ({ addressField, addressFilter }, user) => {
 	switch(addressField) {
 		case 'branch': {
 			let { branch = {} } = addressFilter
-			let { branchId } = state
+			let { branchId } = branch
 			branchId = Array.prototype.equalize([branchId], user.allowedBranches)
 			return fetchAll(BranchQuery.DISABLED_BRANCHES, branchId)
 		}
