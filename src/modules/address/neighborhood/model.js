@@ -3,8 +3,8 @@ import RegionQuery from '#sql/region'
 import NeighborhoodQuery from '#sql/neighborhood'
 import StreetQuery from '#sql/street'
 
-const neighborhoods = ({ regionId = 0, neighborhoodId = 0 }) => {
-	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId)
+const neighborhoods = ({ stateId = 0, regionId = 0, neighborhoodId = 0 }) => {
+	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId, stateId)
 }
 
 const streets = ({ neighborhoodId }) => {

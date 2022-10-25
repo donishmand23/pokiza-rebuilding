@@ -13,7 +13,7 @@ const state = ({ stateId }) => {
 }
 
 const neighborhoods = ({ regionId }) => {
-	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS, regionId, 0)
+	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS, regionId, 0, 0)
 }
 
 const regions = ({ stateId = 0, regionId = 0 }) => {

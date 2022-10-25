@@ -1,5 +1,6 @@
 const NEIGHBORHOODS = `
 	SELECT 
+		DISTINCT ON(n.neighborhood_id)
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
@@ -17,11 +18,16 @@ const NEIGHBORHOODS = `
 	CASE 
 		WHEN $2 > 0 THEN n.neighborhood_id = $2
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $3 > 0 THEN s.state_id = $3
+		ELSE TRUE
 	END 
 `
 
 const NEIGHBORHOODS_FOR_STREETS = `
 	SELECT 
+		DISTINCT ON(n.neighborhood_id)
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
@@ -35,6 +41,7 @@ const NEIGHBORHOODS_FOR_STREETS = `
 
 const NEIGHBORHOODS_FOR_AREAS = `
 	SELECT 
+		DISTINCT ON(n.neighborhood_id)
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
@@ -105,6 +112,7 @@ const ENABLE_NEIGHBORHOOD = `
 
 const DISABLED_NEIGHBORHOODS = `
 	SELECT 
+		DISTINCT ON(n.neighborhood_id)
 		n.neighborhood_id,
 		n.neighborhood_name,
 		n.neighborhood_distance,
