@@ -12,8 +12,8 @@ const streets = async ({ areaId }) => {
 	return fetchAll(StreetQuery.STREETS_FOR_AREAS, areaId)
 }
 
-const areas = ({ regionId = 0, neighborhoodId = 0, streetId = 0, areaId = 0 }) => {
-	return fetchAll(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId)
+const areas = ({ stateId = 0, regionId = 0, neighborhoodId = 0, streetId = 0, areaId = 0 }) => {
+	return fetchAll(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId, stateId)
 }
 
 const addArea = async ({ streetId, areaName, areaDistance }) => {

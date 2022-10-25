@@ -23,6 +23,10 @@ const STREETS = `
 	CASE 
 		WHEN $3 > 0 THEN s.street_id = $3
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $4 > 0 THEN st.state_id = $4
+		ELSE TRUE
 	END
 `
 

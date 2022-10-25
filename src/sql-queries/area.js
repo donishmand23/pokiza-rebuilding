@@ -29,6 +29,10 @@ const AREAS = `
 	CASE 
 		WHEN $4 > 0 THEN a.area_id = $4
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $5 > 0 THEN st.state_id = $5
+		ELSE TRUE
 	END
 `
 

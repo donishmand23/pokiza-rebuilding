@@ -9,8 +9,8 @@ const neighborhoods = async ({ streetId }) => {
 	return fetchAll(NeighborhoodQuery.NEIGHBORHOODS_FOR_STREETS, streetId)
 }
 
-const streets = ({ neighborhoodId = 0, regionId = 0, streetId = 0 }) => {
-	return fetchAll(StreetQuery.STREETS, regionId, neighborhoodId, streetId)
+const streets = ({ stateId = 0, neighborhoodId = 0, regionId = 0, streetId = 0 }) => {
+	return fetchAll(StreetQuery.STREETS, regionId, neighborhoodId, streetId, stateId)
 }
 
 const region = ({ streetId }) => {

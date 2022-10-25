@@ -1,5 +1,5 @@
 type Query {
-	streets(regionId: ID neighborhoodId: ID streetId: ID): [Street!]!
+	streets(stateId: ID regionId: ID neighborhoodId: ID streetId: ID): [Street!]!
 }
 
 type Mutation {
