@@ -9,7 +9,6 @@ const STATES = `
 		WHEN $1 > 0 THEN state_id = $1
 		ELSE true
 	END
-	ORDER BY state_name ASC
 `
 
 const CHANGE_STATE = `
@@ -61,7 +60,6 @@ const DISABLED_STATES = `
 		WHEN $1 > 0 THEN s.state_id = $1
 		ELSE true
 	END
-	ORDER BY s.state_name ASC
 `
 
 export default{

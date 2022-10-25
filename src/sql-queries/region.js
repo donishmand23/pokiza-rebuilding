@@ -6,8 +6,8 @@ const REGIONS = `
 		r.branch_id,
 		to_char(r.region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 	FROM regions r
-	INNER JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
-	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
+	LEFT JOIN states s ON r.state_id = s.state_id AND s.state_deleted_at IS NULL
+	LEFT JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE region_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.state_id = $1
@@ -17,7 +17,6 @@ const REGIONS = `
 		WHEN $2 > 0 THEN r.region_id = $2
 		ELSE TRUE
 	END 
-	ORDER BY r.region_name ASC
 `
 
 const REGIONS_FOR_STREETS = `
@@ -29,9 +28,8 @@ const REGIONS_FOR_STREETS = `
 		to_char(r.region_created_at, 'YYYY-MM-DD HH24:MI:SS') region_created_at
 	FROM regions r
 	NATURAL JOIN neighborhoods n
-	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
+	LEFT JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
 	WHERE region_deleted_at IS NULL AND ns.street_id = $1
-	ORDER BY r.region_name ASC
 `
 
 const CHANGE_REGION = `
@@ -110,7 +108,6 @@ const DISABLED_REGIONS = `
 		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN branch_id = ANY($3::INT[])
 		ELSE TRUE
 	END
-	ORDER BY r.region_name ASC
 `
 
 

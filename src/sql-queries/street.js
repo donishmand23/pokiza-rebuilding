@@ -6,11 +6,11 @@ const STREETS = `
 		s.street_distance,
 		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
-	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
-	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
-	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
-	INNER JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
-	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
+	LEFT JOIN neighborhood_streets ns ON s.street_id = ns.street_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
+	LEFT JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
+	LEFT JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
+	LEFT JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE s.street_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.region_id = $1
@@ -28,7 +28,6 @@ const STREETS = `
 		WHEN $4 > 0 THEN st.state_id = $4
 		ELSE TRUE
 	END
-	ORDER BY s.street_name ASC
 `
 
 const STREETS_FOR_AREAS = `
@@ -39,10 +38,9 @@ const STREETS_FOR_AREAS = `
 		s.street_distance,
 		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
-	INNER JOIN street_areas sa ON sa.street_id = s.street_id
-	INNER JOIN areas a ON a.area_id = sa.area_id
+	LEFT JOIN street_areas sa ON sa.street_id = s.street_id
+	LEFT JOIN areas a ON a.area_id = sa.area_id
 	WHERE s.street_deleted_at IS NULL AND a.area_id = $1
-	ORDER BY s.street_name ASC
 `
 
 const STREETS_FOR_NEIGHBORHOODS = `
@@ -53,10 +51,9 @@ const STREETS_FOR_NEIGHBORHOODS = `
 		s.street_distance,
 		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
-	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
-	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
+	LEFT JOIN neighborhood_streets ns ON s.street_id = ns.street_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
 	WHERE s.street_deleted_at IS NULL AND ns.neighborhood_id = $1
-	ORDER BY s.street_name ASC
 `
 
 const CHANGE_STREET = `
@@ -128,8 +125,8 @@ const DISABLED_STREETS = `
 		s.street_distance,
 		to_char(s.street_created_at, 'YYYY-MM-DD HH24:MI:SS') street_created_at
 	FROM streets s
-	INNER JOIN neighborhood_streets ns ON s.street_id = ns.street_id
-	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
+	LEFT JOIN neighborhood_streets ns ON s.street_id = ns.street_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
 	LEFT JOIN regions r ON r.region_id = n.region_id
 	WHERE s.street_deleted_at IS NOT NULL AND
 	CASE 
@@ -148,7 +145,6 @@ const DISABLED_STREETS = `
 		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN r.branch_id = ANY($4::INT[])
 		ELSE TRUE
 	END
-	ORDER BY s.street_name ASC
 `
 
 

@@ -6,13 +6,13 @@ const AREAS = `
 		a.area_distance,
 		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
-	INNER JOIN street_areas sa ON a.area_id = sa.area_id
-	INNER JOIN streets s ON s.street_id = sa.street_id AND s.street_deleted_at IS NULL
-	INNER JOIN neighborhood_streets ns ON ns.street_id = s.street_id
-	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
-	INNER JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
-	INNER JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
-	INNER JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
+	LEFT JOIN street_areas sa ON a.area_id = sa.area_id
+	LEFT JOIN streets s ON s.street_id = sa.street_id AND s.street_deleted_at IS NULL
+	LEFT JOIN neighborhood_streets ns ON ns.street_id = s.street_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id AND n.neighborhood_deleted_at IS NULL
+	LEFT JOIN regions r ON r.region_id = n.region_id AND r.region_deleted_at IS NULL
+	LEFT JOIN states st ON r.state_id = st.state_id AND st.state_deleted_at IS NULL
+	LEFT JOIN branches b ON b.branch_id = r.branch_id AND b.branch_deleted_at IS NULL
 	WHERE a.area_deleted_at IS NULL AND
 	CASE 
 		WHEN $1 > 0 THEN r.region_id = $1
@@ -34,7 +34,6 @@ const AREAS = `
 		WHEN $5 > 0 THEN st.state_id = $5
 		ELSE TRUE
 	END
-	ORDER BY a.area_name ASC
 `
 
 const AREAS_FOR_STREETS = `
@@ -45,10 +44,9 @@ const AREAS_FOR_STREETS = `
 		a.area_distance,
 		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
-	INNER JOIN street_areas sa ON a.area_id = sa.area_id
-	INNER JOIN streets s ON s.street_id = sa.street_id
+	LEFT JOIN street_areas sa ON a.area_id = sa.area_id
+	LEFT JOIN streets s ON s.street_id = sa.street_id
 	WHERE a.area_deleted_at IS NULL AND sa.street_id = $1
-	ORDER BY a.area_name ASC
 `
 
 const CHANGE_AREA = `
@@ -120,10 +118,10 @@ const DISABLED_AREAS = `
 		a.area_distance,
 		to_char(a.area_created_at, 'YYYY-MM-DD HH24:MI:SS') area_created_at
 	FROM areas a
-	INNER JOIN street_areas sa ON a.area_id = sa.area_id
-	INNER JOIN streets s ON s.street_id = sa.street_id
-	INNER JOIN neighborhood_streets ns ON ns.street_id = s.street_id
-	INNER JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
+	LEFT JOIN street_areas sa ON a.area_id = sa.area_id
+	LEFT JOIN streets s ON s.street_id = sa.street_id
+	LEFT JOIN neighborhood_streets ns ON ns.street_id = s.street_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = ns.neighborhood_id
 	LEFT JOIN regions r ON r.region_id = n.region_id
 	WHERE a.area_deleted_at IS NOT NULL AND
 	CASE 
@@ -146,7 +144,6 @@ const DISABLED_AREAS = `
 		WHEN ARRAY_LENGTH($5::INT[], 1) > 0 THEN r.branch_id = ANY($5::INT[])
 		ELSE TRUE
 	END
-	ORDER BY a.area_name ASC
 `
 
 
