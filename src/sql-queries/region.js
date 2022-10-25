@@ -17,6 +17,7 @@ const REGIONS = `
 		WHEN $2 > 0 THEN r.region_id = $2
 		ELSE TRUE
 	END 
+	ORDER BY r.region_name ASC
 `
 
 const REGIONS_FOR_STREETS = `
@@ -30,6 +31,7 @@ const REGIONS_FOR_STREETS = `
 	NATURAL JOIN neighborhoods n
 	INNER JOIN neighborhood_streets ns ON ns.neighborhood_id = n.neighborhood_id
 	WHERE region_deleted_at IS NULL AND ns.street_id = $1
+	ORDER BY r.region_name ASC
 `
 
 const CHANGE_REGION = `
@@ -108,6 +110,7 @@ const DISABLED_REGIONS = `
 		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN branch_id = ANY($3::INT[])
 		ELSE TRUE
 	END
+	ORDER BY r.region_name ASC
 `
 
 

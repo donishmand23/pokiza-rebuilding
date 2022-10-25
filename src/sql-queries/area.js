@@ -34,6 +34,7 @@ const AREAS = `
 		WHEN $5 > 0 THEN st.state_id = $5
 		ELSE TRUE
 	END
+	ORDER BY a.area_name ASC
 `
 
 const AREAS_FOR_STREETS = `
@@ -47,6 +48,7 @@ const AREAS_FOR_STREETS = `
 	INNER JOIN street_areas sa ON a.area_id = sa.area_id
 	INNER JOIN streets s ON s.street_id = sa.street_id
 	WHERE a.area_deleted_at IS NULL AND sa.street_id = $1
+	ORDER BY a.area_name ASC
 `
 
 const CHANGE_AREA = `
@@ -144,6 +146,7 @@ const DISABLED_AREAS = `
 		WHEN ARRAY_LENGTH($5::INT[], 1) > 0 THEN r.branch_id = ANY($5::INT[])
 		ELSE TRUE
 	END
+	ORDER BY a.area_name ASC
 `
 
 

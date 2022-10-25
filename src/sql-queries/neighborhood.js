@@ -23,6 +23,7 @@ const NEIGHBORHOODS = `
 		WHEN $3 > 0 THEN s.state_id = $3
 		ELSE TRUE
 	END 
+	ORDER BY n.neighborhood_name ASC
 `
 
 const NEIGHBORHOODS_FOR_STREETS = `
@@ -37,6 +38,7 @@ const NEIGHBORHOODS_FOR_STREETS = `
 	INNER JOIN neighborhood_streets ns ON n.neighborhood_id = ns.neighborhood_id
 	INNER JOIN streets s ON s.street_id = ns.street_id
 	WHERE n.neighborhood_deleted_at IS NULL AND s.street_id = $1
+	ORDER BY n.neighborhood_name ASC
 `
 
 const NEIGHBORHOODS_FOR_AREAS = `
@@ -53,6 +55,7 @@ const NEIGHBORHOODS_FOR_AREAS = `
 	INNER JOIN street_areas sa ON sa.street_id = s.street_id
 	INNER JOIN areas a ON a.area_id = sa.area_id
 	WHERE n.neighborhood_deleted_at IS NULL AND a.area_id = $1
+	ORDER BY n.neighborhood_name ASC
 `
 
 const CHANGE_NEIGHBORHOOD = `
@@ -133,6 +136,7 @@ const DISABLED_NEIGHBORHOODS = `
 		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN r.branch_id = ANY($3::INT[])
 		ELSE TRUE
 	END
+	ORDER BY n.neighborhood_name ASC
 `
 
 
