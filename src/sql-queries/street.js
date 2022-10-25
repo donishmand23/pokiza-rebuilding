@@ -1,5 +1,6 @@
 const STREETS = `
 	SELECT 
+		DISTINCT ON(s.street_id)
 		s.street_id,
 		s.street_name,
 		s.street_distance,
@@ -26,7 +27,8 @@ const STREETS = `
 `
 
 const STREETS_FOR_AREAS = `
-	SELECT 
+	SELECT
+		DISTINCT ON(s.street_id) 
 		s.street_id,
 		s.street_name,
 		s.street_distance,
@@ -39,6 +41,7 @@ const STREETS_FOR_AREAS = `
 
 const STREETS_FOR_NEIGHBORHOODS = `
 	SELECT 
+		DISTINCT ON(s.street_id)
 		s.street_id,
 		s.street_name,
 		s.street_distance,
@@ -111,7 +114,8 @@ const ENABLE_STREET = `
 `
 
 const DISABLED_STREETS = `
-	SELECT 
+	SELECT
+		DISTINCT ON(s.street_id)
 		s.street_id,
 		s.street_name,
 		s.street_distance,

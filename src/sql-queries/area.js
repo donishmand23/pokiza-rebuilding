@@ -1,5 +1,6 @@
 const AREAS = `
 	SELECT 
+		DISTINCT ON(a.area_id)
 		a.area_id,
 		a.area_name,
 		a.area_distance,
@@ -32,7 +33,8 @@ const AREAS = `
 `
 
 const AREAS_FOR_STREETS = `
-	SELECT 
+	SELECT
+		DISTINCT ON(a.area_id) 
 		a.area_id,
 		a.area_name,
 		a.area_distance,
@@ -106,6 +108,7 @@ const ENABLE_AREA = `
 
 const DISABLED_AREAS = `
 	SELECT 
+		DISTINCT ON(a.area_id)
 		a.area_id,
 		a.area_name,
 		a.area_distance,
