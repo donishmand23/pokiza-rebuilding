@@ -16,7 +16,7 @@ const Query = {
 }
 
 const neighborhood = ({ neighborhoodId }) => {
-	return neighborhoodId && fetch(NeighborhoodQuery.NEIGHBORHOODS, 0, neighborhoodId)
+	return neighborhoodId && fetch(NeighborhoodQuery.NEIGHBORHOODS, 0, neighborhoodId, 0)
 }
 
 const region = ({ regionId }) => {
@@ -24,7 +24,7 @@ const region = ({ regionId }) => {
 }
 
 const street = ({ streetId }) => {
-	return streetId && fetch(StreetQuery.STREETS, 0, 0, streetId)
+	return streetId && fetch(StreetQuery.STREETS, 0, 0, streetId, 0)
 }
 
 const state = ({ stateId }) => {
@@ -32,7 +32,7 @@ const state = ({ stateId }) => {
 }
 
 const area = ({ areaId }) => {
-	return areaId && fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
+	return areaId && fetch(AreaQuery.AREAS, 0, 0, 0, areaId, 0)
 }
 
 const disableEnable = async ({ addressField, addressFieldId, actionName }) => {
