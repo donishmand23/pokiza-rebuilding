@@ -30,7 +30,7 @@ const addStreet = async ({ neighborhoodId, streetName, streetDistance }) => {
 }
 
 const changeStreet = async ({ streetId, neighborhoodId, streetName = '', streetDistance = 0 }) => {
-	let oldData = await fetch(StreetQuery.STREETS, 0, 0, streetId)
+	let oldData = await fetch(StreetQuery.STREETS, 0, 0, streetId, 0)
 	if(!oldData) throw new BadRequestError("Bunday ko'cha mavjud emas!")
 	if(neighborhoodId && neighborhoodId.length != 0) {
 		await fetch(StreetQuery.DELETE_NEIGHBORHOOD_STREETS, streetId)
@@ -38,7 +38,7 @@ const changeStreet = async ({ streetId, neighborhoodId, streetName = '', streetD
 			await fetch(StreetQuery.ADD_NEIGHBORHOOD_STREETS, e, streetId)
 		}
 	}
-	return fetch( StreetQuery.CHANGE_STREET, streetId, streetName, streetDistance)
+	return fetch(StreetQuery.CHANGE_STREET, streetId, streetName, streetDistance)
 }
 
 export default {
