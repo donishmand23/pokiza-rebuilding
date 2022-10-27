@@ -44,19 +44,19 @@ async function checkAddress (userAddress) {
 	}
 
 	if(neighborhoodId) {
-		const neighborhood = await fetch(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId)
+		const neighborhood = await fetch(NeighborhoodQuery.NEIGHBORHOODS, regionId, neighborhoodId, 0)
 		if(!neighborhood) throw new BadRequestError("Kiritilgan mahalla kiritilgan tumanga qarashli emas!")
 	}
 
 	if(!neighborhoodId && streetId) throw new BadRequestError("Ko'chani kirgazish uchun avval mahallani kiritish zarur!")
 	if(streetId) {
-		const street = await fetch(StreetQuery.STREETS, regionId, neighborhoodId, streetId)
+		const street = await fetch(StreetQuery.STREETS, regionId, neighborhoodId, streetId, 0)
 		if(!street) throw new BadRequestError("Kiritilgan ko'cha kiritilgan mahallaga qarashli emas!")
 	}
 
 	if(!streetId && areaId) throw new BadRequestError("Hududni kirgazish uchun avval ko'chani kiritish zarur!")
 	if(areaId) {
-		const area = await fetch(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId)
+		const area = await fetch(AreaQuery.AREAS, regionId, neighborhoodId, streetId, areaId, 0)
 		if(!area) throw new BadRequestError("Kiritilgan hudud kiritilgan ko'chaga qarashli emas!")
 	}
 }
