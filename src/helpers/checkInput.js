@@ -16,7 +16,7 @@ async function checkContact (mainContact) {
 }
 
 async function checkUserInfo (userInfo) {
-	const { firstName, lastName, secondContact, birthDate, gender } = userInfo
+	const { firstName, birthDate, gender } = userInfo
 	if(!firstName) {
 		throw new BadUserInputError(`firstName is required!`)
 	}
@@ -31,7 +31,7 @@ async function checkUserInfo (userInfo) {
 }
 
 async function checkAddress (userAddress) {
-	const { stateId, regionId, neighborhoodId, streetId, areaId, homeNumber, target } = userAddress
+	const { stateId, regionId, neighborhoodId, streetId, areaId } = userAddress
 
 	const state = await fetch(StateQuery.STATES, stateId)
 	if(!state) {
