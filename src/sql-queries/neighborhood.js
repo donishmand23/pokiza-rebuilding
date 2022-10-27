@@ -65,7 +65,7 @@ const CHANGE_NEIGHBORHOOD = `
 		),
 		neighborhood_distance = (
 			CASE
-				WHEN $3 > 0 THEN $3
+				WHEN $3::NUMERIC > 0 THEN $3::NUMERIC
 				ELSE n.neighborhood_distance
 			END
 		),

@@ -59,7 +59,7 @@ const CHANGE_AREA = `
 		),
 		area_distance = (
 			CASE
-				WHEN $3 > 0 THEN $3
+				WHEN $3::NUMERIC > 0 THEN $3::NUMERIC
 				ELSE a.area_distance
 			END
 		)
