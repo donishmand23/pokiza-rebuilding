@@ -11,6 +11,7 @@ import OrderQuery from '#sql/order'
 const products = ({
 	sort,
 	search,
+	isPaid,
 	orderId,
 	branchId,
 	clientId,
@@ -58,7 +59,7 @@ const products = ({
 		(page - 1) * limit, limit, isDeleted,
 		productId, orderId, clientId, branchId, serviceId, productStatus, productPrice, productSpecial, search,
 		bringTime, broughtTime, deliveryTime, deliveredTime, productCreatedAt,
-		stateId, regionId, neighborhoodId, streetId, areaId, transportId,
+		stateId, regionId, neighborhoodId, streetId, areaId, transportId, isPaid,
 		sortObject?.sortKey || 1, sortObject?.value || 1
 	)
 }

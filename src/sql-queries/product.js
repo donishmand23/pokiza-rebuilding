@@ -23,6 +23,7 @@ const PRODUCTS = `
 	LEFT JOIN streets st ON st.street_id = a.street_id
 	LEFT JOIN areas ar ON ar.area_id = a.area_id
 	LEFT JOIN order_bindings ob ON ob.product_id = p.product_id AND order_binding_deleted_at IS NULL
+	LEFT JOIN order_transactions ot ON ot.order_id = o.order_id AND ot.transaction_type = 'income'
 	LEFT JOIN LATERAL (
 		SELECT * FROM product_statuses WHERE product_id = p.product_id
 		ORDER BY product_status_id DESC LIMIT 1
@@ -146,34 +147,39 @@ const PRODUCTS = `
 	CASE 
 		WHEN $23 > 0 THEN ob.transport_id = $23
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $24 = FALSE THEN ot.transaction_id IS NULL
+		WHEN $24 = TRUE THEN ot.transaction_id IS NOT NULL
+		ELSE TRUE
 	END
 	ORDER BY
-	(CASE WHEN $24 = 1 AND $25 = 2 THEN p.product_id END) ASC,
-	(CASE WHEN $24 = 1 AND $25 = 1 THEN p.product_id END) DESC,
-	(CASE WHEN $24 = 2 AND $25 = 2 THEN ps.product_status_code END) ASC,
-	(CASE WHEN $24 = 2 AND $25 = 1 THEN ps.product_status_code END) DESC,
-	(CASE WHEN $24 = 3 AND $25 = 2 THEN pp.product_price END) ASC,
-	(CASE WHEN $24 = 3 AND $25 = 1 THEN pp.product_price END) DESC,
-	(CASE WHEN $24 = 4 AND $25 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
-	(CASE WHEN $24 = 4 AND $25 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
-	(CASE WHEN $24 = 4 AND $25 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
-	(CASE WHEN $24 = 4 AND $25 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
-	(CASE WHEN $24 = 4 AND $25 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
-	(CASE WHEN $24 = 4 AND $25 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC,
-	(CASE WHEN $24 = 5 AND $25 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $24 = 5 AND $25 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $24 = 6 AND $25 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $24 = 6 AND $25 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $24 = 7 AND $25 = 2 THEN o.order_id END) ASC,
-	(CASE WHEN $24 = 7 AND $25 = 1 THEN o.order_id END) DESC,
-	(CASE WHEN $24 = 8 AND $25 = 2 THEN o.order_brougth_time END) ASC,
-	(CASE WHEN $24 = 8 AND $25 = 1 THEN o.order_brougth_time END) DESC,
-	(CASE WHEN $24 = 9 AND $25 = 2 THEN o.order_delivered_time END) ASC,
-	(CASE WHEN $24 = 9 AND $25 = 1 THEN o.order_delivered_time END) DESC,
-	(CASE WHEN $24 = 10 AND $25 = 2 THEN tm.bring_time_remaining END) ASC,
-	(CASE WHEN $24 = 10 AND $25 = 1 THEN tm.bring_time_remaining END) DESC,
-	(CASE WHEN $24 = 11 AND $25 = 2 THEN tm.delivery_time_remaining END) ASC,
-	(CASE WHEN $24 = 11 AND $25 = 1 THEN tm.delivery_time_remaining END) DESC
+	(CASE WHEN $25 = 1 AND $26 = 2 THEN p.product_id END) ASC,
+	(CASE WHEN $25 = 1 AND $26 = 1 THEN p.product_id END) DESC,
+	(CASE WHEN $25 = 2 AND $26 = 2 THEN ps.product_status_code END) ASC,
+	(CASE WHEN $25 = 2 AND $26 = 1 THEN ps.product_status_code END) DESC,
+	(CASE WHEN $25 = 3 AND $26 = 2 THEN pp.product_price END) ASC,
+	(CASE WHEN $25 = 3 AND $26 = 1 THEN pp.product_price END) DESC,
+	(CASE WHEN $25 = 4 AND $26 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
+	(CASE WHEN $25 = 4 AND $26 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
+	(CASE WHEN $25 = 4 AND $26 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
+	(CASE WHEN $25 = 4 AND $26 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
+	(CASE WHEN $25 = 4 AND $26 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
+	(CASE WHEN $25 = 4 AND $26 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC,
+	(CASE WHEN $25 = 5 AND $26 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $25 = 5 AND $26 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $25 = 6 AND $26 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $25 = 6 AND $26 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $25 = 7 AND $26 = 2 THEN o.order_id END) ASC,
+	(CASE WHEN $25 = 7 AND $26 = 1 THEN o.order_id END) DESC,
+	(CASE WHEN $25 = 8 AND $26 = 2 THEN o.order_brougth_time END) ASC,
+	(CASE WHEN $25 = 8 AND $26 = 1 THEN o.order_brougth_time END) DESC,
+	(CASE WHEN $25 = 9 AND $26 = 2 THEN o.order_delivered_time END) ASC,
+	(CASE WHEN $25 = 9 AND $26 = 1 THEN o.order_delivered_time END) DESC,
+	(CASE WHEN $25 = 10 AND $26 = 2 THEN tm.bring_time_remaining END) ASC,
+	(CASE WHEN $25 = 10 AND $26 = 1 THEN tm.bring_time_remaining END) DESC,
+	(CASE WHEN $25 = 11 AND $26 = 2 THEN tm.delivery_time_remaining END) ASC,
+	(CASE WHEN $25 = 11 AND $26 = 1 THEN tm.delivery_time_remaining END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
