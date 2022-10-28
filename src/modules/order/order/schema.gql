@@ -5,6 +5,7 @@ type Query {
 		transportId: ID
 		clientId: [ID!]
 		branchId: [ID!]
+		isPaid: Boolean
 		isDeleted: Boolean
 		orderSpecial: Boolean
 		orderStatus: [StatusValue!] 

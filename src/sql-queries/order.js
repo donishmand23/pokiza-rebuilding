@@ -142,34 +142,39 @@ const ORDERS = `
 	CASE 
 		WHEN $20 > 0 THEN ob.transport_id = $20
 		ELSE TRUE
+	END AND
+	CASE 
+		WHEN $21 = FALSE THEN ot.transaction_id IS NULL
+		WHEN $21 = TRUE THEN ot.transaction_id IS NOT NULL
+		ELSE TRUE
 	END
 	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, u.user_first_name, u.user_last_name, os.order_status_code,
 		     n.neighborhood_distance, st.street_distance, ar.area_distance, ot.transaction_id
 	ORDER BY
-	(CASE WHEN $21 = 1 AND $22 = 2 THEN o.order_id END) ASC,
-	(CASE WHEN $21 = 1 AND $22 = 1 THEN o.order_id END) DESC,
-	(CASE WHEN $21 = 2 AND $22 = 2 THEN u.user_first_name END) ASC,
-	(CASE WHEN $21 = 2 AND $22 = 1 THEN u.user_first_name END) DESC,
-	(CASE WHEN $21 = 3 AND $22 = 2 THEN u.user_last_name END) ASC,
-	(CASE WHEN $21 = 3 AND $22 = 1 THEN u.user_last_name END) DESC,
-	(CASE WHEN $21 = 4 AND $22 = 2 THEN os.order_status_code END) ASC,
-	(CASE WHEN $21 = 4 AND $22 = 1 THEN os.order_status_code END) DESC,
-	(CASE WHEN $21 = 5 AND $22 = 2 THEN COALESCE( SUM(op.product_price) ,0) END) ASC,
-	(CASE WHEN $21 = 5 AND $22 = 1 THEN COALESCE( SUM(op.product_price) ,0) END) DESC,
-	(CASE WHEN $21 = 6 AND $22 = 2 THEN o.order_brougth_time END) ASC,
-	(CASE WHEN $21 = 6 AND $22 = 1 THEN o.order_brougth_time END) DESC,
-	(CASE WHEN $21 = 7 AND $22 = 2 THEN o.order_delivered_time END) ASC,
-	(CASE WHEN $21 = 7 AND $22 = 1 THEN o.order_delivered_time END) DESC,
-	(CASE WHEN $21 = 8 AND $22 = 2 THEN tm.bring_time_remaining END) ASC,
-	(CASE WHEN $21 = 8 AND $22 = 1 THEN tm.bring_time_remaining END) DESC,
-	(CASE WHEN $21 = 9 AND $22 = 2 THEN tm.delivery_time_remaining END) ASC,
-	(CASE WHEN $21 = 9 AND $22 = 1 THEN tm.delivery_time_remaining END) DESC,
-	(CASE WHEN $21 = 10 AND $22 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
-	(CASE WHEN $21 = 10 AND $22 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
-	(CASE WHEN $21 = 10 AND $22 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
-	(CASE WHEN $21 = 10 AND $22 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
-	(CASE WHEN $21 = 10 AND $22 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
-	(CASE WHEN $21 = 10 AND $22 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC
+	(CASE WHEN $22 = 1 AND $23 = 2 THEN o.order_id END) ASC,
+	(CASE WHEN $22 = 1 AND $23 = 1 THEN o.order_id END) DESC,
+	(CASE WHEN $22 = 2 AND $23 = 2 THEN u.user_first_name END) ASC,
+	(CASE WHEN $22 = 2 AND $23 = 1 THEN u.user_first_name END) DESC,
+	(CASE WHEN $22 = 3 AND $23 = 2 THEN u.user_last_name END) ASC,
+	(CASE WHEN $22 = 3 AND $23 = 1 THEN u.user_last_name END) DESC,
+	(CASE WHEN $22 = 4 AND $23 = 2 THEN os.order_status_code END) ASC,
+	(CASE WHEN $22 = 4 AND $23 = 1 THEN os.order_status_code END) DESC,
+	(CASE WHEN $22 = 5 AND $23 = 2 THEN COALESCE( SUM(op.product_price) ,0) END) ASC,
+	(CASE WHEN $22 = 5 AND $23 = 1 THEN COALESCE( SUM(op.product_price) ,0) END) DESC,
+	(CASE WHEN $22 = 6 AND $23 = 2 THEN o.order_brougth_time END) ASC,
+	(CASE WHEN $22 = 6 AND $23 = 1 THEN o.order_brougth_time END) DESC,
+	(CASE WHEN $22 = 7 AND $23 = 2 THEN o.order_delivered_time END) ASC,
+	(CASE WHEN $22 = 7 AND $23 = 1 THEN o.order_delivered_time END) DESC,
+	(CASE WHEN $22 = 8 AND $23 = 2 THEN tm.bring_time_remaining END) ASC,
+	(CASE WHEN $22 = 8 AND $23 = 1 THEN tm.bring_time_remaining END) DESC,
+	(CASE WHEN $22 = 9 AND $23 = 2 THEN tm.delivery_time_remaining END) ASC,
+	(CASE WHEN $22 = 9 AND $23 = 1 THEN tm.delivery_time_remaining END) DESC,
+	(CASE WHEN $22 = 10 AND $23 = 2 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) ASC,
+	(CASE WHEN $22 = 10 AND $23 = 1 AND n.neighborhood_distance IS NOT NULL THEN n.neighborhood_distance END) DESC,
+	(CASE WHEN $22 = 10 AND $23 = 2 AND st.street_distance IS NOT NULL THEN st.street_distance END) ASC,
+	(CASE WHEN $22 = 10 AND $23 = 1 AND st.street_distance IS NOT NULL THEN st.street_distance END) DESC,
+	(CASE WHEN $22 = 10 AND $23 = 2 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) ASC,
+	(CASE WHEN $22 = 10 AND $23 = 1 AND ar.area_distance IS NOT NULL THEN ar.area_distance END) DESC
 	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 

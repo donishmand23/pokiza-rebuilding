@@ -14,6 +14,7 @@ import UserQuery from '#sql/user'
 const orders = ({
 	sort,
 	search,
+	isPaid,
 	orderId,
 	clientId,
 	branchId,
@@ -51,7 +52,7 @@ const orders = ({
 		(page - 1) * limit, limit, isDeleted,
 		orderId, clientId, branchId, orderStatus, orderSpecial, search,
 		bringTime, broughtTime, deliveryTime, deliveredTime, orderCreatedAt,
-		stateId, regionId, neighborhoodId, streetId, areaId, transportId,
+		stateId, regionId, neighborhoodId, streetId, areaId, transportId, isPaid,
 		sortObject?.sortKey || 1, sortObject?.value || 1
 	)
 }
