@@ -131,7 +131,7 @@ const contactScalar = new GraphQLScalarType({
 })
 
 function checkContact (value) {
-	const contactRegEx = /^998[389][012345789][0-9]{7}$/
+	const contactRegEx = /^998[3897][0123456789][0-9]{7}$/
 	const testForContact = contactRegEx.test(value)
 	if(!testForContact) {
 		throw new Error("Invalid Contact type!")
