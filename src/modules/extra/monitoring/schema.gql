@@ -69,6 +69,7 @@ enum MonitoringSectionFields {
 	moneyAmount
 	receiver
 	sender
+	availability
 }
 
 enum MonitoringSectionNames {

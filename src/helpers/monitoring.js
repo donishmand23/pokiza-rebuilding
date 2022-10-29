@@ -215,6 +215,14 @@ const setMonitoring = ({ userId, branchId, sectionName, sectionId, operationType
 			})
 		}
 
+		if (data.new_broken && (data.new_broken !== data.old_broken)) {
+			innerSetMonitor({
+				sectionField: 'availability',
+				oldValue: `value: ${data.old_broken}`,
+				newValue: `value: ${data.new_broken}`
+			})
+		}
+
 		if (data.new_unit && (data.new_unit != data.old_unit)) {
 			innerSetMonitor({
 				sectionField: 'unit',

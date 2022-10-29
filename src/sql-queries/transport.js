@@ -353,6 +353,12 @@ const CHANGE_TRANSPORT = `
 		),
 		transport_img = (
 			CASE WHEN LENGTH($7) > 0 THEN $7 ELSE t.transport_img END
+		),
+		transport_broken = (
+			CASE
+				WHEN LENGTH($8) > 0 THEN CAST($8 AS BOOLEAN)
+				ELSE t.transport_broken
+			END
 		)
 	FROM transports ot
 	WHERE t.transport_deleted_at IS NULL AND t.transport_id = $1 AND
@@ -364,12 +370,14 @@ const CHANGE_TRANSPORT = `
 	t.transport_number as new_number,
 	t.transport_summary as new_summary,
 	t.transport_img as new_file,
+	t.transport_broken as new_broken,
 	ot.branch_id as old_branch_id,
 	ot.transport_model as old_name,
 	ot.transport_color as old_color,
 	ot.transport_number as old_number,
 	ot.transport_summary as old_summary,
 	ot.transport_img as old_file,
+	ot.transport_broken as old_broken,
 	to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
 	to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 `

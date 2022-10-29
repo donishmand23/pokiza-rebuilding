@@ -3,7 +3,7 @@ import monitoringModel from './model.js'
 const sections = {
 	clients: ['branch', 'status', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'birthDate', 'gender', 'summary'],
 	staffs: ['branch', 'file', 'firstName', 'lastName', 'mainContact', 'secondContact', 'address', 'birthDate', 'gender', 'summary'],
-	transports: ['file', 'branch', 'name', 'color', 'status', 'number', 'summary'],
+	transports: ['file', 'branch', 'name', 'color', 'status', 'number', 'summary', 'availability'],
 	orders: ['status', 'address', 'branch', 'summary', 'bringTime', 'plan'],
 	products: ['status', 'summary', 'service', 'file', 'size'],
 	services: ['name', 'price', 'branch', 'unit', 'unitKeys'],

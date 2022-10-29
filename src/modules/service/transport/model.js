@@ -64,10 +64,10 @@ const addTransport = ({ file, branchId, transportModel, transportColor, transpor
 	)
 }
 
-const changeTransport = async ({ transportId, file, branchId, transportModel, transportColor, transportNumber, transportSummary }, { userId }) => {
+const changeTransport = async ({ transportId, file, branchId, transportModel, transportColor, transportNumber, transportSummary, transportBroken }, { userId }) => {
 	const updatedTransport = await fetch(
 		TransportQuery.CHANGE_TRANSPORT, transportId, 
-		branchId, transportModel, transportColor, transportNumber, transportSummary, file
+		branchId, transportModel, transportColor, transportNumber, transportSummary, file, transportBroken
 	)
 
 	if(updatedTransport) setMonitoring({ 
