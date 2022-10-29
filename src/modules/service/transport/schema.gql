@@ -7,7 +7,7 @@ type Query {
 		staffId: ID
 		branchId: [ID!]
 		available: Boolean
-		isDeleted: Boolean
+		isDeleted: Boolean = false
 		sort: TransportSort = {}
 		pagination: Pagination = {} 
 	): [Transport!]!

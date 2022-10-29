@@ -6,7 +6,7 @@ type Query {
 		clientId: [ID!]
 		branchId: [ID!]
 		isPaid: Boolean
-		isDeleted: Boolean
+		isDeleted: Boolean = false
 		orderSpecial: Boolean
 		orderStatus: [StatusValue!] 
 		sort: OrderSort = {}

@@ -1,5 +1,9 @@
 type Query {
-	services(serviceId: ID isDeleted: Boolean branchId: [ID!]): [Service!]!
+	services(
+		serviceId: ID 
+		isDeleted: Boolean = false 
+		branchId: [ID!]
+	): [Service!]!
 
 	deliveryHours(branchId: [ID!]): [DeliveryHour!]!
 }

@@ -2,7 +2,7 @@ type Query {
 	staffs(
 		staffId: ID
 		search: String
-		isDeleted: Boolean
+		isDeleted: Boolean = false
 		sort: UserSort = {}
 		pagination: Pagination = {} 
 		addressFilter: AddressFilter = {}

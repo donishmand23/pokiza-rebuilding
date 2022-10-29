@@ -8,7 +8,7 @@ type Query {
 		orderId: [ID!]
 		serviceId: [ID!]
 		isPaid: Boolean
-		isDeleted: Boolean
+		isDeleted: Boolean = false
 		productSpecial: Boolean
 		productStatus: [StatusValue!]
 		sort: ProductSort = {}

@@ -4,7 +4,7 @@ type Query {
 		search: String
 		socialSetId: [ID!]
 		clientStatus: [Int!]
-		isDeleted: Boolean
+		isDeleted: Boolean = false
 		sort: UserSort = {}
 		pagination: Pagination = {} 
 		addressFilter: AddressFilter = {}
