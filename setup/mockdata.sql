@@ -441,7 +441,8 @@ insert into order_bindings (transport_id, order_id, product_id, order_binding_ty
 (1, 1, null, 2, false),
 (1, 2, null, 2, false),
 (2, 5, null, 2, true),
-(2, null, 1, 2, false);
+(1, 5, null, 1, true),
+(2, null, 1, 1, false);
 
 
 --------------------------------------------------------------- FINANCE --------------------------------------------------------------
