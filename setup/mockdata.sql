@@ -388,6 +388,15 @@ insert into products (order_id, service_id, product_size, product_size_details, 
 -- product statuses
 insert into product_statuses (product_id, staff_id, product_status_code) values
 (1, 3, 1),
+(1, 2, 2),
+(1, 2, 3),
+(1, 2, 4),
+(1, 2, 5),
+(1, 2, 6),
+(1, 2, 7),
+(1, 2, 8),
+(1, 3, 9),
+(1, 3, 10),
 (2, 3, 1),
 (3, 3, 1),
 (4, 3, 1),
@@ -428,10 +437,11 @@ insert into transport_registration (staff_id, transport_id, registered_at, unreg
 insert into transport_registration (staff_id, transport_id, registered_at, unregistered_at) values (3, 2, NOW() - '10000 second'::INTERVAL, null);
 
 -- order_bindings
-insert into order_bindings (transport_id, order_id, order_binding_type, finished) values
-(1, 1, 2, false),
-(1, 2, 2, false),
-(2, 5, 2, true); 
+insert into order_bindings (transport_id, order_id, product_id, order_binding_type, finished) values
+(1, 1, null, 2, false),
+(1, 2, null, 2, false),
+(2, 5, null, 2, true),
+(2, null, 1, 2, false);
 
 
 --------------------------------------------------------------- FINANCE --------------------------------------------------------------
