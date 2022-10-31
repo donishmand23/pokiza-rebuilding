@@ -91,7 +91,7 @@ const productStatusInfo = {
 	},
 	8: {
 		code: 8,
-		name: 'yuklanmoqda',
+		name: 'Yuklanmoqda',
 		description: 'Yetkazib berish uchun mashinaga biriktirilgan buyum statusi'
 	},
 	9: {
