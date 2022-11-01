@@ -202,7 +202,7 @@ const TRANSPORT = `
 		ELSE TRUE
 	END AND
 	CASE
-		WHEN $4 > 0 OR $5 > 0 THEN t.transport_id = (
+		WHEN $4 > 0 OR $5 > 0 THEN t.transport_id IN (
 			SELECT transport_id FROM
 			order_bindings WHERE
 			CASE
