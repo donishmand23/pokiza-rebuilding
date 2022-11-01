@@ -28,22 +28,20 @@ export default {
 					el.count = count
 					
 					if(el.section_name == 'products' && el.section_field == 'status') {
-						el.old_value = 'value: ' + process.PRODUCT_STATUSES[el.old_value]?.code
-						el.new_value = 'value: ' + process.PRODUCT_STATUSES[el.new_value]?.code
+						el.old_value = process.PRODUCT_STATUSES[el.old_value]?.code
+						el.new_value = process.PRODUCT_STATUSES[el.new_value]?.code
 						return el
 					}
 
 					if(el.section_name == 'orders' && el.section_field == 'status') {
-						el.old_value = 'value: ' + process.ORDER_STATUSES[el.old_value]?.code
-						el.new_value = 'value: ' + process.ORDER_STATUSES[el.new_value]?.code
+						el.old_value = process.ORDER_STATUSES[el.old_value]?.code
+						el.new_value = process.ORDER_STATUSES[el.new_value]?.code
 						return el
 					}
 
 					if((['birthDate', 'bringTime', 'dateTime']).includes(el.section_field)) {
-						let [, oldDate] = el.old_value.split('value: ')
-						let [, newDate] = el.new_value.split('value: ')
-						oldDate = new Date(oldDate)
-						newDate = new Date(newDate)
+						const oldDate = new Date(el.old_value)
+						const newDate = new Date(el.new_value)
 
 						const oldD = oldDate.toISOString().split('T')[0]
 						const newD = newDate.toISOString().split('T')[0]
@@ -51,16 +49,14 @@ export default {
 						const oldT = oldDate.toTimeString().split(' ')[0]
 						const newT = newDate.toTimeString().split(' ')[0]
 
-						el.old_value = 'value: ' + oldD + ' ' + oldT
-						el.new_value = 'value: ' + newD + ' ' + newT
+						el.old_value = oldD + ' ' + oldT
+						el.new_value = newD + ' ' + newT
 						return el
 					}
 
 					if(el.section_field == 'gender') {
-						let [, oldBirthDate] = el.old_value.split('value: ')
-						let [, newBirthDate] = el.new_value.split('value: ')
-						el.old_value = oldBirthDate == 1 ? 'value: male' : oldBirthDate == 2 ? 'value: female' : el.old_value
-						el.new_value = newBirthDate == 1 ? 'value: male' : newBirthDate == 2 ? 'value: female' : el.new_value
+						el.old_value = el.old_value == 1 ? 'erkak' : el.old_value == 2 ? 'ayol' : el.old_value
+						el.new_value = el.new_value == 1 ? 'erkak' : el.new_value == 2 ? 'ayol' : el.new_value
 						return el
 					}
 
