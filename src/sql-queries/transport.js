@@ -228,6 +228,19 @@ const SEARCH_TRANSPORTS = `
 		t.branch_id,
 		t.transport_broken,
 		t.transport_img,
+		CASE
+			WHEN tr.unregistered_at IS NOT NULL THEN FALSE
+			WHEN tr.registration_id IS NULL THEN FALSE
+			WHEN tr.unregistered_at IS NULL THEN TRUE
+		END as transport_registered,
+		CASE
+			WHEN EXISTS (
+				SELECT * FROM order_bindings 
+				WHERE transport_id = t.transport_id AND
+				finished = FALSE
+			) THEN TRUE
+			ELSE FALSE
+		END AS transport_order_loaded,
 		(
 			SELECT COUNT(*) FROM order_bindings 
 			WHERE transport_id = t.transport_id AND
@@ -266,6 +279,13 @@ const SEARCH_TRANSPORTS = `
 		to_char(t.transport_created_at, 'YYYY-MM-DD HH24:MI:SS') transport_created_at,
 		to_char(t.transport_deleted_at, 'YYYY-MM-DD HH24:MI:SS') transport_deleted_at
 	FROM transports t
+	LEFT JOIN LATERAL (
+		SELECT *
+		FROM transport_registration tr
+		WHERE tr.transport_id = t.transport_id
+		ORDER BY tr.registration_id DESC
+		LIMIT 1
+	) tr ON tr.transport_id = t.transport_id
 	WHERE t.transport_deleted_at IS NULL AND
 	CASE
 		WHEN ARRAY_LENGTH($2::INT[], 1) > 0 THEN t.branch_id = ANY($2::INT[])
