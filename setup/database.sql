@@ -96,7 +96,7 @@ create table addresses (
 	neighborhood_id bigint references neighborhoods(neighborhood_id),
 	street_id bigint references streets(street_id),
 	area_id bigint references areas(area_id),
-	address_home_number smallint,
+	address_home_number text,
 	address_target text,
 	address_created_at timestamptz default current_timestamp,
 	address_deleted_at timestamptz default null

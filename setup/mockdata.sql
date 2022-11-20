@@ -205,14 +205,14 @@ insert into social_sets (social_set_name, social_set_icon) values
 
 -- addresses (user uchun adresslar)
 insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id, address_home_number, address_target) values
-/* 1 */ (3, 1, 1, 1, 1, 25, 'bozorga yaqin joyda'),                   -- ToshkentSh, Olmazor, A mahalla, ABX ko''cha, alpha hudud   
-/* 2 */ (3, 2, 3, 7, 9, 12, 'bekat yaqinida'),                        -- ToshkentSh, Chilonzor, C mahalla, AZD ko''cha, zorri hudud
-/* 3 */ (3, 2, 4, 10, 10, 16, '13-kvartal'),                           -- ToshkentSh, Chilonzor, D mahalla, IUY ko''cha, aswed hudud
-/* 4 */ (3, 2, 4, 8, 10, 16, 'chilonzor metro'),                       -- ToshkentSh, Chilonzor, D mahalla, BVI ko''cha, aswed hudud
-/* 5 */ (3, 2, 4, 11, 15, 95, 'svetafor oldidagi 4 etajli dom'),       -- ToshkentSh, Chilonzor, D mahalla, AFD ko''cha, beeen hudud
-/* 6 */ (2, 6, 11, 12, 16, 105, 'Mini market orqasida'),              -- Farg''ona, Qo''qonSh, R mahalla, QTR ko''cha, reety hudud
-/* 7 */ (2, 6, 11, 13, 17, 5, 'supreme degan do''kon ro''parasida'),  -- Farg''ona, Qo''qonSh, R mahalla, LWT ko''cha, tesrp hudud
-/* 8 */ (2, 6, 12, 14, 19, 13, 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
+/* 1 */ (3, 1, 1, 1, 1, '25', 'bozorga yaqin joyda'),                   -- ToshkentSh, Olmazor, A mahalla, ABX ko''cha, alpha hudud   
+/* 2 */ (3, 2, 3, 7, 9, '12', 'bekat yaqinida'),                        -- ToshkentSh, Chilonzor, C mahalla, AZD ko''cha, zorri hudud
+/* 3 */ (3, 2, 4, 10, 10, '16', '13-kvartal'),                           -- ToshkentSh, Chilonzor, D mahalla, IUY ko''cha, aswed hudud
+/* 4 */ (3, 2, 4, 8, 10, '16', 'chilonzor metro'),                       -- ToshkentSh, Chilonzor, D mahalla, BVI ko''cha, aswed hudud
+/* 5 */ (3, 2, 4, 11, 15, '95', 'svetafor oldidagi 4 etajli dom'),       -- ToshkentSh, Chilonzor, D mahalla, AFD ko''cha, beeen hudud
+/* 6 */ (2, 6, 11, 12, 16, '105', 'Mini market orqasida'),              -- Farg''ona, Qo''qonSh, R mahalla, QTR ko''cha, reety hudud
+/* 7 */ (2, 6, 11, 13, 17, '5', 'supreme degan do''kon ro''parasida'),  -- Farg''ona, Qo''qonSh, R mahalla, LWT ko''cha, tesrp hudud
+/* 8 */ (2, 6, 12, 14, 19, '13', 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
 
 -- users (userlar)
 insert into users (user_main_contact, user_second_contact, user_password, user_first_name, user_last_name, user_birth_date, user_gender, branch_id, address_id) values
@@ -297,11 +297,11 @@ insert into delivery_hours(delivery_hour_special, delivery_hour_simple, branch_i
 -----------------------------------------   ORDERS   ------------------------------------------------
 -- addresses (buyurtmalar uchun adresslar)
 insert into addresses (state_id, region_id, neighborhood_id, street_id, area_id, address_home_number, address_target) values
-/* 9  */ (3, 1, 1, 1, 1, 25, 'bozorga yaqin joyda'),                   -- ToshkentSh, Olmazor, A mahalla, ABX ko''cha, alpha hudud   
-/* 10 */ (3, 2, 3, 7, 9, 12, 'bekat yaqinida'),                        -- ToshkentSh, Chilonzor, C mahalla, AZD ko''cha, zorri hudud
-/* 11 */ (3, 2, 4, 10, 10, 16, '13-kvartal'),                          -- ToshkentSh, Chilonzor, D mahalla, IUY ko''cha, aswed hudud
-/* 12 */ (2, 6, 11, 13, 17, 5, 'supreme degan do''kon ro''parasida'),  -- Farg''ona, Qo''qonSh, R mahalla, LWT ko''cha, tesrp hudud
-/* 13 */ (2, 6, 12, 14, 19, 13, 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
+/* 9  */ (3, 1, 1, 1, 1, '25', 'bozorga yaqin joyda'),                   -- ToshkentSh, Olmazor, A mahalla, ABX ko''cha, alpha hudud   
+/* 10 */ (3, 2, 3, 7, 9, '12', 'bekat yaqinida'),                        -- ToshkentSh, Chilonzor, C mahalla, AZD ko''cha, zorri hudud
+/* 11 */ (3, 2, 4, 10, 10, '16', '13-kvartal'),                          -- ToshkentSh, Chilonzor, D mahalla, IUY ko''cha, aswed hudud
+/* 12 */ (2, 6, 11, 13, 17, '5', 'supreme degan do''kon ro''parasida'),  -- Farg''ona, Qo''qonSh, R mahalla, LWT ko''cha, tesrp hudud
+/* 13 */ (2, 6, 12, 14, 19, '13', 'nasiyaSavdo do''koni orqa tomoni');   -- Farg''ona, Qo''qonSh, O mahalla, VBT ko''cha, toole hudud
 
 -- orders
 insert into orders (client_id, branch_id, address_id, order_special, order_bring_time, order_delivery_time) values

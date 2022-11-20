@@ -187,7 +187,7 @@ const CHANGE_STAFF = `
 			address_home_number = (
 				CASE 
 					WHEN $2 = FALSE THEN a.address_home_number
-					WHEN $2 = TRUE AND $8 > 0 THEN $8
+					WHEN $2 = TRUE AND LENGTH($8) > 0 THEN $8
 					ELSE NULL
 				END
 			), 

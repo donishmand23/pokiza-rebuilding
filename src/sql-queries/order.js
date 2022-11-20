@@ -396,7 +396,7 @@ const CHANGE_ORDER = `
 			address_home_number = (
 				CASE 
 					WHEN $3 = FALSE THEN a.address_home_number
-					WHEN $3 = TRUE AND $9 > 0 THEN $9
+					WHEN $3 = TRUE AND LENGTH($9) > 0 THEN $9
 					ELSE NULL
 				END
 			), 
