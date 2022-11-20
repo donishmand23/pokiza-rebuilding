@@ -310,6 +310,7 @@ const SEARCH_ORDERS = `
 		ELSE TRUE
 	END
 	GROUP BY o.order_id, tm.bring_time_remaining, tm.delivery_time_remaining, ot.transaction_id
+	LIMIT $3
 `
 
 const ADD_ORDER = `

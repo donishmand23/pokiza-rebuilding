@@ -123,6 +123,7 @@ const SEARCH_CLIENTS = `
 		) WHEN LENGTH($1) > 0 THEN c.client_id::VARCHAR = $1::VARCHAR
 		ELSE TRUE
 	END
+	LIMIT $3
 `
 
 const ADD_CLIENT = `

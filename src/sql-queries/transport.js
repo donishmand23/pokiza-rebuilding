@@ -300,6 +300,7 @@ const SEARCH_TRANSPORTS = `
 		) WHEN LENGTH($1) > 0 THEN t.transport_id::VARCHAR = $1::VARCHAR
 		ELSE TRUE
 	END
+	LIMIT $3
 `
 
 const DRIVERS = `

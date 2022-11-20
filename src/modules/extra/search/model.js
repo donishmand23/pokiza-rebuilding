@@ -7,23 +7,23 @@ import TransportQuery from '#sql/transport'
 
 
 const searchStaffs = ({ key, branchId }) => {
-	return fetchAll(StaffQuery.SEARCH_STAFFS, key, branchId)
+	return fetchAll(StaffQuery.SEARCH_STAFFS, key, branchId, 10)
 }
 
 const searchClients = ({ key, branchId }) => {
-	return fetchAll(ClientQuery.SEARCH_CLIENTS, key, branchId)
+	return fetchAll(ClientQuery.SEARCH_CLIENTS, key, branchId, 10)
 }
 
 const searchOrders = ({ key, branchId }) => {
-	return fetchAll(OrderQuery.SEARCH_ORDERS, key, branchId)
+	return fetchAll(OrderQuery.SEARCH_ORDERS, key, branchId, 10)
 }
 
 const searchProducts = ({ key, branchId }) => {
-	return fetchAll(ProductQuery.SEARCH_PRODUCTS, key, branchId)
+	return fetchAll(ProductQuery.SEARCH_PRODUCTS, key, branchId, 10)
 }
 
 const searchTransports = ({ key, branchId }) => {
-	return fetchAll(TransportQuery.SEARCH_TRANSPORTS, key, branchId)
+	return fetchAll(TransportQuery.SEARCH_TRANSPORTS, key, branchId, 10)
 }
 
 const searchGlobal = async ({ key }, user) => {

@@ -307,6 +307,7 @@ const SEARCH_PRODUCTS = `
 		) WHEN LENGTH($1) > 0 THEN p.product_id::VARCHAR = $1::VARCHAR
 		ELSE TRUE
 	END
+	LIMIT $3
 `
 
 const ADD_PRODUCT = `

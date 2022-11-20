@@ -116,6 +116,7 @@ const SEARCH_STAFFS = `
 		) WHEN LENGTH($1) > 0 THEN s.staff_id::VARCHAR = $1::VARCHAR
 		ELSE TRUE
 	END
+	LIMIT $3
 `
 
 const ADD_STAFF = `
