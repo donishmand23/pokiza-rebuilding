@@ -474,15 +474,15 @@ const CHANGE_ORDER = `
 	o.order_summary as new_summary,
 	o.branch_id as new_branch_id,
 	CASE 
-		WHEN o.order_special = TRUE THEN 'special'
-		WHEN o.order_special = FALSE THEN 'simple' 
+		WHEN o.order_special = TRUE THEN 'tezkor'
+		WHEN o.order_special = FALSE THEN 'oddiy' 
 	END as new_plan,
 	oo.order_bring_time as old_bring_time,
 	oo.order_summary as old_summary,
 	oo.branch_id as old_branch_id,
 	CASE 
-		WHEN oo.order_special = TRUE THEN 'special' 
-		WHEN oo.order_special = FALSE THEN 'simple' 
+		WHEN oo.order_special = TRUE THEN 'tezkor' 
+		WHEN oo.order_special = FALSE THEN 'oddiy' 
 	END as old_plan,
 	EXTRACT( EPOCH FROM (o.order_bring_time::TIMESTAMPTZ - NOW()) ) AS bring_time_remaining,
 	to_char(o.order_bring_time, 'YYYY-MM-DD HH24:MI:SS') order_bring_time,
