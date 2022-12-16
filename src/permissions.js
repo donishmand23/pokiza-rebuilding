@@ -118,4 +118,5 @@ export default {
     'productStatusesCountStatistics': [2306],
     'serviceProductsCountStatistics': [2306],
     'branchFinanceStatistics': [2306],
+    'serviceSummaryStatistics': [2306],
 }

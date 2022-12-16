@@ -28,6 +28,12 @@ type Query {
 		dateFilter: RangeDate = {}
 		financeDepartment: FinanceDepartments!
 	): BranchFinanceStatistics!
+
+	serviceSummaryStatistics(
+		year: Int!
+		branchId: [ID!]
+		addressFilter: AddressFilter = {}
+	): [ServiceSummaryStatistics!]!
 }
 
 # ordersCountStatistics
@@ -107,4 +113,17 @@ enum FinanceDepartments {
 	debt
 	sale
 	expanse
+}
+
+#serviceSummaryStatistics
+type ServiceSummaryStatistics {
+	serviceId: ID!
+	serviceName: String!
+	branch: Branch!
+	monthlySummary: [MonthlySummary!]!
+}
+
+type MonthlySummary {
+	date: String!
+	count: Int!
 }

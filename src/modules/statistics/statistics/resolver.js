@@ -162,6 +162,15 @@ export default {
 			} catch (error) {
 				throw error
 			}
+		},
+
+		serviceSummaryStatistics: async (_, args, user) => {
+			try {
+				const statistics = await statisticsModel.serviceSummaryStatistics(args, user)
+				return statistics
+			} catch (error) {
+				throw error
+			}
 		}
 	},
 
@@ -207,5 +216,11 @@ export default {
 
 	BranchFinanceStatistics: {
 		branch: global => statisticsModel.branch({ branchId: global.branch_id })
+	},
+
+	ServiceSummaryStatistics: {
+		serviceId:   global => global.service_id,
+		serviceName: global => global.service_name,
+		branch:      global => statisticsModel.branch({ branchId: global.branch_id })
 	}
 }

@@ -264,8 +264,45 @@ const BRANCH_EXPANSE_STATISTICS = `
 	GROUP BY et.transaction_money_type, u.branch_id
 `
 
+const SERVICE_SUMMARY_STATISTICS = `
+	SELECT
+		COUNT(*),
+		to_char(p.product_created_at, 'YYYY-MM') date
+	FROM products p
+	NATURAL JOIN orders o
+	LEFT JOIN addresses a ON a.address_id = o.address_id
+	LEFT JOIN states sta ON sta.state_id = a.state_id
+	LEFT JOIN regions r ON r.region_id = a.region_id
+	LEFT JOIN neighborhoods n ON n.neighborhood_id = a.neighborhood_id
+	LEFT JOIN streets st ON st.street_id = a.street_id
+	LEFT JOIN areas ar ON ar.area_id = a.area_id
+	WHERE p.service_id = $1 AND EXTRACT(YEAR FROM p.product_created_at) = $2 AND
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN sta.state_id = ANY($3::INT[])
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN r.region_id = ANY($4::INT[])
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN ARRAY_LENGTH($5::INT[], 1) > 0 THEN n.neighborhood_id = ANY($5::INT[]) 
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN ARRAY_LENGTH($6::INT[], 1) > 0 THEN st.street_id = ANY($6::INT[]) 
+		ELSE TRUE
+	END AND
+	CASE 
+		WHEN ARRAY_LENGTH($7::INT[], 1) > 0 THEN ar.area_id = ANY($7::INT[]) 
+		ELSE TRUE
+	END
+	GROUP BY to_char(p.product_created_at, 'YYYY-MM')
+`
+
 export default {
 	BRANCH_ORDER_SALE_STATISTICS,
+	SERVICE_SUMMARY_STATISTICS,
 	BRANCH_EXPANSE_STATISTICS,
 	PRODUCTS_INFO_PER_SERVICE,
 	PRODUCTS_INFO_PER_STATUS,

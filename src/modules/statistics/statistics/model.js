@@ -1,5 +1,6 @@
 import { fetch, fetchAll } from '#utils/postgres'
 import StatisticsQuery from '#sql/statistics'
+import ServiceQuery from '#sql/service'
 import BranchQuery from '#sql/branch'
 
 const ordersCountStatistics = ({
@@ -68,7 +69,7 @@ const serviceProductsCountStatistics = ({
 	)
 }
 
-const branchFinanceStatistics = async ({
+const branchFinanceStatistics = ({
 	branchId,
 	dateFilter = {},
 	financeDepartment,
@@ -79,16 +80,40 @@ const branchFinanceStatistics = async ({
 	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
 	
 	if (financeDepartment === 'debt') {
-		return await fetchAll(StatisticsQuery.BRANCH_DEBT_STATISTICS, branchId, dateFilter)
+		return fetchAll(StatisticsQuery.BRANCH_DEBT_STATISTICS, branchId, dateFilter)
 	}
 
 	if (financeDepartment === 'sale') {
-		return await fetchAll(StatisticsQuery.BRANCH_ORDER_SALE_STATISTICS, branchId, dateFilter)
+		return fetchAll(StatisticsQuery.BRANCH_ORDER_SALE_STATISTICS, branchId, dateFilter)
 	}
 
 	if (financeDepartment === 'expanse') {
-		return await fetchAll(StatisticsQuery.BRANCH_EXPANSE_STATISTICS, branchId, dateFilter)
+		return fetchAll(StatisticsQuery.BRANCH_EXPANSE_STATISTICS, branchId, dateFilter)
 	}
+}
+
+const serviceSummaryStatistics = async ({
+	year,
+	branchId,
+	addressFilter = {},
+}, user) => {
+	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
+
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
+	const services = await fetchAll(ServiceQuery.SERVICES, null, 0, branchId)
+
+	const result = services.map(async service => {
+		service.monthlySummary = await fetchAll(
+			StatisticsQuery.SERVICE_SUMMARY_STATISTICS,
+			service.service_id, year,
+			stateId, regionId, neighborhoodId, streetId, areaId
+		)
+
+		return service
+	}) 
+	
+	return Promise.all(result)
 }
 
 const branch = ({ branchId }) => {
@@ -100,6 +125,7 @@ export default {
 	serviceProductsCountStatistics,
 	productStatusesCountStatistics,
 	productServiceCountStatistics,
+	serviceSummaryStatistics,
 	branchFinanceStatistics,
 	ordersCountStatistics,
 	branch
