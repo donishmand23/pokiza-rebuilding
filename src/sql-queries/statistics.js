@@ -167,9 +167,109 @@ const SERVICE_PRODUCTS_COUNT = `
 	GROUP BY s.service_id, p.product_id, p.product_size, ps.product_status_code, b.branch_name
 `
 
+const BRANCH_DEBT_STATISTICS = `
+	SELECT DISTINCT ON (s.staff_id)
+        CASE
+            WHEN transaction_type = 'income' THEN tu.branch_id
+            WHEN transaction_type = 'outcome' THEN fu.branch_id
+        END AS branch_id,
+        CASE
+            WHEN transaction_type = 'income' THEN dt.transaction_to
+            WHEN transaction_type = 'outcome' THEN dt.transaction_from
+        END AS staff_id,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_to AND
+            transaction_type = 'income' AND transaction_money_type = 'cash' AND
+            transaction_status = 'accepted'
+        ) AS debt_cash,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_to AND
+            transaction_type = 'income' AND transaction_money_type = 'card' AND
+            transaction_status = 'accepted'
+        ) AS debt_card,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_from AND
+            transaction_type = 'outcome' AND transaction_money_type = 'cash' AND
+            transaction_status = 'accepted'
+        ) AS equity_cash,
+        (
+            SELECT COALESCE( SUM(transaction_money) ,0) FROM debt_transactions
+            WHERE s.staff_id = transaction_from AND
+            transaction_type = 'outcome' AND transaction_money_type = 'card' AND
+            transaction_status = 'accepted'
+        ) AS equity_card
+    FROM debt_transactions dt
+    INNER JOIN staffs s ON s.staff_id = dt.transaction_from OR s.staff_id = dt.transaction_to
+    LEFT JOIN staffs fs ON fs.staff_id = dt.transaction_from
+    LEFT JOIN staffs ts ON ts.staff_id = dt.transaction_to
+    LEFT JOIN users fu ON fu.user_id = fs.user_id
+    LEFT JOIN users tu ON tu.user_id = ts.user_id
+    WHERE dt.transaction_status = 'accepted' AND dt.transaction_deleted_at IS NULL AND
+    CASE
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 AND dt.transaction_type = 'income' THEN tu.branch_id = ANY($1::INT[])
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 AND dt.transaction_type = 'outcome' THEN fu.branch_id = ANY($1::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($2::TIMESTAMPTZ[], 1) = 2 THEN (
+			dt.transaction_created_at BETWEEN ($2::TIMESTAMPTZ[])[1] AND (($2::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		) ELSE TRUE
+	END
+`
+
+const BRANCH_ORDER_SALE_STATISTICS = `
+	SELECT
+        ot.transaction_type,
+		SUM(ot.transaction_money_cash) AS total_money_cash,
+		SUM(ot.transaction_money_card) AS total_money_card,
+		o.branch_id
+    FROM order_transactions ot
+	NATURAL JOIN orders o
+	WHERE ot.transaction_deleted_at IS NULL AND
+	CASE
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN o.branch_id = ANY($1::INT[])
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN o.branch_id = ANY($1::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($2::TIMESTAMPTZ[], 1) = 2 THEN (
+			ot.transaction_created_at BETWEEN ($2::TIMESTAMPTZ[])[1] AND (($2::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		) ELSE TRUE
+	END
+	GROUP BY ot.transaction_type, o.branch_id
+`
+
+const BRANCH_EXPANSE_STATISTICS = `
+	SELECT
+		SUM(et.transaction_money),
+        et.transaction_money_type,
+		u.branch_id
+    FROM expanse_transactions et
+	LEFT JOIN staffs s ON s.staff_id = et.transaction_from
+	INNER JOIN users u ON u.user_id = s.user_id
+	WHERE et.transaction_deleted_at IS NULL AND et.transaction_status = 'accepted' AND
+	CASE
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN u.branch_id = ANY($1::INT[])
+		WHEN ARRAY_LENGTH($1::INT[], 1) > 0 THEN u.branch_id = ANY($1::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($2::TIMESTAMPTZ[], 1) = 2 THEN (
+			et.transaction_created_at BETWEEN ($2::TIMESTAMPTZ[])[1] AND (($2::TIMESTAMPTZ[])[2] + '1 day'::INTERVAL)
+		) ELSE TRUE
+	END
+	GROUP BY et.transaction_money_type, u.branch_id
+`
+
 export default {
+	BRANCH_ORDER_SALE_STATISTICS,
+	BRANCH_EXPANSE_STATISTICS,
 	PRODUCTS_INFO_PER_SERVICE,
 	PRODUCTS_INFO_PER_STATUS,
 	ORDERS_COUNT_STATISTICS,
+	BRANCH_DEBT_STATISTICS,
 	SERVICE_PRODUCTS_COUNT,
 }

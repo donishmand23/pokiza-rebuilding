@@ -101,6 +101,68 @@ export default {
 				throw error
 			}
 		},
+
+		branchFinanceStatistics: async (_, args, user) => {
+			try {
+				const statistics = await statisticsModel.branchFinanceStatistics(args, user)
+
+				if (args.financeDepartment === 'debt') {
+					const result = statistics.reduce((newObj, el) => {
+						newObj['branch_id'] = el.branch_id
+						newObj['totalIncomeCash'] =  	newObj['totalIncomeCash']     +  +el.equity_cash
+						newObj['totalIncomeCard'] =  	newObj['totalIncomeCard']     +  +el.equity_card
+						newObj['totalIncome'] =      	newObj['totalIncomeCash']     +  newObj['totalIncomeCard']
+						newObj['totalOutcomeCash'] = 	newObj['totalOutcomeCash']    +  +el.debt_cash
+						newObj['totalOutcomeCard'] = 	newObj['totalOutcomeCard']    +  +el.debt_card
+						newObj['totalOutcome'] =     	newObj['totalOutcomeCash']    +  newObj['totalOutcomeCard']
+						return newObj
+					}, {
+						branch_id: 0,
+						totalIncomeCash: 0,
+						totalIncomeCard: 0,
+						totalIncome: 0,
+						totalOutcomeCash: 0,
+						totalOutcomeCard: 0,
+						totalOutcome: 0,
+					})
+
+					return result
+				}
+
+				if (args.financeDepartment === 'sale') {
+					const income = statistics.find(el => el.transaction_type === 'income')
+					const outcome = statistics.find(el => el.transaction_type === 'outcome')
+					
+					return {
+						branch_id: income?.branch_id || outcome?.branch_id,
+						totalIncomeCash: +income?.total_money_cash || 0,
+						totalIncomeCard: +income?.total_money_card || 0,
+						totalIncome: (+income?.total_money_cash || 0) + (+income?.total_money_card || 0),
+						totalOutcomeCash: +outcome?.total_money_cash || 0,
+						totalOutcomeCard: +outcome?.total_money_card || 0,
+						totalOutcome: (+outcome?.total_money_cash || 0) + (+outcome?.total_money_card || 0),
+					}
+				}
+
+				if (args.financeDepartment === 'expanse') {
+					const cash = statistics.find(el => el.transaction_money_type === 'cash')
+					const card = statistics.find(el => el.transaction_money_type === 'card')
+
+					return {
+						branch_id: cash?.branch_id || card?.branch_id,
+						totalIncomeCash: 0,
+						totalIncomeCard: 0,
+						totalIncome: 0,
+						totalOutcomeCash: +cash?.sum || 0,
+						totalOutcomeCard: +card?.sum || 0,
+						totalOutcome: (+cash?.sum || 0) + (+card?.sum || 0),
+					}
+				}
+
+			} catch (error) {
+				throw error
+			}
+		}
 	},
 
 	OrdersCountStatistics: {
@@ -141,5 +203,9 @@ export default {
 				}, 0)
 			return size
 		},
+	},
+
+	BranchFinanceStatistics: {
+		branch: global => statisticsModel.branch({ branchId: global.branch_id })
 	}
 }

@@ -22,6 +22,12 @@ type Query {
 		statusCode: StatusValue!
 		dateFilter: RangeDate = {}
 	): ServiceProductsCountStatistics!
+
+	branchFinanceStatistics(
+		branchId: ID!
+		dateFilter: RangeDate = {}
+		financeDepartment: FinanceDepartments!
+	): BranchFinanceStatistics!
 }
 
 # ordersCountStatistics
@@ -83,4 +89,22 @@ type ServiceProductInfo {
 	serviceProductCount: Int!
 	serviceProductSize: Int!
 	serviceProductPercent: Float!
+}
+
+#branchFinanceStatistics
+type BranchFinanceStatistics {
+	branch: Branch
+	totalIncome: Int!
+	totalIncomeCash: Int!
+	totalIncomeCard: Int!
+
+	totalOutcome: Int!
+	totalOutcomeCash: Int!
+	totalOutcomeCard: Int!
+}
+
+enum FinanceDepartments {
+	debt
+	sale
+	expanse
 }

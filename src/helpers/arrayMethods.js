@@ -1,7 +1,7 @@
 Array.prototype.equalize = function (array1, array2) {
-    if(!array2.length) array2 = [0]
+    if(!array2?.length) array2 = [0]
 
-    if (!array1 || (array1 && !array1.length)) {
+    if (!array1 || (array1 && !array1?.length)) {
         return array2
     }
 
@@ -10,7 +10,7 @@ Array.prototype.equalize = function (array1, array2) {
         else return
     }).filter(el => el)
 
-    if (!array1 || (array1 && !array1.length)) {
+    if (!array1 || (array1 && !array1?.length)) {
         return [0]
     }
 
