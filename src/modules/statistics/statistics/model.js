@@ -116,12 +116,30 @@ const serviceSummaryStatistics = async ({
 	return Promise.all(result)
 }
 
+const socialSetRegistrationStatistics = ({
+	branchId,
+	dateFilter = {},
+	addressFilter = {},
+}, user) => {
+	const { stateId, regionId, neighborhoodId, streetId, areaId } = addressFilter
+
+	dateFilter = Object.keys(dateFilter).length ? [dateFilter.from, dateFilter.to] : []
+	branchId = Array.prototype.equalize(branchId, user.allowedBranches)
+
+	return fetchAll(
+		StatisticsQuery.SOCIAL_SET_REGISTRATION_STATISTICS,
+		branchId, dateFilter,
+		stateId, regionId, neighborhoodId, streetId, areaId
+	)
+}
+
 const branch = ({ branchId }) => {
 	return fetch(BranchQuery.BRANCHES, branchId)
 }
 
 
 export default {
+	socialSetRegistrationStatistics,
 	serviceProductsCountStatistics,
 	productStatusesCountStatistics,
 	productServiceCountStatistics,

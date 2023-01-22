@@ -151,4 +151,5 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
     'serviceProductsCountStatistics',
     'branchFinanceStatistics',
     'serviceSummaryStatistics',
+    'socialSetRegistrationStatistics',
 ]

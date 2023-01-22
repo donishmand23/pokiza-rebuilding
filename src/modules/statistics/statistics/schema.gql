@@ -34,6 +34,12 @@ type Query {
 		branchId: [ID!]
 		addressFilter: AddressFilter = {}
 	): [ServiceSummaryStatistics!]!
+
+	socialSetRegistrationStatistics(
+		branchId: [ID!]
+		addressFilter: AddressFilter = {}
+		dateFilter: RangeDate = {}
+	): [SocialSetRegistrationStatistics!]!
 }
 
 # ordersCountStatistics
@@ -126,4 +132,12 @@ type ServiceSummaryStatistics {
 type MonthlySummary {
 	date: String!
 	count: Int!
+}
+
+# socialSetRegistrationStatistics
+type SocialSetRegistrationStatistics {
+	socialSetId: ID!
+	socialSetName: String!
+	socialSetIcon: String!
+	registrationCount: Int!
 }

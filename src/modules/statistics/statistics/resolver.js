@@ -171,6 +171,15 @@ export default {
 			} catch (error) {
 				throw error
 			}
+		},
+
+		socialSetRegistrationStatistics: async (_, args, user) => {
+			try {	
+				const statistics = await statisticsModel.socialSetRegistrationStatistics(args, user)
+				return statistics
+			} catch (error) {
+				throw error
+			}
 		}
 	},
 
@@ -222,5 +231,12 @@ export default {
 		serviceId:   global => global.service_id,
 		serviceName: global => global.service_name,
 		branch:      global => statisticsModel.branch({ branchId: global.branch_id })
+	},
+
+	SocialSetRegistrationStatistics: {
+		socialSetId:   	   global => global.social_set_id,
+		socialSetName: 	   global => global.social_set_name,
+		socialSetIcon: 	   global => global.social_set_icon,
+		registrationCount: global => global.registration_count,
 	}
 }
