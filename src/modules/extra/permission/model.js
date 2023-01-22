@@ -25,15 +25,6 @@ const deletePermissionGroup = ({ groupId }) => {
 	return fetch(PermissionQuery.DELETE_PERMISSION_GROUP, groupId)
 }
 
-const deletePermission = async ({ staffId, permissionKeys, branchId }) => {
-	const data = await Promise.all(
-		permissionKeys.map(async key => {
-			return await fetch(PermissionQuery.DELETE_PERMISSION, staffId, key, branchId)
-		})
-	)
-	return data.filter(el => el)
-}
-
 const addPermission = async ({ staffId, permissionKeys, branchId }) => {
 	await fetchAll(PermissionQuery.DELETE_ALL_PERMISSIONS, staffId, branchId)
 	const data = await Promise.all(
@@ -74,7 +65,6 @@ export default {
 	permissionsByGroup,
 	addPermissionGroup,
 	permissionGroups,
-	deletePermission,
 	permissionsUser,
 	permissionsList,
 	addPermission

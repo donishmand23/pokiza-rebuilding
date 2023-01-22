@@ -54,7 +54,6 @@ export default {
 
     'permissionsUser': [1900],
     'addPermission': [1901],
-    'deletePermission': [1902],
 
     'addBranch': [1101],
     'changeBranch': [1102],

@@ -11,12 +11,6 @@ type Mutation {
 		permissionKeys: [Int!]!
 	): MutationResponses!
 
-	deletePermission(
-		staffId: ID! 
-		permissionKeys: [Int!]! 
-		branchId: ID!
-	): MutationResponses!
-
 	addPermissionGroup(
 		groupName: String! 
 		permissionKeys: [Int!]

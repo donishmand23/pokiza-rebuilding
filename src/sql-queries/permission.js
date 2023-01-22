@@ -14,19 +14,6 @@ const ADD_PERMISSION = `
 	WHERE np.permission_set_id IS NOT NULL
 `
 
-const DELETE_PERMISSION = `
-	WITH deleted_permission AS (
-		DELETE FROM permission_sets
-		WHERE staff_id = $1 AND permission_action = $2 AND branch_id = $3
-		RETURNING *
-	) SELECT
-		p.permission_action,
-		p.permission_model
-	FROM deleted_permission np
-	INNER JOIN permissions p ON p.permission_action = np.permission_action
-	WHERE np.permission_set_id IS NOT NULL
-`
-
 const DELETE_ALL_PERMISSIONS = `
 	DELETE FROM permission_sets
 	WHERE staff_id = $1 AND branch_id = $2
@@ -271,7 +258,6 @@ export default {
 	EDIT_PERMISSION_GROUP,
 	PERMISSIONS_BY_GROUP,
 	ADD_PERMISSION_GROUP,
-	DELETE_PERMISSION,
 	PERMISSION_GROUPS,
 	BRANCHES_BY_USER,
 	PERMISSION_SETS,

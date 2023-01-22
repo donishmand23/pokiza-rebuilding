@@ -525,7 +525,6 @@ insert into permissions (permission_action, permission_model) values
 
 (1900, 'Huquqlarni ko''rish'),
 (1901, 'Huquqlarni qo''shish'),
-(1902, 'Huquqlarni o''chirish'),
 
 (2101, 'Buyurtma holatini "Moderator"ga o''zgartirish'),     
 (2102, 'Buyurtma holatini "Kutilmoqda"ga o''zgartirish'),     
@@ -669,7 +668,6 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1901);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 1902);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2101);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2102);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 1, 2103);
@@ -803,7 +801,6 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (1, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1901);
-insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 1902);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2101);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2102);
 insert into permission_sets (staff_id, branch_id, permission_action) values (1, 2, 2103);
@@ -938,7 +935,6 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (3, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 1808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 1901);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 1902);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2101);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2102);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 1, 2103);
@@ -1072,7 +1068,6 @@ insert into permission_sets (staff_id, branch_id, permission_action) values (3, 
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 1808);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 1900);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 1901);
-insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 1902);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 2101);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 2102);
 insert into permission_sets (staff_id, branch_id, permission_action) values (3, 2, 2103);

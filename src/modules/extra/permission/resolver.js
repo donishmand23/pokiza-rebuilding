@@ -24,21 +24,6 @@ export default {
 			}
 		},
 
-		deletePermission: async (_, args, user) => {
-			try {
-				const deletedPermissions = await permissionModel.deletePermission(args, user)
-				if(deletedPermissions.length) {
-					return {
-						status: 200,
-						message: "Xodimdan rixsatnoma(lar) olib tashlandi!",
-						data: deletedPermissions
-					}
-				} else throw new BadRequestError("Xodimdan ruxsatnoma(lar) allaqachon olib tashlangan!")
-			} catch(error) { 
-				throw error
-			 }
-		},
-
 		addPermissionGroup: async (_, args, user) => {
 			try {
 				const newPermissionGroup = await permissionModel.addPermissionGroup(args, user)

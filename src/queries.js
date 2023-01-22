@@ -127,7 +127,6 @@ export const PRIVATE_STAFF_ONLY_QUERIES = [
 
     'permissionsUser',
     'addPermission',
-    'deletePermission',
 
     'addBranch',
     'changeBranch',
