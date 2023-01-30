@@ -68,7 +68,7 @@ type TransportDetail {
 	direction: BindType!
 	transport: Transport!
 	finished: Boolean!
-	driver: Staff!
+	driver: Staff
 }
 
 input OrderDateFilter {
