@@ -8,7 +8,6 @@ export default {
 
 				const servicesObject = statistics.reduce((acc, el) => {
 					acc[el.service_id] = acc[el.service_id] || []
-
 					acc[el.service_id].push(el)
 
 					return acc;
