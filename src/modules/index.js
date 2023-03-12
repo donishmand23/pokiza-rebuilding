@@ -40,6 +40,7 @@ import FondTransactionModule from './finance/fond/index.js'
 
 // statistics
 import StatisticsModule from './statistics/statistics/index.js'
+import KpiModule from './statistics/kpi/index.js'
 
 export default {
 	typeDefs: [
@@ -79,6 +80,7 @@ export default {
   		FondTransactionModule.typeDefs,
 		// statistics
 		StatisticsModule.typeDefs,
+		KpiModule.typeDefs,
 	],
 	resolvers: [
 		// address
@@ -117,5 +119,6 @@ export default {
   		FondTransactionModule.resolvers,
 		// statistics
 		StatisticsModule.resolvers,
+		KpiModule.resolvers,
 	]
 }

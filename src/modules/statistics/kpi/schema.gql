@@ -1,0 +1,18 @@
+type Query {
+	productsKPI(
+		staffId: ID!
+		branchId: ID!
+		statusCode: StatusValue!
+		dateFilter: RangeDate = {}
+	): ProductsKPI!
+}
+
+type ProductsKPI {
+	totalProducts: Int!
+	services: [ProductServiceKPI!]! 
+}
+
+type ProductServiceKPI {
+	service: Service!
+	amount: Int!
+}
