@@ -5,6 +5,14 @@ type Query {
 		statusCode: StatusValue!
 		dateFilter: RangeDate = {}
 	): ProductsKPI!
+
+	productStatusesKPI(
+		staffId: [ID!]
+		branchId: [ID!]
+		productId: ID
+		dateFilter: RangeDate = {}
+		pagination: Pagination = {} 
+	): [ProductStatusesKPI!]!
 }
 
 type ProductsKPI {
@@ -15,4 +23,12 @@ type ProductsKPI {
 type ProductServiceKPI {
 	service: Service!
 	amount: Int!
+}
+
+type ProductStatusesKPI {
+	statusFrom: StatusInfo!
+	statusTo: StatusInfo!
+	createdAt: DateTime!
+	pruductId: Int!
+	staff: Staff!
 }

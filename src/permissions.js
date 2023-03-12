@@ -120,4 +120,5 @@ export default {
     'serviceSummaryStatistics': [2306],
     'socialSetRegistrationStatistics': [2306],
     'productsKPI': [2306],
+    'productStatusesKPI': [2306],
 }
