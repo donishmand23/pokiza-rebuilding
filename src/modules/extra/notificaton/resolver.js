@@ -37,9 +37,9 @@ export default {
 	},
 
 	Query: {
-		notifications: async (_, args, { userId }) => {
+		notifications: async (_, args) => {
 			try {
-				const notifications = await notificationModel.notifications({ userId })
+				const notifications = await notificationModel.notifications(args)
 				return notifications
 			} catch(error) {
 				throw error

@@ -1,5 +1,9 @@
 type Query {
-	notifications: [Notification!]!
+	notifications(
+		senderUserId: [ID!]
+		receiverUserId: [ID!]
+		pagination: Pagination = {} 
+	): [Notification!]!
 }
 
 type Mutation {

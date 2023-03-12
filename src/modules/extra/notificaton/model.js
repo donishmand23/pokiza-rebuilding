@@ -2,8 +2,10 @@ import { fetch, fetchAll } from '#utils/postgres'
 import NotificationQuery from '#sql/notificaton'
 import UserQuery from '#sql/user'
 
-const notifications = async ({ userId }) => {
-	return fetchAll(NotificationQuery.NOTIFICATIONS, userId)
+const notifications = async ({ senderUserId, receiverUserId, pagination }) => {
+	const { page, limit } = pagination
+		
+	return fetchAll(NotificationQuery.NOTIFICATIONS, (page - 1) * limit, limit, senderUserId, receiverUserId)
 }
 
 const staff = ({ staffId }) => {

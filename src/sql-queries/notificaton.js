@@ -8,8 +8,17 @@ const NOTIFICATIONS = `
 		notification_img,
 		to_char(notification_created_at, 'YYYY-MM-DD HH24:MI:SS') notification_created_at
 	FROM notifications
-	WHERE notification_to = $1
+	WHERE
+	CASE
+		WHEN ARRAY_LENGTH($3::INT[], 1) > 0 THEN notification_from = ANY($3::INT[])
+		ELSE TRUE
+	END AND
+	CASE
+		WHEN ARRAY_LENGTH($4::INT[], 1) > 0 THEN notification_to = ANY($4::INT[])
+		ELSE TRUE
+	END
 	ORDER BY notification_id DESC
+	OFFSET $1 ROWS FETCH FIRST $2 ROW ONLY
 `
 
 const SEND_NOTIFICATION = `
