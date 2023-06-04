@@ -19,7 +19,7 @@ async function changeStatus ({ staffId, orderId, productId }) {
 			return fetch(OrderQuery.CHANGE_ORDER_STATUS, order_id, 5, staffId)
 		}
 
-		if (productId && product_general_status >= 7 && !(order_status >= 5)) {
+		if (productId && product_general_status >= 7 && !(order_status >= 6)) {
 			return fetch(OrderQuery.CHANGE_ORDER_STATUS, order_id, 6, staffId)
 		}
 
