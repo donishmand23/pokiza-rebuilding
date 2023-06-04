@@ -25,7 +25,7 @@ const addArea = async ({ streetId, areaName, areaDistance }) => {
 }
 
 const changeArea = async ({ areaId, streetId, areaName = '', areaDistance = 0 })   => {
-	let oldData = await fetch(AreaQuery.AREAS, 0, 0, 0, areaId)
+	let oldData = await fetch(AreaQuery.AREAS, 0, 0, 0, areaId, 0)
 	if(!oldData) throw new BadRequestError("Bunday hudud yo'q!")
 	if(streetId && streetId.length != 0) {
 		await fetch(AreaQuery.DELETE_STREET_AREAS, areaId)
